@@ -1,0 +1,4 @@
+OBJS := function.o
+DIRS := upgrade ai_schedule user_manage
+
+include $(SUB_MAKE_INCLUDE)
