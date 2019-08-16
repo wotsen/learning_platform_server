@@ -1,0 +1,7 @@
+all: run
+
+tfile_test: tfile_test.cpp tfile.h
+	g++ -std=c++11 -I. tfile_test.cpp -o tfile_test
+
+run: tfile_test
+	 ./tfile_test ${ARGS}

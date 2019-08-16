@@ -1,4 +1,4 @@
 OBJS := 
-DIRS := tfile tools_func
+DIRS := file
 
 include $(SUB_MAKE_INCLUDE)

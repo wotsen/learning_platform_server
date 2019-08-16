@@ -1,4 +1,4 @@
 OBJS := common.o
-DIRS := 
+DIRS := config
 
 include $(SUB_MAKE_INCLUDE)

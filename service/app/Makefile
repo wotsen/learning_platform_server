@@ -18,10 +18,10 @@ rwildcard=$(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$(2
 default: show-info all
 
 # non-phony targets
-#@echo -e "\t" CC $(CCFLAG) $(ALL_OBJS) $(MAIN_SRC) -o $@
+#@echo -e "\t" CC $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG)
 $(TARGET): build-subdirs $(OBJS) find-all-objs
 	@echo -e "\t" CC $@
-	@$(CC) $(CCFLAG) $(ALL_OBJS) $(MAIN_SRC) -o $@
+	@$(CC) $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG) 
 
 # phony targets
 .PHONY: all
@@ -50,6 +50,6 @@ show-info:
 # need to be placed at the end of the file
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 export PROJECT_PATH := $(patsubst %/,%,$(dir $(mkfile_path)))
-export MAKE_INCLUDE=$(PROJECT_PATH)/config/make.global
-export SUB_MAKE_INCLUDE=$(PROJECT_PATH)/config/submake.global
+export MAKE_INCLUDE=$(PROJECT_PATH)/mkconfig/make.global
+export SUB_MAKE_INCLUDE=$(PROJECT_PATH)/mkconfig/submake.global
 include $(MAKE_INCLUDE)

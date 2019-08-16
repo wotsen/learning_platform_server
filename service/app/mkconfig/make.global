@@ -11,7 +11,8 @@ CC := g++
 INC := 
 LIBS := -lrt -lpthread
 DMARCROS := -DDEBUG
-CCFLAG := -Wall $(DMARCROS) $(INC) $(LIBS)
+# -ggdb
+CCFLAG := -O0 -g3 -Wall $(DMARCROS) $(INC) $(LIBS) -std=c++11
 OBJCCFLAG := $(CCFLAG) -c
 
 # recursive make and clean
@@ -32,4 +33,4 @@ clean-subdirs:
 #@echo -e "\t" CC $(OBJCCFLAG) $< -o $@
 %.o: %.c*
 	@echo -e "\t" CC $<
-	@$(CC) $(OBJCCFLAG) $< -o $@
+	@$(CC) $< -o $@ $(OBJCCFLAG)

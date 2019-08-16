@@ -1,0 +1,4 @@
+OBJS := elog_file.o
+DIRS := 
+
+include $(SUB_MAKE_INCLUDE)
