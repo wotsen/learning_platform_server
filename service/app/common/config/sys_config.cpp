@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-11 13:00:24
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-12 23:58:44
+ * @LastEditTime: 2019-08-17 11:34:52
  */
 /**
  * @file sys_config.cpp
@@ -43,10 +43,7 @@ SysConfig * SysConfig::get_sys_config(void)
     }
 
     std::string conf_str(2048, '\0');
-    size_t ret = 0;
-    ret = instance->file->read(conf_str);
-
-    dbg_print("read file : %s\n", ret > 0 ? "true" : "false");
+    instance->file->read(conf_str);
 
     // 读完了就删掉
     instance->file->close();

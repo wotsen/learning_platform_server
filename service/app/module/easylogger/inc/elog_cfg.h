@@ -1,4 +1,9 @@
 /*
+ * @Date: 2019-08-10 22:55:30
+ * @LastEditors: 余王亮
+ * @LastEditTime: 2019-08-17 11:32:12
+ */
+/*
  * This file is part of the EasyLogger Library.
  *
  * Copyright (c) 2015, Armink, <armink.ztl@gmail.com>
@@ -36,7 +41,11 @@
 /* enable flush file cache. default open this macro */
 #define ELOG_FILE_FLUSH_CAHCE_ENABLE
 /* setting static output log level */
+#ifdef  NDEBUG
+#define ELOG_OUTPUT_LVL                      ELOG_LVL_INFO
+#else
 #define ELOG_OUTPUT_LVL                      ELOG_LVL_VERBOSE
+#endif
 /* enable assert check */
 #define ELOG_ASSERT_ENABLE
 /* buffer size for every line's log */

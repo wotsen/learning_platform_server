@@ -120,7 +120,7 @@ const char *elog_port_get_time(void) {
 const char *elog_port_get_p_info(void) {
     static char cur_process_info[10] = { 0 };
 
-    snprintf(cur_process_info, 10, "pid:%04d", getpid());
+    snprintf(cur_process_info, 10, "tid:%04d", getpid());
 
     return cur_process_info;
 }

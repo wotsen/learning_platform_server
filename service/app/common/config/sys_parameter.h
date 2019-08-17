@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-11 21:42:59
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-15 00:09:41
+ * @LastEditTime: 2019-08-17 15:54:03
  */
 /**
  * @file sys_parameter.h
@@ -17,6 +17,7 @@
 #ifndef __SYS_PARAMETER_H__
 #define __SYS_PARAMETER_H__
 #include <stdio.h>
+#include <pthread.h>
 #include "inttypes.h"
 #include "../../tools/tfile/tfile.h"
 #include "../../tools/com_def.h"
@@ -54,6 +55,7 @@ private:
 
     static SysParameter *instance;
     struct sys_parameter *para;
+    pthread_mutex_t mutex;
     FILE *fp;
 };
 

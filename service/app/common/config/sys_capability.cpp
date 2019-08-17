@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-15 22:25:47
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-15 23:25:31
+ * @LastEditTime: 2019-08-17 11:35:30
  */
 /**
  * @file sys_capability.cpp
@@ -106,7 +106,7 @@ bool sys_capability_init(void)
         exit(0);
         return false;
     }
-    log_i("sys_config json : %s\n", get_json_capability()->ToFormattedString().c_str());
+    log_d("sys_config json : %s\n", get_json_capability()->ToFormattedString().c_str());
     log_i("parser sys config json success!\n");
 
     return true;
