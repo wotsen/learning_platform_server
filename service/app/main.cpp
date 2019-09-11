@@ -70,6 +70,8 @@ static bool alone_run(void)
     sprintf(buf, "%ld", (long)getpid());
     write(fd, buf, strlen(buf) + 1);
 
+    // 不用关闭fd?
+
     return true;
 }
 
