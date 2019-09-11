@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-14 23:12:24
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-17 16:05:50
+ * @LastEditTime: 2019-08-25 14:01:23
  */
 /**
  * @file sys_parameter.cpp
@@ -17,37 +17,42 @@
 
 #include <iostream>
 #include "../../tools/tools_func/calculate_crc16.h"
-#include "../../module/easylogger/inc/elog.h"
+#include <easylogger/inc/elog.h>
 #include "sys_parameter.h"
 
 SysParameter *SysParameter::instance = nullptr;
 
 SysParameter *SysParameter::get_sys_para(void)
 {
-    if (nullptr != instance) {
+    if (nullptr != instance)
+    {
         return instance;
     }
 
     instance = new SysParameter();
     instance->para = new struct sys_parameter;
 
-    pthread_mutex_init(&instance->mutex);
+    pthread_mutex_init(&instance->mutex, NULL);
 
     memset(instance->para, 0, sizeof(struct sys_parameter));
 
     instance->fp = fopen(SYS_PARAMETER_FILENAME, "rb+");
 
-    if (NULL == instance->fp) {
+    if (NULL == instance->fp)
+    {
         instance->fp = fopen(SYS_PARAMETER_FILENAME, "wb+");
-        if (NULL == instance->fp) {
+        if (NULL == instance->fp)
+        {
             instance->para = NULL;
             delete instance;
             log_e("load sys parameter error : %s\n", strerror(errno));
             exit(-1);
         }
-        if (!instance->reset_default_parameter()) {
+        if (!instance->reset_default_parameter())
+        {
             fclose(instance->fp);
             delete instance->para;
+            instance->para = nullptr;
             delete instance;
             log_e("load sys parameter error : %s\n", strerror(errno));
             exit(-1);
@@ -59,11 +64,15 @@ SysParameter *SysParameter::get_sys_para(void)
 
     fread(instance->para, sizeof(struct sys_parameter), 1, instance->fp);
 
-    if (instance->cal_crc16() != instance->para->para_crc) {
+    if (calculate_crc16(0, (uint8_t *)instance->para, sizeof(struct sys_parameter) - sizeof(instance->para->para_crc))
+        != instance->para->para_crc)
+    {
         log_i("sys parameter crc not currect, reset defaul parameter\n");
-        if (!instance->reset_default_parameter()) {
+        if (!instance->reset_default_parameter())
+        {
             fclose(instance->fp);
             delete instance->para;
+            instance->para = nullptr;
             delete instance;
             log_e("reset default sys parameter error : %s\n", strerror(errno));
             exit(-1);
@@ -75,17 +84,16 @@ SysParameter *SysParameter::get_sys_para(void)
 
 SysParameter::~SysParameter(void)
 {
-    if (nullptr != instance) {
-        if (NULL != instance->fp)
-        {
-            fclose(instance->fp);
-            instance->fp = NULL;
-        }
+    if (NULL != instance->fp)
+    {
+        fclose(instance->fp);
+        instance->fp = NULL;
+    }
 
-        if (NULL != instance->para) {
-            delete instance->para;
-            instance->para = NULL;
-        }
+    if (NULL != instance->para)
+    {
+        delete instance->para;
+        instance->para = NULL;
     }
 }
 
@@ -95,7 +103,8 @@ SysParameter::~SysParameter(void)
  */
 void SysParameter::cal_crc16(void)
 {
-    if (NULL == para) return;
+    if (NULL == para)
+        return;
     para->para_crc = calculate_crc16(0, (uint8_t *)para, sizeof(struct sys_parameter) - sizeof(para->para_crc));
 }
 
@@ -107,7 +116,10 @@ void SysParameter::cal_crc16(void)
  */
 bool SysParameter::reset_default_parameter(void)
 {
-    if (!is_ok()) { return false; }
+    if (!is_ok())
+    {
+        return false;
+    }
 
     para->para_magic = SYS_PARAMETER_MAGIC;
     // TODO: other para
@@ -126,8 +138,12 @@ bool SysParameter::reset_default_parameter(void)
  */
 bool SysParameter::save_para(size_t start, size_t len)
 {
-    if (!is_ok()) { return false; }
-    if (start + len > sizeof(struct sys_parameter)) {
+    if (!is_ok())
+    {
+        return false;
+    }
+    if (start + len > sizeof(struct sys_parameter))
+    {
         return false;
     }
     size_t ret = 0;
@@ -145,7 +161,7 @@ bool SysParameter::save_para(size_t start, size_t len)
  * 
  * @return struct sys_parameter* 
  */
-struct sys_parameter * get_para_ptr(void)
+struct sys_parameter *get_para_ptr(void)
 {
     return SysParameter::get_sys_para()->get_para_ptr();
 }
@@ -159,8 +175,9 @@ struct sys_parameter * get_para_ptr(void)
 bool sys_para_init(void)
 {
     struct sys_parameter *para = get_para_ptr();
-    
-    if (NULL != para) {
+
+    if (NULL != para)
+    {
         log_i("sys parameter load success!");
         return true;
     }

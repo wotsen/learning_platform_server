@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package insider.sdk;
+
+message body {
+    int32 net_layer = 1;
+}

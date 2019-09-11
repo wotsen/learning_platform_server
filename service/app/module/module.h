@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-11 00:22:09
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-11 00:23:24
+ * @LastEditTime: 2019-08-25 14:05:09
  */
 /**
  * @file module.h
@@ -16,6 +16,5 @@
 
 #ifndef __MODULE_H__
 #define __MODULE_H__
-#include "easylogger/easylogger_setup.h"
 
 #endif // !1__MODULE_H__

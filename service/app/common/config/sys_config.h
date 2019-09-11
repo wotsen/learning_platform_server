@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-11 12:45:30
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-12 23:58:29
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-08-17 21:26:01
  */
 /**
  * @file sys_config.h
@@ -13,26 +13,26 @@
  * @copyright Copyright (c) 2019
  * 
  */
+#pragma once
 
-#ifndef __SYS_CONFIG_H__
-#define __SYS_CONFIG_H__
 #include "sys_load_json.h"
 
-class SysConfig : public AbsSysLoadJson {
+#define SYS_ELOG_PATH "../log/elog_file.log"
+
+class SysConfig : public AbsSysLoadJson
+{
 public:
-#define SYS_CONFIG_FILENAME "ai_runtime/etc/sys_config.json"
+#define SYS_CONFIG_FILENAME "../etc/sys_config.json"
 #define SYS_CONFIG_FILE_MAX 2048
 
     ~SysConfig();
-    static SysConfig * get_sys_config(void);
+    static SysConfig *get_sys_config(void);
 
 private:
-    SysConfig() { };
+    SysConfig(){};
 
     static SysConfig *instance;
 };
 
 bool sys_config_init(void);
 neb::CJsonObject *get_json_config(void);
-
-#endif // !1__SYS_CONFIG_H__

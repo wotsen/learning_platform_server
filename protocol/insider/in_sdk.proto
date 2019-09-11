@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "in_header.proto";
+import "in_body.proto";
+import "in_footer.proto";
+
+package insider.sdk;
+
+message sdk {
+    header header = 1;
+    body body = 2;
+    footer footer = 3;
+}

@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-11 21:42:59
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-17 15:54:03
+ * @LastEditTime: 2019-08-25 14:09:45
  */
 /**
  * @file sys_parameter.h
@@ -13,32 +13,34 @@
  * @copyright Copyright (c) 2019
  * 
  */
+#pragma once
 
-#ifndef __SYS_PARAMETER_H__
-#define __SYS_PARAMETER_H__
 #include <stdio.h>
 #include <pthread.h>
 #include "inttypes.h"
-#include "../../tools/tfile/tfile.h"
+#include <tfile/tfile.h>
 #include "../../tools/com_def.h"
 
-struct sys_parameter {
+struct sys_parameter
+{
 #define SYS_PARAMETER_MAGIC 0x190ADB
     uint32_t para_magic;
     uint16_t para_crc;
-}PACKED;
+} PACKED;
 
-class SysParameter : tfile::ReaderWriter {
+class SysParameter : tfile::ReaderWriter
+{
 public:
-#define SYS_PARAMETER_FILENAME "ai_runtime/data/para.bin"
+#define SYS_PARAMETER_FILENAME "../data/para.bin"
 
     ~SysParameter();
 
-    struct sys_parameter *get_para_ptr(void) {
+    struct sys_parameter *get_para_ptr(void)
+    {
         return para;
     }
 
-    static SysParameter * get_sys_para(void);
+    static SysParameter *get_sys_para(void);
 
     bool reset_default_parameter(void);
 
@@ -46,12 +48,13 @@ public:
 
     bool save_para(size_t start, size_t len);
 
-    bool is_ok(void) const {
+    bool is_ok(void) const
+    {
         return (NULL != para && NULL != fp);
     }
 
 private:
-    SysParameter() { }
+    SysParameter() {}
 
     static SysParameter *instance;
     struct sys_parameter *para;
@@ -60,6 +63,4 @@ private:
 };
 
 bool sys_para_init(void);
-struct sys_parameter * get_para_ptr(void);
-
-#endif // !1__SYS_PARAMETER_H__
+struct sys_parameter *get_para_ptr(void);

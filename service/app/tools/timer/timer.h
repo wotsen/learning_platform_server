@@ -3,8 +3,8 @@
  * @LastEditors: 余王亮
  * @LastEditTime: 2019-08-16 21:46:25
  */
-#ifndef __TIMER_H__
-#define __TIMER_H__
+#pragma once
+
 #include <inttypes.h>
 
 #ifdef __cplusplus
@@ -51,5 +51,3 @@ void print_calendar(uint16_t year); 			/* 打印一年的年历 */
 #ifdef __cplusplus
 }
 #endif
-
-#endif // endof : #ifndef __TIMER_H__

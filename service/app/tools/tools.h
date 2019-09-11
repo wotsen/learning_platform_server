@@ -13,8 +13,6 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#ifndef __TOOLS_H__
-#define __TOOLS_H__
-#include "tfile/tfile.h"
+#pragma once
 
-#endif // !1__TOOLS_H__
+#include "tfile/tfile.h"

@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-12 23:33:56
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-12 23:50:31
+ * @LastEditTime: 2019-08-25 14:09:48
  */
 /**
  * @file sys_load_json.h
@@ -13,16 +13,17 @@
  * @copyright Copyright (c) 2019
  * 
  */
+#pragma once
 
-#ifndef __SYS_LOAD_JSON_H__
-#define __SYS_LOAD_JSON_H__
-#include "../../tools/tfile/tfile.h"
-#include "../../module/cjson_object/CJsonObject.hpp"
+#include <tfile/tfile.h>
+#include <CJsonObject/CJsonObject.hpp>
 
-class AbsSysLoadJson {
+class AbsSysLoadJson
+{
 public:
-    virtual ~AbsSysLoadJson() { };
-    neb::CJsonObject *get_json(void) {
+    virtual ~AbsSysLoadJson(){};
+    neb::CJsonObject *get_json(void)
+    {
         return json;
     }
 
@@ -30,5 +31,3 @@ protected:
     tfile::Reader *file;
     neb::CJsonObject *json;
 };
-
-#endif // !1__SYS_LOAD_JSON_H__

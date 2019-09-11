@@ -3,7 +3,7 @@ TARGET := AIService
 MAIN_SRC := main.cpp
 
 # compile marcros
-DIRS := common function module tools
+DIRS := common function tools module
 OBJS := 
 
 # intermedia compile marcros
@@ -22,6 +22,7 @@ default: show-info all
 $(TARGET): build-subdirs $(OBJS) find-all-objs
 	@echo -e "\t" CC $@
 	@$(CC) $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG) 
+	@cp $(TARGET) ../../pack/ai_platform/ai_runtime/bin 
 
 # phony targets
 .PHONY: all
@@ -49,6 +50,7 @@ show-info:
 
 # need to be placed at the end of the file
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+export ROOT_DIR := $(shell pwd)
 export PROJECT_PATH := $(patsubst %/,%,$(dir $(mkfile_path)))
 export MAKE_INCLUDE=$(PROJECT_PATH)/mkconfig/make.global
 export SUB_MAKE_INCLUDE=$(PROJECT_PATH)/mkconfig/submake.global

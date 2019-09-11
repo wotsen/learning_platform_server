@@ -13,11 +13,6 @@
  * @copyright Copyright (c) 2019
  * 
  */
-
-#ifndef __USR_APPS_H__
-#define __USR_APPS_H__
-
+#pragma once
 
 void usr_apps_init(void);
-
-#endif // !1__USR_APPS_H__

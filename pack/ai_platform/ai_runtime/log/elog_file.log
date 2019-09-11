@@ -1,0 +1,348 @@
+[36;22mI/elog     [08-24 00:14:02] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [08-24 00:14:02] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [08-24 00:14:02] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [08-24 00:14:02] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [08-24 00:14:02] create task tid=[139703611754240], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [08-24 00:14:02] tid=[139703611754240], name=[task_manage] run
+[0m
+[36;22mI/elog     [08-24 19:55:58] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [08-24 19:55:58] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [08-24 19:55:58] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [08-24 19:55:58] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [08-24 19:55:58] create task tid=[139810346305280], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [08-24 19:55:58] tid=[139810346305280], name=[task_manage] run
+[0m
+[36;22mI/elog     [08-24 19:56:20] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [08-24 19:56:20] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [08-24 19:56:20] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [08-24 19:56:20] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [08-24 19:56:20] create task tid=[139981406799616], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [08-24 19:56:20] tid=[139981406799616], name=[task_manage] run
+[0m
+[36;22mI/elog     [08-24 20:11:55] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [08-24 20:11:55] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [08-24 20:11:55] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [08-24 20:11:55] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [08-24 20:11:55] create task tid=[139756600493824], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [08-24 20:11:55] tid=[139756600493824], name=[task_manage] run
+[0m
+[36;22mI/elog     [08-25 14:14:46] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [08-25 14:14:46] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [08-25 14:14:46] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [08-25 14:14:46] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [08-25 14:14:46] create task tid=[139947311302400], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [08-25 14:14:46] tid=[139947311302400], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-07 17:58:15] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-07 17:58:15] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-07 17:58:15] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-07 17:58:15] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-07 17:58:15] create task tid=[140297462286080], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-07 17:58:15] tid=[140297462286080], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 21:49:06] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 21:49:06] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 21:49:06] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 21:49:07] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 21:49:07] create task tid=[139942546573056], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 21:49:07] tid=[139942546573056], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 21:58:02] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 21:58:02] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 21:58:02] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 21:58:02] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 21:58:02] create task tid=[140280997545728], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 21:58:02] tid=[140280997545728], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:00:26] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:00:26] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:00:26] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:00:26] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:00:26] create task tid=[140079429781248], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:00:26] tid=[140079429781248], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:03:27] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:03:27] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:03:27] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:03:27] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:03:27] create task tid=[140414317692672], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:03:27] tid=[140414317692672], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:07:33] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:07:33] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:07:33] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:07:33] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:07:34] create task tid=[140198847907584], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:07:34] tid=[140198847907584], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:08:27] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:08:28] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:08:28] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:08:28] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:08:28] create task tid=[140216055039744], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:08:28] tid=[140216055039744], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:16:11] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:16:11] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:16:11] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:16:11] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:16:11] create task tid=[140212024313600], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:16:11] tid=[140212024313600], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:17:18] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:17:18] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:17:18] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:17:18] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:17:18] create task tid=[140683719935744], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:17:18] tid=[140683719935744], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:20:56] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:20:57] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:20:57] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:20:57] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:20:57] create task tid=[140022391441152], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:20:57] tid=[140022391441152], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:22:08] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:22:08] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:22:08] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:22:08] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-09 22:22:08 tid:0836 tid:13984] (task_manage.cpp task_create:59)stacksize too little : 8192, need over 16384
+[0m
+[36;22mI/elog     [09-09 22:24:41] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:24:41] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:24:41] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:24:41] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:24:41] create task tid=[139912952301312], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:24:41] tid=[139912952301312], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:27:29] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:27:29] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:27:29] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:27:29] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:27:29] create task tid=[140555168352000], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:27:29] tid=[140555168352000], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:31:02] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:31:02] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:31:02] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:31:02] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:31:02] create task tid=[140691160270592], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:31:02] tid=[140691160270592], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-09 22:31:27] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-09 22:31:27] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-09 22:31:27] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-09 22:31:27] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-09 22:31:27] create task tid=[139648516916992], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-09 22:31:27] tid=[139648516916992], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-10 21:42:48] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:42:48] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:42:48] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:42:48] sys parameter load success![0m
+[36;22mI/elog     [09-10 21:44:08] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:44:08] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:44:08] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:44:08] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:44:08 tid:0514 tid:14066] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:44:08 tid:0514 tid:14066] (task_manage.cpp task_create:95)............2
+[0m
+[36;22mI/elog     [09-10 21:44:32] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:44:33] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:44:33] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:44:33] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:44:33 tid:0568 tid:13992] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:44:33 tid:0568 tid:13992] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:44:33 tid:0568 tid:13992] (task_manage.cpp task_create:102)............3
+[0m
+[36;22mI/elog     [09-10 21:44:53] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:44:53] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:44:53] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:44:53] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:44:54 tid:0622 tid:14061] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:44:54 tid:0622 tid:14061] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:44:54 tid:0622 tid:14061] (task_manage.cpp task_create:102)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:44:54 tid:0622 tid:14061] (task_manage.cpp task_create:110)............3
+[0m
+[36;22mI/elog     [09-10 21:45:21] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:45:21] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:45:21] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:45:21] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:45:21 tid:0676 tid:13978] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:21 tid:0676 tid:13978] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:21 tid:0676 tid:13978] (task_manage.cpp task_create:102)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:21 tid:0676 tid:13978] (task_manage.cpp task_create:110)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:21 tid:0676 tid:13978] (task_manage.cpp task_create:128)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:21 tid:0676 tid:13978] (task_manage.cpp task_create:130)............3
+[0m
+[36;22mI/elog     [09-10 21:45:48] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:45:48] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:45:48] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:45:48] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:45:48 tid:0730 tid:14011] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:48 tid:0730 tid:14011] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:48 tid:0730 tid:14011] (task_manage.cpp task_create:102)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:48 tid:0730 tid:14011] (task_manage.cpp task_create:110)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:48 tid:0730 tid:14011] (task_manage.cpp task_create:128)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:48 tid:0730 tid:14011] (task_manage.cpp task_create:130)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:45:48 tid:0730 tid:14011] (task_manage.cpp task_create:134)............3
+[0m
+[36;22mI/elog     [09-10 21:46:39] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:46:39] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:46:39] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:46:39] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:46:39 tid:0780 tid:14029] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:46:39 tid:0780 tid:14029] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:46:39 tid:0780 tid:14029] (task_manage.cpp task_create:102)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:46:39 tid:0780 tid:14029] (task_manage.cpp task_create:110)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:46:39 tid:0780 tid:14029] (task_manage.cpp task_create:128)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:46:39 tid:0780 tid:14029] (task_manage.cpp task_create:130)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:46:39 tid:0780 tid:14029] (task_manage.cpp task_create:134)............3
+[0m
+[36;22mI/elog     [09-10 21:47:24] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:47:24] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:47:24] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:47:24] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:47:24 tid:0834 tid:14065] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:47:24 tid:0834 tid:14065] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:47:24 tid:0834 tid:14065] (task_manage.cpp task_create:102)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:47:24 tid:0834 tid:14065] (task_manage.cpp task_create:110)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:47:24 tid:0834 tid:14065] (task_manage.cpp task_create:128)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:47:24 tid:0834 tid:14065] (task_manage.cpp task_create:130)............3
+[0m
+[36;22mI/elog     [09-10 21:48:12] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:48:12] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:48:13] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:48:13] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:102)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:110)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:128)............3
+[0m
+[36;22mI/TASK_MANAGE [09-10 21:48:13] create task tid=[140574552327936], id=[1], name=[task_manage]
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:131)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:135)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:13 tid:0888 tid:14057] (task_manage.cpp task_create:137)............3
+[0m
+[36;22mI/TASK_MANAGE [09-10 21:48:13] tid=[140574552327936], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-10 21:48:42] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 21:48:42] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 21:48:42] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 21:48:42] sys parameter load success![0m
+[31;22mE/TASK_MANAGE [09-10 21:48:42 tid:0942 tid:14025] (task_manage.cpp task_create:92)............1
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:42 tid:0942 tid:14025] (task_manage.cpp task_create:95)............2
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:42 tid:0942 tid:14025] (task_manage.cpp task_create:102)............3
+[0m
+[31;22mE/TASK_MANAGE [09-10 21:48:42 tid:0942 tid:14025] (task_manage.cpp task_create:110)............3
+[0m
+[36;22mI/TASK_MANAGE [09-10 21:48:42] create task tid=[140255845779200], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-10 21:48:42] tid=[140255845779200], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-10 23:34:53] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-10 23:34:53] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-10 23:34:53] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-10 23:34:53] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-10 23:34:53] create task tid=[140157021947648], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-10 23:34:53] tid=[140157021947648], name=[task_manage] run
+[0m
+[36;22mI/elog     [09-11 00:26:13] EasyLogger V2.1.0 is initialize success.[0m
+[36;22mI/COMMON   [09-11 00:26:13] 日志模块初始化完成...[0m
+[36;22mI/SYS_CAPABILITY [09-11 00:26:13] parser sys config json success!
+[0m
+[36;22mI/SYS_PARAMETER [09-11 00:26:13] sys parameter load success![0m
+[36;22mI/TASK_MANAGE [09-11 00:26:13] create task tid=[140234501228288], id=[1], name=[task_manage]
+[0m
+[36;22mI/TASK_MANAGE [09-11 00:26:13] tid=[140234501228288], name=[task_manage] run
+[0m

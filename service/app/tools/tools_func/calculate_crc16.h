@@ -13,10 +13,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#ifndef __CALCULATE_CRC16_H__
-#define __CALCULATE_CRC16_H__
+#pragma once
+
 #include <inttypes.h>
 
 uint16_t calculate_crc16(uint16_t crc, uint8_t *ptr, uint32_t len);
-
-#endif // !1__CALCULATE_CRC16_H__

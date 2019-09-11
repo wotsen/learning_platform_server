@@ -1,4 +1,4 @@
 OBJS := 
-DIRS := easylogger cjson_object
+DIRS := 
 
 include $(SUB_MAKE_INCLUDE)

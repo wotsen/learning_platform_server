@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-15 22:25:47
  * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-17 11:35:30
+ * @LastEditTime: 2019-08-25 14:00:39
  */
 /**
  * @file sys_capability.cpp
@@ -17,13 +17,14 @@
 #define LOG_TAG "SYS_CAPABILITY"
 
 #include "sys_capability.h"
-#include "../../module/easylogger/inc/elog.h"
+#include <easylogger/inc/elog.h>
 
 SysCapability *SysCapability::instance = nullptr;
 
 SysCapability *SysCapability::get_sys_capability(void)
 {
-    if (nullptr != instance) {
+    if (nullptr != instance)
+    {
         return instance;
     }
 
@@ -31,14 +32,28 @@ SysCapability *SysCapability::get_sys_capability(void)
     instance->json = nullptr;
     instance->file = nullptr;
 
-    try{
+    try
+    {
         instance->file = new tfile::Reader(SYS_CAPAABILITY_FILENAME);
-    } catch (const std::runtime_error &err) {
-        throw ("can not open " SYS_CAPAABILITY_FILENAME);
+    }
+    catch (const std::runtime_error &err)
+    {
+        if (nullptr != instance)
+        {
+            delete instance;
+            instance = nullptr;
+        }
+        throw("can not open " SYS_CAPAABILITY_FILENAME);
     }
 
-    if (nullptr == instance->file->get()) {
-        throw ("can not open " SYS_CAPAABILITY_FILENAME);
+    if (nullptr == instance->file->get())
+    {
+        if (nullptr != instance)
+        {
+            delete instance;
+            instance = nullptr;
+        }
+        throw("can not open " SYS_CAPAABILITY_FILENAME);
     }
 
     std::string conf_str(2048, '\0');
@@ -47,7 +62,8 @@ SysCapability *SysCapability::get_sys_capability(void)
     // 读完了就删掉
     instance->file->close();
 
-    if (nullptr != instance->file) {
+    if (nullptr != instance->file)
+    {
         delete instance->file;
         instance->file = nullptr;
     }
@@ -65,32 +81,30 @@ SysCapability *SysCapability::get_sys_capability(void)
 
 SysCapability::~SysCapability()
 {
-    if (nullptr != instance) {
-        instance->file->close();
+    instance->file->close();
 
-        if (nullptr != this->file)
-        {
-            delete this->file;
-            instance->file = nullptr;
-        }
+    if (nullptr != this->file)
+    {
+        delete this->file;
+        instance->file = nullptr;
+    }
 
-        if (nullptr != instance->json)
-        {
-            delete this->json;
-            instance->json = nullptr;
-        }
-
-        delete instance;
-        instance = nullptr;
+    if (nullptr != instance->json)
+    {
+        delete this->json;
+        instance->json = nullptr;
     }
 }
 
 neb::CJsonObject *get_json_capability(void)
 {
-    neb::CJsonObject * conf = nullptr;
-    try {
+    neb::CJsonObject *conf = nullptr;
+    try
+    {
         conf = SysCapability::get_sys_capability()->get_json();
-    } catch (std::string str) {
+    }
+    catch (std::string str)
+    {
         log_e(str.c_str());
         conf = nullptr;
     }
@@ -101,7 +115,8 @@ neb::CJsonObject *get_json_capability(void)
 bool sys_capability_init(void)
 {
     neb::CJsonObject *json_conf = get_json_capability();
-    if (nullptr == json_conf) {
+    if (nullptr == json_conf)
+    {
         log_e("can not load capability json!");
         exit(0);
         return false;

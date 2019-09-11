@@ -13,8 +13,6 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#ifndef __COM_DEF_H__
-#define __COM_DEF_H__
-#define PACKED		__attribute__ ((packed)) /* 结构体对齐 */
+#pragma once
 
-#endif // !1__COM_DEF_H__
+#define PACKED		__attribute__ ((packed)) /* 结构体对齐 */

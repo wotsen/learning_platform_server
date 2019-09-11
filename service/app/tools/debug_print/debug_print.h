@@ -13,8 +13,7 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#ifndef __DEBUG_PRINT_H__
-#define __DEBUG_PRINT_H__
+#pragma once
 
 #ifndef LOG_TAG
 #define LOG_TAG "DBG_PRINT"
@@ -46,5 +45,3 @@
 #define dbg_print(fmt, args...) (void)0
 
 #endif // NDEBUG
-
-#endif // !1__DEBUG_PRINT_H__

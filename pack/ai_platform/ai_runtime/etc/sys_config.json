@@ -1,0 +1,7 @@
+{
+    "module" : {
+        "easylogger" : {
+            "log_path" : "ai_runtime/log/elog_file.log"
+        }
+    }
+}

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package insider.sdk;
+
+message header {
+    int64 msg_magic = 1;
+}

@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-11 13:00:24
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-17 11:34:52
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-08-17 21:25:54
  */
 /**
  * @file sys_config.cpp
@@ -20,11 +20,12 @@
 #include "sys_config.h"
 #include "../../tools/debug_print/debug_print.h"
 
-SysConfig * SysConfig::instance = nullptr;
+SysConfig *SysConfig::instance = nullptr;
 
-SysConfig * SysConfig::get_sys_config(void)
+SysConfig *SysConfig::get_sys_config(void)
 {
-    if (nullptr != instance) {
+    if (nullptr != instance)
+    {
         return instance;
     }
 
@@ -32,14 +33,28 @@ SysConfig * SysConfig::get_sys_config(void)
     instance->json = nullptr;
     instance->file = nullptr;
 
-    try{
+    try
+    {
         instance->file = new tfile::Reader(SYS_CONFIG_FILENAME);
-    } catch (const std::runtime_error &err) {
-        throw ("can not open " SYS_CONFIG_FILENAME);
+    }
+    catch (const std::runtime_error &err)
+    {
+        if (nullptr != instance)
+        {
+            delete instance;
+            instance = nullptr;
+        }
+        throw("can not open " SYS_CONFIG_FILENAME);
     }
 
-    if (nullptr == instance->file->get()) {
-        throw ("can not open " SYS_CONFIG_FILENAME);
+    if (nullptr == instance->file->get())
+    {
+        if (nullptr != instance)
+        {
+            delete instance;
+            instance = nullptr;
+        }
+        throw("can not open " SYS_CONFIG_FILENAME);
     }
 
     std::string conf_str(2048, '\0');
@@ -48,7 +63,8 @@ SysConfig * SysConfig::get_sys_config(void)
     // 读完了就删掉
     instance->file->close();
 
-    if (nullptr != instance->file) {
+    if (nullptr != instance->file)
+    {
         delete instance->file;
         instance->file = nullptr;
     }
@@ -66,32 +82,29 @@ SysConfig * SysConfig::get_sys_config(void)
 
 SysConfig::~SysConfig()
 {
-    if (nullptr != instance) {
+    if (nullptr != this->file)
+    {
         instance->file->close();
+        delete this->file;
+        instance->file = nullptr;
+    }
 
-        if (nullptr != this->file)
-        {
-            delete this->file;
-            instance->file = nullptr;
-        }
-
-        if (nullptr != instance->json)
-        {
-            delete this->json;
-            instance->json = nullptr;
-        }
-
-        delete instance;
-        instance = nullptr;
+    if (nullptr != instance->json)
+    {
+        delete this->json;
+        instance->json = nullptr;
     }
 }
 
 neb::CJsonObject *get_json_config(void)
 {
-    neb::CJsonObject * conf = nullptr;
-    try {
+    neb::CJsonObject *conf = nullptr;
+    try
+    {
         conf = SysConfig::get_sys_config()->get_json();
-    } catch (std::string str) {
+    }
+    catch (const char *str)
+    {
         std::cout << str << std::endl;
         conf = nullptr;
     }
@@ -102,7 +115,8 @@ neb::CJsonObject *get_json_config(void)
 bool sys_config_init(void)
 {
     neb::CJsonObject *json_conf = get_json_config();
-    if (nullptr == json_conf) {
+    if (nullptr == json_conf)
+    {
         exit(0);
         return false;
     }

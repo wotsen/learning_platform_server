@@ -8,11 +8,11 @@ MAKEFLAG := -s --no-print-directory
 CC := g++
 
 # compile flags
-INC := 
-LIBS := -lrt -lpthread
+INC := -I$(ROOT_DIR)/../includes
+LIBS := -lrt -lpthread -L$(ROOT_DIR)/../libs -lCJsonObject -lfmt -ltfile -leasylogger -lprotobuf
 DMARCROS := -DLANGUAGE_ZH -DNDEBUG #-DDEBUG 
 # -ggdb
-CCFLAG := -O0 -g3 -Wall $(DMARCROS) $(INC) $(LIBS) -std=c++11
+CCFLAG := -O0 -g3 -Wall $(DMARCROS) $(INC) $(LIBS) -std=c++17
 OBJCCFLAG := $(CCFLAG) -c
 
 # recursive make and clean
