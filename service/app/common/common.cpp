@@ -32,14 +32,19 @@ void sys_init(void)
     sys_config_init(); // 初始化配置
 
     struct elog_custom_config elog_config = {
-        .log_path = (char *)SYS_ELOG_PATH
+        .log_path = (char *)SYS_ELOG_PATH,
+#ifndef NDEBUG
+        .log_lv = ELOG_LVL_INFO
+#else
+        .log_lv = ELOG_LVL_VERBOSE
+#endif
     };
     if (easylogger_setup(&elog_config)) {
         log_i("日志模块初始化完成...");
     }
     else
     {
-        printf("日志模块舒适化失败!");
+        printf("日志模块初始化失败!");
         exit(0);
     } // 初始化日志
 

@@ -8,7 +8,7 @@ MAKEFLAG := -s --no-print-directory
 CC := g++
 
 # compile flags
-INC := -I$(ROOT_DIR)/../includes
+INC := -I$(ROOT_DIR)/../includes -I$(ROOT_DIR)/../third_include
 LIBS := -lrt -lpthread -L$(ROOT_DIR)/../libs -lCJsonObject -lfmt -ltfile -leasylogger -lprotobuf
 DMARCROS := -DLANGUAGE_ZH -DNDEBUG #-DDEBUG 
 # -ggdb

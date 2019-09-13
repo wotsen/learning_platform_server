@@ -16,6 +16,7 @@
 #ifndef __EASYLOGGER_SETUP_H__
 #define __EASYLOGGER_SETUP_H__
 #include <stdbool.h>
+#include <inttypes.h>
 #include "inc/elog.h"
 
 #ifdef __cplusplus
@@ -23,7 +24,8 @@ extern "C" {
 #endif
 
 struct elog_custom_config {
-    char *log_path;
+    char *log_path;  // 日志文件路径
+    uint8_t log_lv;  // 日志等级
 };
 
 bool easylogger_setup(struct elog_custom_config *elog_config);

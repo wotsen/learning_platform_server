@@ -41,11 +41,11 @@
 /* enable flush file cache. default open this macro */
 #define ELOG_FILE_FLUSH_CAHCE_ENABLE
 /* setting static output log level */
-#ifdef  NDEBUG
-#define ELOG_OUTPUT_LVL                      ELOG_LVL_INFO
-#else
+// #ifdef  NDEBUG
+// #define ELOG_OUTPUT_LVL                      ELOG_LVL_INFO
+// #else
 #define ELOG_OUTPUT_LVL                      ELOG_LVL_VERBOSE
-#endif
+// #endif
 /* enable assert check */
 #define ELOG_ASSERT_ENABLE
 /* buffer size for every line's log */
