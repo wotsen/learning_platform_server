@@ -23,7 +23,7 @@
 #include <time.h>
 #include <vector>
 
-namespace aipTaskMana
+namespace wotsen
 {
 
 using thread_func = void *(*)(void *);
@@ -33,6 +33,10 @@ enum
 {
     TASK_MAIN_ID = 0,   // 主线程号
     TASK_MANAGE_ID = 1, // 任务管理线程号
+    TASK_UPGRADE_ID = 2, // 升级任务
+    TASK_NETWORK_ID = 3, // 网络任务
+    TASK_ALARM_ID = 4, // 告警任务
+    TASK_AI_SCHEDULE = 5, // ai调度
     // 前面的都算做是模块类的任务，之后的算作临时的
     TASK_NORMAL_ID // 普通短期线程
 };
@@ -154,5 +158,5 @@ void task_alive(const pthread_t tid) noexcept;
 void task_set_name(const char * name) noexcept;
 
 // 任务管理初始化
-void task_init(void) noexcept;
+void task_manage_init(void) noexcept;
 } // namespace aipTaskMana

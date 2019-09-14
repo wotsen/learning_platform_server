@@ -22,11 +22,11 @@
 #include <sys/types.h>
 #include <memory>
 #include <algorithm>
-#include "task_manage.h"
 #include <easylogger/inc/elog.h>
 #include "../../tools/timer/timer.h"
+#include "task_manage.h"
 
-namespace aipTaskMana
+namespace wotsen
 {
 
 TasksManage *TasksManage::task_pool = nullptr;
@@ -591,7 +591,7 @@ void *task_run(TasksManage *tasks)
 }
 
 // 初始出化任务管理任务
-void task_init(void) noexcept
+void task_manage_init(void) noexcept
 {
     task_create(task_manage, STACKSIZE(800), "task_manage", TASK_MANAGE_ID, OS_MIN(5), E_TASK_REBOOT_SYSTEM);
 }

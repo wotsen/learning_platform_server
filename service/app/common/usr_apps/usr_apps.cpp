@@ -15,15 +15,16 @@
  */
 #define LOG_TAG "USR_APPS"
 
-#include "usr_apps.h"
 #include <easylogger/inc/elog.h>
+#include "usr_apps.h"
 #include "../../function/task_manage/task_manage.h"
-
-using namespace aipTaskMana;
+#include "../../function/upgrade/upgrade.h"
 
 void usr_apps_init(void)
 {
-    task_init(); // 初始化任务队列
+    wotsen::task_manage_init(); // 初始化任务队列
+
+    task_upgrade_init();  // 升级任务
     // 通用网络协议接口，使用回调分发到各组业务的队列，使用非阻塞消息队列通知
     // 告警
     // 升级，文件传输校验以及如何安装，设计扩展

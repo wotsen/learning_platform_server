@@ -1,7 +1,7 @@
 /*
  * @Date: 2019-08-10 20:53:17
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 14:05:25
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-13 15:53:44
  */
 /**
  * @file common.cpp
@@ -23,14 +23,10 @@
 #include <easylogger/easylogger_setup.h>
 #include "../module/module.h"
 
-/**
- * @brief 系统初始化
- * 
- */
-void sys_init(void)
-{
-    sys_config_init(); // 初始化配置
+static void _elog_init(void);
 
+static void _elog_init(void)
+{
     struct elog_custom_config elog_config = {
         .log_path = (char *)SYS_ELOG_PATH,
 #ifndef NDEBUG
@@ -47,6 +43,17 @@ void sys_init(void)
         printf("日志模块初始化失败!");
         exit(0);
     } // 初始化日志
+}
+
+/**
+ * @brief 系统初始化
+ * 
+ */
+void sys_init(void)
+{
+    sys_config_init(); // 初始化配置
+
+    _elog_init();
 
     sys_capability_init(); // 初始化能力
 
