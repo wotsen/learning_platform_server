@@ -2,6 +2,31 @@ syntax = "proto3";
 
 package insider.sdk;
 
-message header {
+enum TransProto {
+    ARP = 0;
+    TCP = 1;
+    UDP = 2;
+}
+
+enum DataProto {
+    DATA_UPGRADE = 0;   // 升级数据
+    DATA_PARA_OPERATION = 1;  // 参数操作
+    DATA_ALARM = 2;     // 告警
+    DATA_HEART_BEAT = 3;    // 心跳
+    DATA_AI = 4;    // 深度学习任务
+    DATA_PICTURE = 5;   // 图像
+}
+
+message Host {
+    int32 port = 1;
+    string ipv4 = 2;
+}
+
+message Header {
     int64 msg_magic = 1;
+    int64 pack_len = 2;
+    int64 pack_id = 3;
+    Host host = 4;
+    TransProto trans_proto = 5;
+    DataProto data_proto = 6;
 }

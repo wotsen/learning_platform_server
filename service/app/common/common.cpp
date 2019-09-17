@@ -29,7 +29,7 @@ static void _elog_init(void)
 {
     struct elog_custom_config elog_config = {
         .log_path = (char *)SYS_ELOG_PATH,
-#ifndef NDEBUG
+#ifdef NDEBUG
         .log_lv = ELOG_LVL_INFO
 #else
         .log_lv = ELOG_LVL_VERBOSE

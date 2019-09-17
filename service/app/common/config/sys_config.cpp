@@ -20,6 +20,8 @@
 #include "sys_config.h"
 #include "../../tools/debug_print/debug_print.h"
 
+using json = nlohmann::json;
+
 SysConfig *SysConfig::instance = nullptr;
 
 SysConfig *SysConfig::get_sys_config(void)
@@ -30,7 +32,6 @@ SysConfig *SysConfig::get_sys_config(void)
     }
 
     instance = new SysConfig();
-    instance->json = nullptr;
     instance->file = nullptr;
 
     try
@@ -70,11 +71,11 @@ SysConfig *SysConfig::get_sys_config(void)
     }
 
     // 解析json
-    instance->json = new neb::CJsonObject(conf_str);
+    instance->j= json::parse(conf_str);
 
-    if (instance->json->IsEmpty())
+    if (instance->j.empty())
     {
-        throw(instance->json->GetErrMsg());
+        dbg_print("can not parse json : " SYS_CONFIG_FILENAME "\n");
     }
 
     return instance;
@@ -88,39 +89,22 @@ SysConfig::~SysConfig()
         delete this->file;
         instance->file = nullptr;
     }
-
-    if (nullptr != instance->json)
-    {
-        delete this->json;
-        instance->json = nullptr;
-    }
 }
 
-neb::CJsonObject *get_json_config(void)
+json &get_json_config(void)
 {
-    neb::CJsonObject *conf = nullptr;
-    try
-    {
-        conf = SysConfig::get_sys_config()->get_json();
-    }
-    catch (const char *str)
-    {
-        std::cout << str << std::endl;
-        conf = nullptr;
-    }
-
-    return conf;
+    return SysConfig::get_sys_config()->get_json();
 }
 
 bool sys_config_init(void)
 {
-    neb::CJsonObject *json_conf = get_json_config();
-    if (nullptr == json_conf)
+    json j = get_json_config();
+    if (j.empty())
     {
         exit(0);
         return false;
     }
-    dbg_print("sys_config json : %s\n", get_json_config()->ToFormattedString().c_str());
+    dbg_print("sys_config json : %s\n", j.dump(4).c_str());
     dbg_print("parser sys config json success!\n");
 
     return true;

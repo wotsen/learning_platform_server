@@ -40,6 +40,7 @@ SysParameter *SysParameter::get_sys_para(void)
 
     if (NULL == instance->fp)
     {
+        log_e("no param file create\n");
         instance->fp = fopen(SYS_PARAMETER_FILENAME, "wb+");
         if (NULL == instance->fp)
         {

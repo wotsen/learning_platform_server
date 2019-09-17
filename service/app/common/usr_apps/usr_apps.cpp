@@ -19,12 +19,19 @@
 #include "usr_apps.h"
 #include "../../function/task_manage/task_manage.h"
 #include "../../function/upgrade/upgrade.h"
+#include "../../function/uv_event/uv_event.h"
+#include "../../function/network/network.h"
 
 void usr_apps_init(void)
 {
     wotsen::task_manage_init(); // 初始化任务队列
 
+    task_uv_event_init();
+
+    task_network_init();
+
     task_upgrade_init();  // 升级任务
+
     // 通用网络协议接口，使用回调分发到各组业务的队列，使用非阻塞消息队列通知
     // 告警
     // 升级，文件传输校验以及如何安装，设计扩展

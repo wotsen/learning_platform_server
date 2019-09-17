@@ -15,6 +15,7 @@
  */
 #pragma once
 
+#include <nlohmann/json.hpp>
 #include "sys_load_json.h"
 
 struct sys_capability
@@ -38,4 +39,4 @@ private:
 };
 
 bool sys_capability_init(void);
-neb::CJsonObject *get_json_capability(void);
+nlohmann::json &get_json_capability(void);

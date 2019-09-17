@@ -35,4 +35,4 @@ private:
 };
 
 bool sys_config_init(void);
-neb::CJsonObject *get_json_config(void);
+nlohmann::json &get_json_config(void);

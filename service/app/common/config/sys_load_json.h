@@ -16,18 +16,21 @@
 #pragma once
 
 #include <tfile/tfile.h>
-#include <CJsonObject/CJsonObject.hpp>
+#include <nlohmann/json.hpp>
+// #include <CJsonObject/CJsonObject.hpp>
 
 class AbsSysLoadJson
 {
 public:
     virtual ~AbsSysLoadJson(){};
-    neb::CJsonObject *get_json(void)
+    nlohmann::json &get_json(void)
     {
-        return json;
+        return j;
     }
 
 protected:
     tfile::Reader *file;
-    neb::CJsonObject *json;
+    // neb::CJsonObject *json;
+    nlohmann::json j;
+
 };

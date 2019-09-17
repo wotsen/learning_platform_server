@@ -19,6 +19,8 @@
 #include "sys_capability.h"
 #include <easylogger/inc/elog.h>
 
+using json = nlohmann::json;
+
 SysCapability *SysCapability::instance = nullptr;
 
 SysCapability *SysCapability::get_sys_capability(void)
@@ -29,7 +31,6 @@ SysCapability *SysCapability::get_sys_capability(void)
     }
 
     instance = new SysCapability();
-    instance->json = nullptr;
     instance->file = nullptr;
 
     try
@@ -69,11 +70,11 @@ SysCapability *SysCapability::get_sys_capability(void)
     }
 
     // 解析json
-    instance->json = new neb::CJsonObject(conf_str);
+    instance->j = json::parse(conf_str);
 
-    if (instance->json->IsEmpty())
+    if (instance->j.empty())
     {
-        throw(instance->json->GetErrMsg());
+        log_e("can not parse json : " SYS_CAPAABILITY_FILENAME "\n");
     }
 
     return instance;
@@ -88,41 +89,24 @@ SysCapability::~SysCapability()
         delete this->file;
         instance->file = nullptr;
     }
-
-    if (nullptr != instance->json)
-    {
-        delete this->json;
-        instance->json = nullptr;
-    }
 }
 
-neb::CJsonObject *get_json_capability(void)
+json &get_json_capability(void)
 {
-    neb::CJsonObject *conf = nullptr;
-    try
-    {
-        conf = SysCapability::get_sys_capability()->get_json();
-    }
-    catch (std::string str)
-    {
-        log_e(str.c_str());
-        conf = nullptr;
-    }
-
-    return conf;
+    return SysCapability::get_sys_capability()->get_json();
 }
 
 bool sys_capability_init(void)
 {
-    neb::CJsonObject *json_conf = get_json_capability();
-    if (nullptr == json_conf)
+    json j = get_json_capability();
+    if (j.empty())
     {
         log_e("can not load capability json!");
         exit(0);
         return false;
     }
-    log_d("sys_config json : %s\n", get_json_capability()->ToFormattedString().c_str());
-    log_i("parser sys config json success!\n");
+    log_d("sys_capability json : %s\n", j.dump(4).c_str());
+    log_i("parser sys capability json success!\n");
 
     return true;
 }

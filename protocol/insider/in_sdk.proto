@@ -6,8 +6,8 @@ import "in_footer.proto";
 
 package insider.sdk;
 
-message sdk {
-    header header = 1;
-    body body = 2;
-    footer footer = 3;
+message Sdk {
+    Header header = 1;
+    Body body = 2;
+    Footer footer = 3;
 }

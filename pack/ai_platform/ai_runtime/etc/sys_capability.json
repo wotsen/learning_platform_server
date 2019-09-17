@@ -1,5 +1,11 @@
 {
-    "ai":{
-        "enable":"true"
+    "ai": {
+        "enable": "true"
+    },
+    "service": {
+        "network": {
+            "support-version": ["ipv4"],
+            "support-layer": ["tcp", "udp"]
+        }
     }
 }

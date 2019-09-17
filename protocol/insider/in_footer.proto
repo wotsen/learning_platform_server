@@ -2,6 +2,6 @@ syntax = "proto3";
 
 package insider.sdk;
 
-message footer {
+message Footer {
     int32 crc16 = 1;
 }
