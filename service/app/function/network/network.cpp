@@ -19,16 +19,16 @@
 using namespace insider::sdk;
 using namespace wotsen;
 
-// 创建tcp服务器
-bool UvSdkNetServer::create_tcp_server(const std::string &ipv4, const int &port) {
+static UvSdkNetServer *uv_sdk_net_server = nullptr;
+
+bool UvSdkNetServer::create_tcp_server(const char *ipv4, const int &port)
+{
 	std::shared_ptr<UvSdkNetSrvType<uv_tcp_t>> server(new UvSdkNetSrvType<uv_tcp_t>);
 
 	uv_tcp_init(loop, &server->handle);
-	uv_ip4_addr(ipv4.c_str(), port, &server->addr);
+	uv_ip4_addr(ipv4, port, &server->addr);
 
 	uv_tcp_bind(&server->handle, (const struct sockaddr*)&server->addr, 0);
-
-	server->handle.data = (void *)loop;
 
 	int r = uv_listen((uv_stream_t*)&server->handle, DEFAULT_BACKLOG, on_new_connection);
 	if (r)
@@ -40,7 +40,10 @@ bool UvSdkNetServer::create_tcp_server(const std::string &ipv4, const int &port)
 	tcp_servers.push_back(std::move(server));
 
 	return true;
-
+}
+// 创建tcp服务器
+bool UvSdkNetServer::create_tcp_server(const std::string &ipv4, const int &port) {
+	return create_tcp_server(ipv4.c_str(), port);
 }
 
 void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
@@ -79,7 +82,7 @@ void on_new_connection(uv_stream_t *server, int status) {
 	}
 
 	uv_tcp_t *client = (uv_tcp_t *)malloc(sizeof(uv_tcp_t));
-	uv_tcp_init((uv_loop_t *)server->loop, client);
+	uv_tcp_init(server->loop, client);
 	if (0 == uv_accept(server, (uv_stream_t *)client))
 	{
 		uv_read_start((uv_stream_t *)client, alloc_buffer, echo_read);
@@ -91,40 +94,22 @@ void on_new_connection(uv_stream_t *server, int status) {
 }
 
 UvSdkNetServer::~UvSdkNetServer() {
-	// for (; !tcp_servers.empty(); ) {
-	// 	auto tcp_s = tcp_servers.pop_front();
-	// 	uv_close((uv_handle_t *)&tcp_s->handle, NULL);
-	// 	delete tcp_s;
-	// }
 	for (auto &tcp_s : tcp_servers) {
 		uv_close((uv_handle_t *)&tcp_s->handle, NULL);
 	}
 	tcp_servers.clear();
 }
 
-static void *task_sdk_uv_net(void *name) {
-    pthread_t tid = pthread_self();
-	std::string ipv4("0.0.0.0");
-	int port = 8001;
+void sdk_uv_net_init(void) {
+	uv_sdk_net_server = new UvSdkNetServer(UvEvent::get_uv_event()->get_uv_loop());
 
-	UvEvent *event = UvEvent::get_uv_event();
-
-	UvSdkNetServer uv_sdk_net_server(event->get_uv_loop());
-
-	uv_sdk_net_server.create_tcp_server(ipv4, port);
+	uv_sdk_net_server->create_tcp_server("0.0.0.0", 8001);
 
     log_i("sdk-uv网络任务初始化完成...\n");
 
-    for (;;)
-    {
-        task_alive(tid);          // 自身任务心跳
-
-        ostime_delay(OS_MS(3)); // 3秒刷新一次
-    }
 }
 
 void task_network_init(void)
 {
-	// task_sdk_uv_net(NULL);
-    task_create(task_sdk_uv_net, STACKSIZE(100*1024), "task_sdk_uv_net", 0, OS_MIN(30), E_TASK_REBOOT_SYSTEM);
+	sdk_uv_net_init();
 }

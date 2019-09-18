@@ -39,6 +39,7 @@ public:
 
 	// 创建tcp服务器
 	bool create_tcp_server(const std::string &ipv4, const int &port);
+	bool create_tcp_server(const char *ipv4, const int &port);
 
 	// void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
 	// void echo_read(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);

@@ -416,6 +416,7 @@ void TasksManage::task_correction_time(void) noexcept
         }
         last_time = now;
     }
+    pthread_mutex_unlock(&task_pool->mutex);
 }
 
 void TasksManage::task_check_timeout(void) noexcept

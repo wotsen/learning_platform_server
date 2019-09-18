@@ -6,6 +6,8 @@
 
 获取源码：
 
+注意安装`3.9.1`版本
+
 ```shell
 $ git clone https://github.com/protocolbuffers/protobuf.git
 $ cd protobuf

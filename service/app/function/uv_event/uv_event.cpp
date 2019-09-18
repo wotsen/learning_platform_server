@@ -68,7 +68,7 @@ void UvEvent::uv_event_run(void)
 
 static void alive_uv_event(uv_timer_t *handle) {
     task_alive(*(pthread_t *)(handle->data));          // 自身任务心跳
-	log_d("......................\n");
+	// log_d("......................\n");
 }
 
 
