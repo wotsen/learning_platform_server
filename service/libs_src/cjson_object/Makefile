@@ -44,6 +44,7 @@ install:
 
 update:
 	mkdir ../../includes/CJsonObject -p
+	mkdir ../../libs/
 	cp CJsonObject/include/* ../../includes/CJsonObject -rf
 	cp CJsonObject/lib/$(TARGET) ../../libs -rf
 

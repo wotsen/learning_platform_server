@@ -24,78 +24,77 @@ SysParameter *SysParameter::instance = nullptr;
 
 SysParameter *SysParameter::get_sys_para(void)
 {
-    if (nullptr != instance)
-    {
-        return instance;
-    }
+	if (nullptr != instance)
+	{
+		return instance;
+	}
 
-    instance = new SysParameter();
-    instance->para = new struct sys_parameter;
+	instance = new SysParameter();
+	instance->para = new struct sys_parameter;
 
-    pthread_mutex_init(&instance->mutex, NULL);
+	pthread_mutex_init(&instance->mutex, NULL);
 
-    memset(instance->para, 0, sizeof(struct sys_parameter));
+	memset(instance->para, 0, sizeof(struct sys_parameter));
 
-    instance->fp = fopen(SYS_PARAMETER_FILENAME, "rb+");
+	instance->fp = fopen(SYS_PARAMETER_FILENAME, "rb+");
 
-    if (NULL == instance->fp)
-    {
-        log_e("no param file create\n");
-        instance->fp = fopen(SYS_PARAMETER_FILENAME, "wb+");
-        if (NULL == instance->fp)
-        {
-            instance->para = NULL;
-            delete instance;
-            log_e("load sys parameter error : %s\n", strerror(errno));
-            exit(-1);
-        }
-        if (!instance->reset_default_parameter())
-        {
-            fclose(instance->fp);
-            delete instance->para;
-            instance->para = nullptr;
-            delete instance;
-            log_e("load sys parameter error : %s\n", strerror(errno));
-            exit(-1);
-        }
-        return instance;
-    }
+	if (NULL == instance->fp)
+	{
+		log_e("no param file create\n");
+		instance->fp = fopen(SYS_PARAMETER_FILENAME, "wb+");
+		if (NULL == instance->fp)
+		{
+			instance->para = NULL;
+			delete instance;
+			log_e("load sys parameter error : %s\n", strerror(errno));
+			exit(-1);
+		}
+		if (!instance->reset_default_parameter())
+		{
+			fclose(instance->fp);
+			delete instance->para;
+			instance->para = nullptr;
+			delete instance;
+			log_e("load sys parameter error : %s\n", strerror(errno));
+			exit(-1);
+		}
+		return instance;
+	}
 
-    fseek(instance->fp, 0, SEEK_SET);
+	fseek(instance->fp, 0, SEEK_SET);
 
-    fread(instance->para, sizeof(struct sys_parameter), 1, instance->fp);
+	fread(instance->para, sizeof(struct sys_parameter), 1, instance->fp);
 
-    if (calculate_crc16(0, (uint8_t *)instance->para, sizeof(struct sys_parameter) - sizeof(instance->para->para_crc))
-        != instance->para->para_crc)
-    {
-        log_i("sys parameter crc not currect, reset defaul parameter\n");
-        if (!instance->reset_default_parameter())
-        {
-            fclose(instance->fp);
-            delete instance->para;
-            instance->para = nullptr;
-            delete instance;
-            log_e("reset default sys parameter error : %s\n", strerror(errno));
-            exit(-1);
-        }
-    }
+	if (calculate_crc16(0, (uint8_t *)instance->para, sizeof(struct sys_parameter) - sizeof(instance->para->para_crc)) != instance->para->para_crc)
+	{
+		log_i("sys parameter crc not currect, reset defaul parameter\n");
+		if (!instance->reset_default_parameter())
+		{
+			fclose(instance->fp);
+			delete instance->para;
+			instance->para = nullptr;
+			delete instance;
+			log_e("reset default sys parameter error : %s\n", strerror(errno));
+			exit(-1);
+		}
+	}
 
-    return instance;
+	return instance;
 }
 
 SysParameter::~SysParameter(void)
 {
-    if (NULL != instance->fp)
-    {
-        fclose(instance->fp);
-        instance->fp = NULL;
-    }
+	if (NULL != instance->fp)
+	{
+		fclose(instance->fp);
+		instance->fp = NULL;
+	}
 
-    if (NULL != instance->para)
-    {
-        delete instance->para;
-        instance->para = NULL;
-    }
+	if (NULL != instance->para)
+	{
+		delete instance->para;
+		instance->para = NULL;
+	}
 }
 
 /**
@@ -104,9 +103,9 @@ SysParameter::~SysParameter(void)
  */
 void SysParameter::cal_crc16(void)
 {
-    if (NULL == para)
-        return;
-    para->para_crc = calculate_crc16(0, (uint8_t *)para, sizeof(struct sys_parameter) - sizeof(para->para_crc));
+	if (NULL == para)
+		return;
+	para->para_crc = calculate_crc16(0, (uint8_t *)para, sizeof(struct sys_parameter) - sizeof(para->para_crc));
 }
 
 /**
@@ -117,16 +116,16 @@ void SysParameter::cal_crc16(void)
  */
 bool SysParameter::reset_default_parameter(void)
 {
-    if (!is_ok())
-    {
-        return false;
-    }
+	if (!is_ok())
+	{
+		return false;
+	}
 
-    para->para_magic = SYS_PARAMETER_MAGIC;
-    // TODO: other para
-    cal_crc16();
+	para->para_magic = SYS_PARAMETER_MAGIC;
+	// TODO: other para
+	cal_crc16();
 
-    return save_para(0, sizeof(struct sys_parameter));
+	return save_para(0, sizeof(struct sys_parameter));
 }
 
 /**
@@ -139,22 +138,22 @@ bool SysParameter::reset_default_parameter(void)
  */
 bool SysParameter::save_para(size_t start, size_t len)
 {
-    if (!is_ok())
-    {
-        return false;
-    }
-    if (start + len > sizeof(struct sys_parameter))
-    {
-        return false;
-    }
-    size_t ret = 0;
+	if (!is_ok())
+	{
+		return false;
+	}
+	if (start + len > sizeof(struct sys_parameter))
+	{
+		return false;
+	}
+	size_t ret = 0;
 
-    pthread_mutex_lock(&instance->mutex);
-    fseek(fp, start, SEEK_SET);
-    ret = fwrite((uint8_t *)para + start, len, 1, fp);
-    pthread_mutex_unlock(&instance->mutex);
+	pthread_mutex_lock(&instance->mutex);
+	fseek(fp, start, SEEK_SET);
+	ret = fwrite((uint8_t *)para + start, len, 1, fp);
+	pthread_mutex_unlock(&instance->mutex);
 
-    return ret == len;
+	return ret == len;
 }
 
 /**
@@ -164,7 +163,7 @@ bool SysParameter::save_para(size_t start, size_t len)
  */
 struct sys_parameter *get_para_ptr(void)
 {
-    return SysParameter::get_sys_para()->get_para_ptr();
+	return SysParameter::get_sys_para()->get_para_ptr();
 }
 
 /**
@@ -175,14 +174,14 @@ struct sys_parameter *get_para_ptr(void)
  */
 bool sys_para_init(void)
 {
-    struct sys_parameter *para = get_para_ptr();
+	struct sys_parameter *para = get_para_ptr();
 
-    if (NULL != para)
-    {
-        log_i("sys parameter load success!");
-        return true;
-    }
+	if (NULL != para)
+	{
+		log_i("sys parameter load success!");
+		return true;
+	}
 
-    log_e("sys parameter load faild!");
-    return false;
+	log_e("sys parameter load faild!");
+	return false;
 }

@@ -45,6 +45,7 @@ install:
 
 update:
 	mkdir ../../includes/tfile -p
+	mkdir ../../libs/
 	cp tfile/include/* ../../includes/tfile -rf
 	cp tfile/lib/$(TARGET) ../../libs -rf
 

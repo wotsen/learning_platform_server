@@ -44,6 +44,7 @@ install:
 
 update:
 	mkdir ../../includes/fmt -p
+	mkdir ../../libs/
 	cp fmt/include/* ../../includes/fmt -rf
 	cp fmt/lib/$(TARGET) ../../libs -rf
 

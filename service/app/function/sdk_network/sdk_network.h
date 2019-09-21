@@ -1,5 +1,5 @@
 /**
- * @file network.h
+ * @file sdk_network.h
  * @author 余王亮 (astralrovers@outlook.com)
  * @brief 系统通用网络接口，非三方协议
  * @version 0.1
@@ -59,4 +59,4 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
 void echo_read(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);
 void on_new_connection(uv_stream_t *server, int status);
 
-void task_network_init(void);
+void sdk_uv_net_init(void);

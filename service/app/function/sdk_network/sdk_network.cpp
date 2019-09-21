@@ -11,13 +11,11 @@
 #define LOG_TAG "NETWORK"
 
 #include <easylogger/easylogger_setup.h>
-#include "../task_manage/task_manage.h"
 #include "../../tools/timer/timer.h"
-#include "../../common/sdk_protocol/in_sdk.pb.h"
-#include "network.h"
+#include "sdk_protocol/in_sdk.pb.h"
+#include "sdk_network.h"
 
 using namespace insider::sdk;
-using namespace wotsen;
 
 static UvSdkNetServer *uv_sdk_net_server = nullptr;
 
@@ -107,9 +105,4 @@ void sdk_uv_net_init(void) {
 
     log_i("sdk-uv网络任务初始化完成...\n");
 
-}
-
-void task_network_init(void)
-{
-	sdk_uv_net_init();
 }

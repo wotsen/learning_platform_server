@@ -20,7 +20,7 @@
 #include "../../function/task_manage/task_manage.h"
 #include "../../function/upgrade/upgrade.h"
 #include "../../function/uv_event/uv_event.h"
-#include "../../function/network/network.h"
+#include "../../function/sdk_network/sdk_network.h"
 
 void usr_apps_init(void)
 {
@@ -28,7 +28,7 @@ void usr_apps_init(void)
 
     task_uv_event_init();
 
-    task_network_init();
+    sdk_uv_net_init();
 
     task_upgrade_init();  // 升级任务
 
