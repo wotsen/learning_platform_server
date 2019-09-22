@@ -15,52 +15,28 @@
  */
 #pragma once
 
-#include <stdio.h>
 #include <pthread.h>
-#include "inttypes.h"
-#include <tfile/tfile.h>
-#include "../../tools/com_def.h"
+#include "sys_load_json.h"
 
-struct sys_parameter
-{
-#define SYS_PARAMETER_MAGIC 0x190ADB
-    uint32_t para_magic;
-    uint16_t para_crc;
-} PACKED;
-
-class SysParameter : tfile::ReaderWriter
+class SysParameter : public AbsSysLoadJson
 {
 public:
-#define SYS_PARAMETER_FILENAME "../data/para.bin"
+#define SYS_RUNTIME_CONFIG_FILENAME "../data/sys_runtime_param.json"
+#define SYS_DEFAULT_CONFIG_FILENAME "../data/sys_default_param.json"
 
     ~SysParameter();
+    static SysParameter *get_sys_param(void);
 
-    struct sys_parameter *get_para_ptr(void)
-    {
-        return para;
-    }
-
-    static SysParameter *get_sys_para(void);
-
-    bool reset_default_parameter(void);
-
-    void cal_crc16(void);
-
-    bool save_para(size_t start, size_t len);
-
-    bool is_ok(void) const
-    {
-        return (NULL != para && NULL != fp);
-    }
+    void save_param(void) const;
 
 private:
-    SysParameter() {}
+    SysParameter(){};
 
     static SysParameter *instance;
-    struct sys_parameter *para;
     pthread_mutex_t mutex;
-    FILE *fp;
 };
 
-bool sys_para_init(void);
-struct sys_parameter *get_para_ptr(void);
+bool sys_parameter_init(void);
+nlohmann::json &get_json_param(void);
+
+/******************************************参数配置接口*******************************************************/

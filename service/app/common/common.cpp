@@ -52,13 +52,13 @@ static void _elog_init(void)
  */
 void sys_init(void)
 {
-    sys_config_init(); // 初始化配置
+    _elog_init();  // 先初始化日志
 
-    _elog_init();
+    sys_config_init(); // 初始化配置
 
     sys_capability_init(); // 初始化能力
 
-    sys_para_init(); // 加载参数
+    sys_parameter_init(); // 加载参数
 
     // network_setup(); // 初始化网络
 }

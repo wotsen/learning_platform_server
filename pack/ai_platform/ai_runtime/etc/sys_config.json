@@ -1,13 +1,10 @@
 {
     "module" : {
-        "easylogger" : {
-            "log_path" : "ai_runtime/log/elog_file.log"
-        }
     },
     "network": {
         "sdk" : {
             "tcp": {
-                "ip-version": ["ipv4"],
+                "ip-version": "ipv4",
                 "ipv4" : "0.0.0.0",
                 "port" : 9001
             }

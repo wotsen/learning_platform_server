@@ -20,168 +20,116 @@
 #include <easylogger/inc/elog.h>
 #include "sys_parameter.h"
 
+using json = nlohmann::json;
+
 SysParameter *SysParameter::instance = nullptr;
 
-SysParameter *SysParameter::get_sys_para(void)
+SysParameter *SysParameter::get_sys_param(void)
 {
-	if (nullptr != instance)
+    if (nullptr != instance)
+    {
+        return instance;
+    }
+
+    instance = new SysParameter();
+    instance->file = nullptr;
+
+// TODO:读运行时配置
+// TODO:运行时配置读取失败则加载备份参数(每隔10分钟备份)，加载失败则加载默认配置并重置所有参数配置
+// TODO:所有参数有3个接口：get/set/reset
+// TODO:参数配置文件大小4M限制
+// TODO:写入加锁，做好有类似装饰器的东西
+    try
+    {
+        instance->file = new tfile::Reader(SYS_RUNTIME_CONFIG_FILENAME);
+    }
+    catch (const std::runtime_error &err)
+    {
+        // if (nullptr != instance)
+        // {
+        //     delete instance;
+        //     instance = nullptr;
+        // }
+		instance->file = nullptr;
+        log_e("can not open " SYS_RUNTIME_CONFIG_FILENAME "\n");
+    }
+
+	if (!instance->file)
 	{
-		return instance;
-	}
-
-	instance = new SysParameter();
-	instance->para = new struct sys_parameter;
-
-	pthread_mutex_init(&instance->mutex, NULL);
-
-	memset(instance->para, 0, sizeof(struct sys_parameter));
-
-	instance->fp = fopen(SYS_PARAMETER_FILENAME, "rb+");
-
-	if (NULL == instance->fp)
-	{
-		log_e("no param file create\n");
-		instance->fp = fopen(SYS_PARAMETER_FILENAME, "wb+");
-		if (NULL == instance->fp)
+		try
 		{
-			instance->para = NULL;
-			delete instance;
-			log_e("load sys parameter error : %s\n", strerror(errno));
-			exit(-1);
+			instance->file = new tfile::Reader(SYS_DEFAULT_CONFIG_FILENAME);
 		}
-		if (!instance->reset_default_parameter())
+		catch (const std::runtime_error &err)
 		{
-			fclose(instance->fp);
-			delete instance->para;
-			instance->para = nullptr;
-			delete instance;
-			log_e("load sys parameter error : %s\n", strerror(errno));
-			exit(-1);
-		}
-		return instance;
-	}
-
-	fseek(instance->fp, 0, SEEK_SET);
-
-	fread(instance->para, sizeof(struct sys_parameter), 1, instance->fp);
-
-	if (calculate_crc16(0, (uint8_t *)instance->para, sizeof(struct sys_parameter) - sizeof(instance->para->para_crc)) != instance->para->para_crc)
-	{
-		log_i("sys parameter crc not currect, reset defaul parameter\n");
-		if (!instance->reset_default_parameter())
-		{
-			fclose(instance->fp);
-			delete instance->para;
-			instance->para = nullptr;
-			delete instance;
-			log_e("reset default sys parameter error : %s\n", strerror(errno));
-			exit(-1);
+			if (nullptr != instance)
+			{
+			    delete instance;
+			    instance = nullptr;
+			}
+			instance->file = nullptr;
+			throw("can not open " SYS_DEFAULT_CONFIG_FILENAME);
 		}
 	}
 
-	return instance;
+    if (nullptr == instance->file->get())
+    {
+        if (nullptr != instance)
+        {
+            delete instance;
+            instance = nullptr;
+        }
+        throw("can not open " SYS_RUNTIME_CONFIG_FILENAME);
+    }
+
+    std::string conf_str(2048, '\0');
+    instance->file->read(conf_str);
+
+    // 读完了就删掉
+    instance->file->close();
+
+    if (nullptr != instance->file)
+    {
+        delete instance->file;
+        instance->file = nullptr;
+    }
+
+    // 解析json
+    instance->j= json::parse(conf_str);
+
+    if (instance->j.empty())
+    {
+        log_d("can not parse json : " SYS_RUNTIME_CONFIG_FILENAME "\n");
+    }
+
+    return instance;
 }
 
-SysParameter::~SysParameter(void)
+SysParameter::~SysParameter()
 {
-	if (NULL != instance->fp)
-	{
-		fclose(instance->fp);
-		instance->fp = NULL;
-	}
-
-	if (NULL != instance->para)
-	{
-		delete instance->para;
-		instance->para = NULL;
-	}
+    if (nullptr != this->file)
+    {
+        instance->file->close();
+        delete this->file;
+        instance->file = nullptr;
+    }
 }
 
-/**
- * @brief 计算参数crc16校验
- * 
- */
-void SysParameter::cal_crc16(void)
+json &get_json_param(void)
 {
-	if (NULL == para)
-		return;
-	para->para_crc = calculate_crc16(0, (uint8_t *)para, sizeof(struct sys_parameter) - sizeof(para->para_crc));
+    return SysParameter::get_sys_param()->get_json();
 }
 
-/**
- * @brief 恢复默认参数
- * 
- * @return true 
- * @return false 
- */
-bool SysParameter::reset_default_parameter(void)
+bool sys_parameter_init(void)
 {
-	if (!is_ok())
-	{
-		return false;
-	}
+    json j = get_json_param();
+    if (j.empty())
+    {
+        exit(0);
+        return false;
+    }
+    log_d("sys_config json : %s\n", j.dump(4).c_str());
+    log_i("parser sys config json success!\n");
 
-	para->para_magic = SYS_PARAMETER_MAGIC;
-	// TODO: other para
-	cal_crc16();
-
-	return save_para(0, sizeof(struct sys_parameter));
-}
-
-/**
- * @brief 保存参数
- * 
- * @param start 起始位置
- * @param len 长度
- * @return true 
- * @return false 
- */
-bool SysParameter::save_para(size_t start, size_t len)
-{
-	if (!is_ok())
-	{
-		return false;
-	}
-	if (start + len > sizeof(struct sys_parameter))
-	{
-		return false;
-	}
-	size_t ret = 0;
-
-	pthread_mutex_lock(&instance->mutex);
-	fseek(fp, start, SEEK_SET);
-	ret = fwrite((uint8_t *)para + start, len, 1, fp);
-	pthread_mutex_unlock(&instance->mutex);
-
-	return ret == len;
-}
-
-/**
- * @brief Get the para ptr object
- * 
- * @return struct sys_parameter* 
- */
-struct sys_parameter *get_para_ptr(void)
-{
-	return SysParameter::get_sys_para()->get_para_ptr();
-}
-
-/**
- * @brief 参数初始化
- * 
- * @return true 
- * @return false 
- */
-bool sys_para_init(void)
-{
-	struct sys_parameter *para = get_para_ptr();
-
-	if (NULL != para)
-	{
-		log_i("sys parameter load success!");
-		return true;
-	}
-
-	log_e("sys parameter load faild!");
-	return false;
+    return true;
 }

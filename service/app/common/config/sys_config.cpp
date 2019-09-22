@@ -17,6 +17,7 @@
 #define LOG_TAG "SYS_CONFIG"
 
 #include <iostream>
+#include <easylogger/inc/elog.h>
 #include "sys_config.h"
 #include "../../tools/debug_print/debug_print.h"
 
@@ -75,7 +76,7 @@ SysConfig *SysConfig::get_sys_config(void)
 
     if (instance->j.empty())
     {
-        dbg_print("can not parse json : " SYS_CONFIG_FILENAME "\n");
+        log_e("can not parse json : " SYS_CONFIG_FILENAME "\n");
     }
 
     return instance;
@@ -113,8 +114,8 @@ bool sys_config_init(void)
         exit(0);
         return false;
     }
-    dbg_print("sys_config json : %s\n", j.dump(4).c_str());
-    dbg_print("parser sys config json success!\n");
+    log_d("sys_config json : %s\n", j.dump(4).c_str());
+    log_i("parser sys config json success!\n");
 
     return true;
 }
