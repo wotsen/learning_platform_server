@@ -14,9 +14,9 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
-extern PROTOBUF_INTERNAL_EXPORT_in_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Body_in_5fbody_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_in_5ffooter_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Footer_in_5ffooter_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_in_5fheader_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Header_in_5fheader_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Body_in_5fsdk_5fbody_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5ffooter_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Footer_in_5fsdk_5ffooter_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fheader_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Header_in_5fsdk_5fheader_2eproto;
 namespace insider {
 namespace sdk {
 class SdkDefaultTypeInternal {
@@ -38,9 +38,9 @@ static void InitDefaultsscc_info_Sdk_in_5fsdk_2eproto() {
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<3> scc_info_Sdk_in_5fsdk_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 3, 0, InitDefaultsscc_info_Sdk_in_5fsdk_2eproto}, {
-      &scc_info_Header_in_5fheader_2eproto.base,
-      &scc_info_Body_in_5fbody_2eproto.base,
-      &scc_info_Footer_in_5ffooter_2eproto.base,}};
+      &scc_info_Header_in_5fsdk_5fheader_2eproto.base,
+      &scc_info_Body_in_5fsdk_5fbody_2eproto.base,
+      &scc_info_Footer_in_5fsdk_5ffooter_2eproto.base,}};
 
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_in_5fsdk_2eproto[1];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_in_5fsdk_2eproto = nullptr;
@@ -65,16 +65,17 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_in_5fsdk_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\014in_sdk.proto\022\013insider.sdk\032\017in_header.p"
-  "roto\032\rin_body.proto\032\017in_footer.proto\"p\n\003"
-  "Sdk\022#\n\006header\030\001 \001(\0132\023.insider.sdk.Header"
-  "\022\037\n\004body\030\002 \001(\0132\021.insider.sdk.Body\022#\n\006foo"
-  "ter\030\003 \001(\0132\023.insider.sdk.Footerb\006proto3"
+  "\n\014in_sdk.proto\022\013insider.sdk\032\023in_sdk_head"
+  "er.proto\032\021in_sdk_body.proto\032\023in_sdk_foot"
+  "er.proto\"p\n\003Sdk\022#\n\006header\030\001 \001(\0132\023.inside"
+  "r.sdk.Header\022\037\n\004body\030\002 \001(\0132\021.insider.sdk"
+  ".Body\022#\n\006footer\030\003 \001(\0132\023.insider.sdk.Foot"
+  "erb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_2eproto_deps[3] = {
-  &::descriptor_table_in_5fbody_2eproto,
-  &::descriptor_table_in_5ffooter_2eproto,
-  &::descriptor_table_in_5fheader_2eproto,
+  &::descriptor_table_in_5fsdk_5fbody_2eproto,
+  &::descriptor_table_in_5fsdk_5ffooter_2eproto,
+  &::descriptor_table_in_5fsdk_5fheader_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_5fsdk_2eproto_sccs[1] = {
   &scc_info_Sdk_in_5fsdk_2eproto.base,
@@ -82,7 +83,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_in_5fsdk_2eproto_once;
 static bool descriptor_table_in_5fsdk_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_in_5fsdk_2eproto = {
-  &descriptor_table_in_5fsdk_2eproto_initialized, descriptor_table_protodef_in_5fsdk_2eproto, "in_sdk.proto", 198,
+  &descriptor_table_in_5fsdk_2eproto_initialized, descriptor_table_protodef_in_5fsdk_2eproto, "in_sdk.proto", 210,
   &descriptor_table_in_5fsdk_2eproto_once, descriptor_table_in_5fsdk_2eproto_sccs, descriptor_table_in_5fsdk_2eproto_deps, 1, 3,
   schemas, file_default_instances, TableStruct_in_5fsdk_2eproto::offsets,
   file_level_metadata_in_5fsdk_2eproto, 1, file_level_enum_descriptors_in_5fsdk_2eproto, file_level_service_descriptors_in_5fsdk_2eproto,

@@ -32,9 +32,9 @@
 #include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
 #include <google/protobuf/unknown_field_set.h>
-#include "in_header.pb.h"
-#include "in_body.pb.h"
-#include "in_footer.pb.h"
+#include "in_sdk_header.pb.h"
+#include "in_sdk_body.pb.h"
+#include "in_sdk_footer.pb.h"
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 #define PROTOBUF_INTERNAL_EXPORT_in_5fsdk_2eproto

@@ -20,13 +20,13 @@
 // 内容分发
 // 回复回调
 
-#define DEFAULT_BACKLOG 128 // 连接队列
-
 // sdk网络服务器
-class UvSdkNetServer {
+class UvSdkNetServer
+{
 public:
 	template <class T>
-	struct UvSdkNetSrvType {
+	struct UvSdkNetSrvType
+	{
 		T handle;
 		struct sockaddr_in addr;
 	};
@@ -41,10 +41,6 @@ public:
 	bool create_tcp_server(const std::string &ipv4, const int &port);
 	bool create_tcp_server(const char *ipv4, const int &port);
 
-	// void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
-	// void echo_read(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);
-	// void on_new_connection(uv_stream_t *server, int status);
-
 	~UvSdkNetServer();
 
 private:
@@ -54,9 +50,5 @@ private:
 	std::list<std::shared_ptr<UvSdkNetSrvType<uv_udp_t>>> udp_servers;
 	std::list<uv_timer_t *> timers;
 };
-
-void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
-void echo_read(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);
-void on_new_connection(uv_stream_t *server, int status);
 
 void sdk_uv_net_init(void);

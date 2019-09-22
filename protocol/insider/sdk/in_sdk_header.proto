@@ -22,11 +22,23 @@ message Host {
     string ipv4 = 2;
 }
 
+enum DataFlow {
+    DATA_IN = 0;  // 输入数据
+    DATA_OUT = 1;  // 输出数据
+}
+
+message DataTime {
+    int64 in_time = 1;
+    int64 out_time = 2;
+}
+
 message Header {
     int64 msg_magic = 1;
     int64 pack_len = 2;
     int64 pack_id = 3;
-    Host host = 4;
-    TransProto trans_proto = 5;
-    DataProto data_proto = 6;
+    DataTime time = 4;
+    DataFlow data_dir = 5;
+    Host host = 6;
+    TransProto trans_proto = 7;
+    DataProto data_proto = 8;
 }

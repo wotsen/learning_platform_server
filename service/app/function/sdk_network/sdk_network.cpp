@@ -10,14 +10,31 @@
  */
 #define LOG_TAG "NETWORK"
 
+#include <iostream>
 #include <easylogger/easylogger_setup.h>
+#include "../../common/config/sys_config.h"
 #include "../../tools/timer/timer.h"
-#include "sdk_protocol/in_sdk.pb.h"
+#include "sdk_package_distribution.h"
 #include "sdk_network.h"
 
-using namespace insider::sdk;
+#define DEFAULT_BACKLOG 128 // 连接队列
+
+typedef struct
+{
+	uv_write_t req;
+	uv_buf_t buf;
+} write_req_t;
 
 static UvSdkNetServer *uv_sdk_net_server = nullptr;
+
+static void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
+static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);
+static void on_stream_write(uv_write_t *req, int status);
+static void on_tcp_connection(uv_stream_t *server, int status);
+static void on_tcp_shutdown(uv_shutdown_t *req, int status);
+static void on_close(uv_handle_t *peer);
+
+static bool uv_stream_write(uv_stream_t *handle, const uv_buf_t *buf);
 
 bool UvSdkNetServer::create_tcp_server(const char *ipv4, const int &port)
 {
@@ -26,9 +43,9 @@ bool UvSdkNetServer::create_tcp_server(const char *ipv4, const int &port)
 	uv_tcp_init(loop, &server->handle);
 	uv_ip4_addr(ipv4, port, &server->addr);
 
-	uv_tcp_bind(&server->handle, (const struct sockaddr*)&server->addr, 0);
+	uv_tcp_bind(&server->handle, (const struct sockaddr *)&server->addr, 0);
 
-	int r = uv_listen((uv_stream_t*)&server->handle, DEFAULT_BACKLOG, on_new_connection);
+	int r = uv_listen((uv_stream_t *)&server->handle, DEFAULT_BACKLOG, on_tcp_connection);
 	if (r)
 	{
 		log_e("Listen error %s\n", uv_strerror(r));
@@ -39,51 +56,131 @@ bool UvSdkNetServer::create_tcp_server(const char *ipv4, const int &port)
 
 	return true;
 }
+
 // 创建tcp服务器
-bool UvSdkNetServer::create_tcp_server(const std::string &ipv4, const int &port) {
+bool UvSdkNetServer::create_tcp_server(const std::string &ipv4, const int &port)
+{
 	return create_tcp_server(ipv4.c_str(), port);
 }
 
-void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
+UvSdkNetServer::~UvSdkNetServer()
 {
-    buf->base = (char*) malloc(suggested_size);
-    buf->len = suggested_size;
+	for (auto &tcp_s : tcp_servers)
+	{
+		uv_close((uv_handle_t *)&tcp_s->handle, NULL);
+	}
+	tcp_servers.clear();
 }
 
-void echo_read(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf)
+static void on_stream_write(uv_write_t *req, int status)
 {
-    if (nread > 0) {
-		// 放入数据处理链表
-		// FIXME:应该发送完后进行释放
-		log_d("read str = [%s]\n", buf->base);
-    	free(buf->base);
-        // write_req_t *req = (write_req_t*) malloc(sizeof(write_req_t));
-        // req->buf = uv_buf_init(buf->base, nread);
-        // uv_write((uv_write_t*) req, client, &req->buf, 1, echo_write);
-        // return;
-    }
-    if (nread < 0) {
-        if (nread != UV_EOF) {
-            log_e("Read error %s\n", uv_err_name(nread));
+	write_req_t *wr = (write_req_t *)req;
+	uv_buf_t *recv = (uv_buf_t *)(wr->req.handle->data);
+	log_i("write recv addr = [%p]\n", recv);
+	log_i("write base addr = [%p]\n", recv->base);
+
+	if (status)
+	{
+		fprintf(stderr, "Write error %s\n", uv_strerror(status));
+	}
+
+	// delete wr->buf.base;
+	delete recv->base;
+	delete recv;
+	delete wr;
+}
+
+static bool uv_stream_write(uv_stream_t *handle, const uv_buf_t *buf)
+{
+	write_req_t *wr = nullptr;
+
+	wr = new write_req_t;
+	wr->buf = uv_buf_init(buf->base, buf->len);
+
+	log_d("send...........\n");
+
+	if (!buf || !buf->base || 0 == buf->len || uv_write((uv_write_t *)wr, handle, &wr->buf, 1, on_stream_write))
+	{
+		log_e("uv_write failed\n");
+		wr->req.handle = handle;
+		on_stream_write((uv_write_t *)wr, 0);
+		return false;
+	}
+
+	return true;
+}
+
+static void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
+{
+	buf->base = new char[suggested_size];
+	log_d("read base addr = [%p]\n", buf->base);
+	buf->len = suggested_size;
+}
+
+static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf)
+{
+	uv_shutdown_t *sreq = nullptr;
+	sdk_package<uv_stream_t> *package = nullptr;
+	uv_buf_t *data = nullptr;
+
+	if (nread > 0)
+	{
+		package = new sdk_package<uv_stream_t>;
+		data = new uv_buf_t(std::move(uv_buf_init(buf->base, buf->len)));
+
+		package->handle = client;
+		package->handle->data = (void *)data;
+		log_d("read recv addr = [%p]\n", data);
+		// package->buf = uv_buf_init(buf->base, buf->len);
+		package->write = uv_stream_write;
+		push_sdk_package(package);
+	}
+
+	if (0 == nread)
+	{
+		delete buf->base;
+	}
+
+	if (nread < 0)
+	{
+		log_d("close connect\n");
+		if (nread != UV_EOF)
+		{
+			log_e("Read error %s\n", uv_err_name(nread));
 		}
-        uv_close((uv_handle_t*) client, NULL);
-    }
-
-    // free(buf->base);
+		delete buf->base;
+		sreq = new uv_shutdown_t;
+		uv_shutdown(sreq, client, on_tcp_shutdown);
+		// uv_close((uv_handle_t *)client, on_close);
+	}
 }
 
-void on_new_connection(uv_stream_t *server, int status) {
+static void on_tcp_shutdown(uv_shutdown_t *req, int status)
+{
+	uv_close((uv_handle_t *)req->handle, on_close);
+	delete req;
+}
+
+static void on_close(uv_handle_t *peer)
+{
+	delete peer;
+}
+
+static void on_tcp_connection(uv_stream_t *server, int status)
+{
 	if (status < 0)
 	{
 		log_e("New connection error %s\n", uv_strerror(status));
-		return ;
+		return;
 	}
 
-	uv_tcp_t *client = (uv_tcp_t *)malloc(sizeof(uv_tcp_t));
+	uv_tcp_t *client = new uv_tcp_t;
+
 	uv_tcp_init(server->loop, client);
+
 	if (0 == uv_accept(server, (uv_stream_t *)client))
 	{
-		uv_read_start((uv_stream_t *)client, alloc_buffer, echo_read);
+		uv_read_start((uv_stream_t *)client, alloc_buffer, read_stream_msg);
 	}
 	else
 	{
@@ -91,18 +188,17 @@ void on_new_connection(uv_stream_t *server, int status) {
 	}
 }
 
-UvSdkNetServer::~UvSdkNetServer() {
-	for (auto &tcp_s : tcp_servers) {
-		uv_close((uv_handle_t *)&tcp_s->handle, NULL);
-	}
-	tcp_servers.clear();
-}
+void sdk_uv_net_init(void)
+{
+	std::string ip_version;
+	std::string ipv4;
+	int port;
 
-void sdk_uv_net_init(void) {
 	uv_sdk_net_server = new UvSdkNetServer(UvEvent::get_uv_event()->get_uv_loop());
 
-	uv_sdk_net_server->create_tcp_server("0.0.0.0", 8001);
+	get_sdk_tcp_host(ip_version, ipv4, port);
 
-    log_i("sdk-uv网络任务初始化完成...\n");
+	uv_sdk_net_server->create_tcp_server(ipv4, port);
 
+	log_i("sdk-uv网络任务初始化完成...\n");
 }

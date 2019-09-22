@@ -16,6 +16,7 @@
 
 #define LOG_TAG "COMMON"
 
+#include <iostream>
 #include "common.h"
 #include "config/sys_config.h"
 #include "config/sys_capability.h"

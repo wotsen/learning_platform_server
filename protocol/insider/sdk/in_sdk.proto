@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "in_header.proto";
-import "in_body.proto";
-import "in_footer.proto";
+import "in_sdk_header.proto";
+import "in_sdk_body.proto";
+import "in_sdk_footer.proto";
 
 package insider.sdk;
 

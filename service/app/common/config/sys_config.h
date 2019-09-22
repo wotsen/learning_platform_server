@@ -34,5 +34,8 @@ private:
     static SysConfig *instance;
 };
 
+/* 获取sdk tcp网络配置 */
+void get_sdk_tcp_host(std::string &ip_version, std::string &ip, int &port);
+
 bool sys_config_init(void);
 nlohmann::json &get_json_config(void);
