@@ -16,6 +16,7 @@
 #define LOG_TAG "SYS_PARAMETER"
 
 #include <iostream>
+#include <iomanip>
 #include "../../tools/tools_func/calculate_crc16.h"
 #include <easylogger/inc/elog.h>
 #include "sys_parameter.h"
@@ -32,74 +33,32 @@ SysParameter *SysParameter::get_sys_param(void)
     }
 
     instance = new SysParameter();
-    instance->file = nullptr;
 
-// TODO:读运行时配置
-// TODO:运行时配置读取失败则加载备份参数(每隔10分钟备份)，加载失败则加载默认配置并重置所有参数配置
-// TODO:所有参数有3个接口：get/set/reset
-// TODO:参数配置文件大小4M限制
-// TODO:写入加锁，做好有类似装饰器的东西
-    try
+    // 打开运行时文件
+    if (!instance->open_runtime_file())
     {
-        instance->file = new tfile::Reader(SYS_RUNTIME_CONFIG_FILENAME);
-    }
-    catch (const std::runtime_error &err)
-    {
-        // if (nullptr != instance)
-        // {
-        //     delete instance;
-        //     instance = nullptr;
-        // }
-		instance->file = nullptr;
-        log_e("can not open " SYS_RUNTIME_CONFIG_FILENAME "\n");
-    }
-
-	if (!instance->file)
-	{
-		try
-		{
-			instance->file = new tfile::Reader(SYS_DEFAULT_CONFIG_FILENAME);
-		}
-		catch (const std::runtime_error &err)
-		{
-			if (nullptr != instance)
-			{
-			    delete instance;
-			    instance = nullptr;
-			}
-			instance->file = nullptr;
-			throw("can not open " SYS_DEFAULT_CONFIG_FILENAME);
-		}
-	}
-
-    if (nullptr == instance->file->get())
-    {
-        if (nullptr != instance)
+        // 创建
+        if (!instance->create_runtime_file())
         {
             delete instance;
-            instance = nullptr;
+            throw("can not open json : " SYS_RUNTIME_CONFIG_FILENAME);
         }
-        throw("can not open " SYS_RUNTIME_CONFIG_FILENAME);
     }
 
-    std::string conf_str(2048, '\0');
-    instance->file->read(conf_str);
-
-    // 读完了就删掉
-    instance->file->close();
-
-    if (nullptr != instance->file)
+    // 解析
+    try {
+        instance->json_file >> instance->j;
+    }
+    catch (nlohmann::detail::parse_error &err)
     {
-        delete instance->file;
-        instance->file = nullptr;
+        log_e("%s\n", err.what());
+        delete instance;
+        throw("can not parse json : " SYS_RUNTIME_CONFIG_FILENAME);
     }
-
-    // 解析json
-    instance->j= json::parse(conf_str);
-
     if (instance->j.empty())
     {
-        log_d("can not parse json : " SYS_RUNTIME_CONFIG_FILENAME "\n");
+        delete instance;
+        throw("can not parse json : " SYS_RUNTIME_CONFIG_FILENAME);
     }
 
     return instance;
@@ -107,12 +66,85 @@ SysParameter *SysParameter::get_sys_param(void)
 
 SysParameter::~SysParameter()
 {
-    if (nullptr != this->file)
+    if (this->json_file)
     {
-        instance->file->close();
-        delete this->file;
-        instance->file = nullptr;
+        instance->json_file.close();
     }
+}
+
+bool SysParameter::open_runtime_file(void)
+{
+    this->json_file.open(SYS_RUNTIME_CONFIG_FILENAME, std::ios::in | std::ios::out);
+
+    if (!this->json_file)
+    {
+        log_e("can not open " SYS_RUNTIME_CONFIG_FILENAME);
+        return false;
+    }
+
+    return true;
+}
+
+bool SysParameter::create_runtime_file(void)
+{
+    std::fstream in;
+
+    // 创建运行时配置参数
+    this->json_file.open(SYS_RUNTIME_CONFIG_FILENAME, std::ios::out);
+
+    if (!this->json_file)
+    {
+        log_e("can not create " SYS_RUNTIME_CONFIG_FILENAME);
+        return false;
+    }
+
+    // 关闭
+    this->json_file.close();
+
+    // 以可读可写方式打开
+    if (!this->open_runtime_file())
+    {
+        return false;
+    }
+
+    // 打开默认配置文件
+    in.open(SYS_DEFAULT_CONFIG_FILENAME, std::ios::in);
+
+    if (!in)
+    {
+        log_e("can not open " SYS_DEFAULT_CONFIG_FILENAME);
+        this->json_file.close();
+        return false;
+    }
+
+    // 拷贝默认配置文件到运行时配置文件
+	in.seekg(0, std::ios::beg);
+	this->json_file.seekp(0, std::ios::beg);
+    this->json_file << in.rdbuf();
+	this->json_file.seekg(0, std::ios::beg);
+
+    in.close();
+
+    return true;
+}
+
+bool SysParameter::open_default_file(void)
+{
+    std::fstream in(SYS_DEFAULT_CONFIG_FILENAME, std::ios::in);
+
+    if (!in)
+    {
+        log_e("can not open " SYS_DEFAULT_CONFIG_FILENAME);
+        return false;
+    }
+
+    return true;
+}
+
+void SysParameter::save_param(void)
+{
+	this->json_file.seekp(0, std::ios::beg);
+    this->json_file << std::setw(4) << this->j;
 }
 
 json &get_json_param(void)
@@ -122,14 +154,22 @@ json &get_json_param(void)
 
 bool sys_parameter_init(void)
 {
-    json j = get_json_param();
+    json j;
+
+    try {
+        j = get_json_param();
+    } catch (std::string &err) {
+        log_e("%s\n", err.c_str());
+        exit(0);
+        return false;
+    }
     if (j.empty())
     {
         exit(0);
         return false;
     }
-    log_d("sys_config json : %s\n", j.dump(4).c_str());
-    log_i("parser sys config json success!\n");
+    log_d("sys_param json : %s\n", j.dump(4).c_str());
+    log_i("parser sys param json success!\n");
 
     return true;
 }

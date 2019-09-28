@@ -15,7 +15,8 @@
  */
 #pragma once
 
-#include <tfile/tfile.h>
+#include <fstream>
+// #include <tfile/tfile.h>
 #include <nlohmann/json.hpp>
 // #include <CJsonObject/CJsonObject.hpp>
 
@@ -29,7 +30,8 @@ public:
     }
 
 protected:
-    tfile::Reader *file;
+    // tfile::Reader *file;
+	std::fstream json_file;
     // neb::CJsonObject *json;
     nlohmann::json j;
 

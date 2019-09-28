@@ -31,50 +31,28 @@ SysCapability *SysCapability::get_sys_capability(void)
     }
 
     instance = new SysCapability();
-    instance->file = nullptr;
 
-    try
+    instance->json_file.open(SYS_CAPAABILITY_FILENAME, std::ios::in | std::ios::out);
+
+    if (!instance->json_file)
     {
-        instance->file = new tfile::Reader(SYS_CAPAABILITY_FILENAME);
-    }
-    catch (const std::runtime_error &err)
-    {
-        if (nullptr != instance)
-        {
-            delete instance;
-            instance = nullptr;
-        }
+        delete instance;
         throw("can not open " SYS_CAPAABILITY_FILENAME);
     }
 
-    if (nullptr == instance->file->get())
-    {
-        if (nullptr != instance)
-        {
-            delete instance;
-            instance = nullptr;
-        }
-        throw("can not open " SYS_CAPAABILITY_FILENAME);
+    try {
+        instance->json_file >> instance->j;
     }
-
-    std::string conf_str(2048, '\0');
-    instance->file->read(conf_str);
-
-    // 读完了就删掉
-    instance->file->close();
-
-    if (nullptr != instance->file)
+    catch (nlohmann::detail::parse_error &err)
     {
-        delete instance->file;
-        instance->file = nullptr;
+        log_e("%s\n", err.what());
+        delete instance;
+        throw("can not parse json : " SYS_CAPAABILITY_FILENAME);
     }
-
-    // 解析json
-    instance->j = json::parse(conf_str);
-
     if (instance->j.empty())
     {
-        log_e("can not parse json : " SYS_CAPAABILITY_FILENAME "\n");
+        delete instance;
+        throw("can not parse json : " SYS_CAPAABILITY_FILENAME);
     }
 
     return instance;
@@ -82,12 +60,9 @@ SysCapability *SysCapability::get_sys_capability(void)
 
 SysCapability::~SysCapability()
 {
-    instance->file->close();
-
-    if (nullptr != this->file)
+    if (this->json_file)
     {
-        delete this->file;
-        instance->file = nullptr;
+        instance->json_file.close();
     }
 }
 
@@ -98,7 +73,17 @@ json &get_json_capability(void)
 
 bool sys_capability_init(void)
 {
-    json j = get_json_capability();
+    json j;
+
+    try {
+        j = get_json_capability();
+    } catch (std::string &err)
+    {
+        log_e("%s\n", err.c_str());
+        exit(0);
+        return false;
+    }
+
     if (j.empty())
     {
         log_e("can not load capability json!");

@@ -24,16 +24,20 @@ public:
 #define SYS_RUNTIME_CONFIG_FILENAME "../data/sys_runtime_param.json"
 #define SYS_DEFAULT_CONFIG_FILENAME "../data/sys_default_param.json"
 
-    ~SysParameter();
-    static SysParameter *get_sys_param(void);
+	~SysParameter();
+	static SysParameter *get_sys_param(void);
 
-    void save_param(void) const;
+	bool open_runtime_file(void);
+	bool create_runtime_file(void);
+	bool open_default_file(void);
+
+	void save_param(void);
 
 private:
-    SysParameter(){};
+	SysParameter(){};
 
-    static SysParameter *instance;
-    pthread_mutex_t mutex;
+	static SysParameter *instance;
+	pthread_mutex_t mutex;
 };
 
 bool sys_parameter_init(void);

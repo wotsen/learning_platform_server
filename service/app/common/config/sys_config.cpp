@@ -33,50 +33,28 @@ SysConfig *SysConfig::get_sys_config(void)
     }
 
     instance = new SysConfig();
-    instance->file = nullptr;
 
-    try
+    instance->json_file.open(SYS_CONFIG_FILENAME, std::ios::in | std::ios::out);
+
+    if (!instance->json_file)
     {
-        instance->file = new tfile::Reader(SYS_CONFIG_FILENAME);
-    }
-    catch (const std::runtime_error &err)
-    {
-        if (nullptr != instance)
-        {
-            delete instance;
-            instance = nullptr;
-        }
+        delete instance;
         throw("can not open " SYS_CONFIG_FILENAME);
     }
 
-    if (nullptr == instance->file->get())
-    {
-        if (nullptr != instance)
-        {
-            delete instance;
-            instance = nullptr;
-        }
-        throw("can not open " SYS_CONFIG_FILENAME);
+    try {
+        instance->json_file >> instance->j;
     }
-
-    std::string conf_str(2048, '\0');
-    instance->file->read(conf_str);
-
-    // 读完了就删掉
-    instance->file->close();
-
-    if (nullptr != instance->file)
+    catch (nlohmann::detail::parse_error &err)
     {
-        delete instance->file;
-        instance->file = nullptr;
+        delete instance;
+        log_e("%s\n", err.what());
+        throw("can not parse json : " SYS_CONFIG_FILENAME);
     }
-
-    // 解析json
-    instance->j= json::parse(conf_str);
-
     if (instance->j.empty())
     {
-        log_e("can not parse json : " SYS_CONFIG_FILENAME "\n");
+        delete instance;
+        throw("can not parse json : " SYS_CONFIG_FILENAME);
     }
 
     return instance;
@@ -84,11 +62,9 @@ SysConfig *SysConfig::get_sys_config(void)
 
 SysConfig::~SysConfig()
 {
-    if (nullptr != this->file)
+    if (this->json_file)
     {
-        instance->file->close();
-        delete this->file;
-        instance->file = nullptr;
+        instance->json_file.close();
     }
 }
 
@@ -108,9 +84,20 @@ void get_sdk_tcp_host(std::string &ip_version, std::string &ip, int &port)
 
 bool sys_config_init(void)
 {
-    json j = get_json_config();
+    json j;
+
+    try {
+        j = get_json_config();
+    } catch (std::string &err)
+    {
+        log_e("%s\n", err.c_str());
+        exit(0);
+        return false;
+    }
+
     if (j.empty())
     {
+        log_e("can not load config json!");
         exit(0);
         return false;
     }
