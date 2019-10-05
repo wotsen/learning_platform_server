@@ -597,7 +597,7 @@ failure:
 
   // .insider.sdk.UserInfo.UserType user_type = 1;
   if (this->user_type() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       1, this->_internal_user_type(), target);
   }
@@ -605,7 +605,7 @@ failure:
   // repeated .insider.sdk.User user = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_user_size()); i < n; i++) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(2, this->_internal_user(i), target, stream);
   }
@@ -820,7 +820,7 @@ failure:
 
   // int64 magic = 1;
   if (this->magic() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(1, this->_internal_magic(), target);
   }
 
@@ -1075,7 +1075,7 @@ failure:
 
   // .insider.sdk.UserInfo user = 1;
   if (this->has_user()) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::user(this), target, stream);
@@ -1093,7 +1093,7 @@ failure:
 
   // .insider.sdk.OperationType method = 3;
   if (this->method() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       3, this->_internal_method(), target);
   }
@@ -1110,7 +1110,7 @@ failure:
   // repeated .insider.sdk.Content content = 5;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_content_size()); i < n; i++) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(5, this->_internal_content(i), target, stream);
   }

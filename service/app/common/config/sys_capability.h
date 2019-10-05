@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-11 22:13:20
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-08-17 21:25:46
- */
 /**
  * @file sys_capability.h
  * @author 余王亮 (wotsen@outlook.com)

@@ -13,9 +13,11 @@
 #include <iostream>
 #include <uv.h>
 
-class UvEvent {
+class UvEvent
+{
 private:
-	UvEvent() : loop(nullptr) { }
+	UvEvent() : loop(nullptr) {}
+
 public:
 	// 初始化uv事件
 	void uv_event_init(void);
@@ -27,6 +29,7 @@ public:
 	~UvEvent();
 	// 开启uv
 	void uv_event_run(void);
+
 private:
 	uv_loop_t *loop;
 	uv_idle_t idler;

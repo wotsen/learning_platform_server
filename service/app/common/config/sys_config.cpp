@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-11 13:00:24
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-08-17 21:25:54
- */
 /**
  * @file sys_config.cpp
  * @author 余王亮 (wotsen@outlook.com)
@@ -42,7 +37,8 @@ SysConfig *SysConfig::get_sys_config(void)
         throw("can not open " SYS_CONFIG_FILENAME);
     }
 
-    try {
+    try
+    {
         instance->json_file >> instance->j;
     }
     catch (nlohmann::detail::parse_error &err)
@@ -86,9 +82,11 @@ bool sys_config_init(void)
 {
     json j;
 
-    try {
+    try
+    {
         j = get_json_config();
-    } catch (std::string &err)
+    }
+    catch (std::string &err)
     {
         log_e("%s\n", err.c_str());
         exit(0);

@@ -5,7 +5,7 @@
  */
 #include <stdio.h>
 #include <time.h>
-#include <pthread.h>    /* -lpthread */
+#include <pthread.h> /* -lpthread */
 
 #include <sys/types.h>
 #include <sys/time.h>
@@ -14,14 +14,14 @@
 
 static char *s_time_strformat(struct tm *tm, char *str);
 
-static pthread_mutex_t s_time_lock = PTHREAD_MUTEX_INITIALIZER;			/* 时间读取锁 */
+static pthread_mutex_t s_time_lock = PTHREAD_MUTEX_INITIALIZER; /* 时间读取锁 */
 
 #if defined(LANGUAGE_ZH)
-	#define TIME_FORMAT "%04d年 %02d月 %02d日 %s %02d:%02d:%02d"
-	static const char *const _wday[] = {"星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+#define TIME_FORMAT "%04d年 %02d月 %02d日 %s %02d:%02d:%02d"
+static const char *const _wday[] = {"星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
 #else
-	#define TIME_FORMAT "%04d-%02d-%02d %s %02d:%02d:%02d"
-	static const char *const _wday[] = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
+#define TIME_FORMAT "%04d-%02d-%02d %s %02d:%02d:%02d"
+static const char *const _wday[] = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 #endif // endof : #if defined(LANGUAGE_ZH)
 
 /**
@@ -55,7 +55,7 @@ void ostime_delay(uint32_t tick)
 	tv.tv_nsec = tick % OS_SEC(1) * TICK_NANOSEC;
 	nanosleep(&tv, NULL);
 
-	return ;
+	return;
 }
 
 /**
@@ -68,7 +68,10 @@ struct tm *getostime_format(struct tm *tm)
 {
 	time_t sec;
 
-	if (!tm) { return NULL; }
+	if (!tm)
+	{
+		return NULL;
+	}
 
 	if ((sec = time(NULL)) < 0)
 	{
@@ -89,18 +92,21 @@ struct tm *getostime_format(struct tm *tm)
  */
 static char *s_time_strformat(struct tm *tm, char *str)
 {
-    if (!tm || !str) { return NULL; }
+	if (!tm || !str)
+	{
+		return NULL;
+	}
 
-	sprintf((char *)str, TIME_FORMAT, \
-			tm->tm_year + 1900, \
-			tm->tm_mon + 1, \
-			tm->tm_mday, \
-			_wday[tm->tm_wday], \
-			tm->tm_hour, \
-			tm->tm_min, \
+	sprintf((char *)str, TIME_FORMAT,
+			tm->tm_year + 1900,
+			tm->tm_mon + 1,
+			tm->tm_mday,
+			_wday[tm->tm_wday],
+			tm->tm_hour,
+			tm->tm_min,
 			tm->tm_sec);
 
-    return str;
+	return str;
 }
 
 /**
@@ -113,9 +119,12 @@ char *getostimestr(char *str)
 {
 	struct tm tm;
 
-	if (!str) { return NULL; }
+	if (!str)
+	{
+		return NULL;
+	}
 
-    return s_time_strformat(getostime_format(&tm), str);
+	return s_time_strformat(getostime_format(&tm), str);
 }
 
 /**
@@ -128,7 +137,10 @@ struct seria_time *get_serail_time(struct seria_time *time)
 {
 	struct tm tm;
 
-	if (NULL == time) { return NULL; }
+	if (NULL == time)
+	{
+		return NULL;
+	}
 
 	getostime_format(&tm);
 
@@ -145,23 +157,23 @@ struct seria_time *get_serail_time(struct seria_time *time)
 	return time;
 }
 
- /**
+/**
   * [print_ostime description] 打印当前时间
   * @method print_ostime
   */
 void print_ostime(void)
 {
-    char str[1024];
-    printf("%s\n", getostimestr(str));
+	char str[1024];
+	printf("%s\n", getostimestr(str));
 }
 
 /* 打印一个月的月历 */
 void print_monthly(uint8_t month)
 {
-    return;
+	return;
 }
 /* 打印一年的年历 */
 void print_calendar(uint16_t year)
 {
-    return;
+	return;
 }

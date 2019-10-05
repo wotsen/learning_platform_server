@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-15 22:25:47
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 14:00:39
- */
 /**
  * @file sys_capability.cpp
  * @author 余王亮 (wotsen@outlook.com)
@@ -40,7 +35,8 @@ SysCapability *SysCapability::get_sys_capability(void)
         throw("can not open " SYS_CAPAABILITY_FILENAME);
     }
 
-    try {
+    try
+    {
         instance->json_file >> instance->j;
     }
     catch (nlohmann::detail::parse_error &err)
@@ -75,9 +71,11 @@ bool sys_capability_init(void)
 {
     json j;
 
-    try {
+    try
+    {
         j = get_json_capability();
-    } catch (std::string &err)
+    }
+    catch (std::string &err)
     {
         log_e("%s\n", err.c_str());
         exit(0);

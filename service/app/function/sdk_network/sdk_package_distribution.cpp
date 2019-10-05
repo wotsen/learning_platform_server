@@ -56,7 +56,6 @@ static void *task_sdk_stream_do(void *name) noexcept
 	char *res_buf = new char[MAX_SDK_MSG_LEN];
 
 	sdk_package<uv_stream_t> *package = nullptr;
-	uv_buf_t *req = NULL;
 
 	struct SdkResponsePack res;
 
@@ -73,9 +72,7 @@ static void *task_sdk_stream_do(void *name) noexcept
 
 			package = stream_list.front();
 
-			req = (uv_buf_t *)(package->handle->data);
-
-			if (sdk_protocol_do(req, &res))
+			if (sdk_protocol_do(SDK_TCP_DATA_TYPE, package, &res))
 			{
 				package->write(package->handle, &res.res);
 			}
@@ -83,7 +80,6 @@ static void *task_sdk_stream_do(void *name) noexcept
 			stream_list.pop_back();
 			delete package;
 			package = nullptr;
-			req = NULL;
 		}
     }
 }

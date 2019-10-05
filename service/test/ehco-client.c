@@ -87,26 +87,33 @@ void on_connect(uv_connect_t *req, int status)
 	// }
 }
 
+static void idle_cb(uv_idle_t* handle) {
+}
+
 int main(void)
 {
 	loop = uv_default_loop();
 
 	// Network I/O の構造体
 	uv_tcp_t client;
+	uv_idle_t idle_handle;
+
+	uv_idle_init(loop, &idle_handle);
+	uv_idle_start(&idle_handle, idle_cb);
 
 	// loop への登録
 	uv_tcp_init(loop, &client);
 
 	// アドレスの取得
 	struct sockaddr_in req_addr;
-	uv_ip4_addr("0.0.0.0", 8001, &req_addr);
+	uv_ip4_addr("0.0.0.0", 9001, &req_addr);
 
 	// TCP コネクション用の構造体
 	uv_connect_t connect_req;
 
 	// 接続
 	uv_tcp_connect(&connect_req, &client, (const struct sockaddr*)&req_addr, on_connect);
-	// uv_read_start((uv_stream_t *)&client, alloc_buffer, echo_read);
+	uv_read_start((uv_stream_t *)&client, alloc_buffer, echo_read);
 
 	// ループを開始
     return uv_run(loop, UV_RUN_DEFAULT);

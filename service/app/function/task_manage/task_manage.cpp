@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-16 23:00:34
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 18:32:50
- */
 /**
  * @file task_manage.cpp
  * @author 余王亮 (wotsen@outlook.com)
@@ -271,16 +266,16 @@ void TasksManage::task_clean(void) noexcept
     task_pool->tasks.erase(std::remove_if(task_pool->tasks.begin(),
                                           task_pool->tasks.end(),
                                           [](auto _task) -> bool {
-                               if (E_TASK_DEAD == _task->state)
-                               {
-                                   pthread_attr_destroy(&_task->attr);
-                                   pthread_mutex_unlock(&_task->mutex);
-                                   pthread_mutex_destroy(&_task->mutex);
-                                   pthread_cond_destroy(&_task->cond);
-                                   return true;
-                               }
-                               return false;
-                           }),
+                                              if (E_TASK_DEAD == _task->state)
+                                              {
+                                                  pthread_attr_destroy(&_task->attr);
+                                                  pthread_mutex_unlock(&_task->mutex);
+                                                  pthread_mutex_destroy(&_task->mutex);
+                                                  pthread_cond_destroy(&_task->cond);
+                                                  return true;
+                                              }
+                                              return false;
+                                          }),
                            task_pool->tasks.end());
     pthread_mutex_unlock(&task_pool->mutex);
 }
@@ -294,18 +289,19 @@ void TasksManage::task_overload(void) noexcept
     task_pool->tasks.erase(std::remove_if(task_pool->tasks.begin(),
                                           task_pool->tasks.end(),
                                           [&old_tasks](auto _task) -> bool {
-                               if (E_TASK_OVERLOAD == _task->state)
-                               {
-                                   old_tasks.push_back(_task);
-                                   return true;
-                               }
-                               return false;
-                           }),
+                                              if (E_TASK_OVERLOAD == _task->state)
+                                              {
+                                                  old_tasks.push_back(_task);
+                                                  return true;
+                                              }
+                                              return false;
+                                          }),
                            task_pool->tasks.end());
 
     pthread_mutex_unlock(&task_pool->mutex);
 
-    for (auto item : old_tasks) {
+    for (auto item : old_tasks)
+    {
         pthread_attr_destroy(&item->attr);
         pthread_mutex_unlock(&item->mutex);
         pthread_mutex_destroy(&item->mutex);
@@ -492,7 +488,7 @@ static void *task_manage(void *name) noexcept
         task_alive(tid);          // 自身任务心跳
         task_pool->task_update(); // 更新所有任务状态
 
-        ostime_delay(OS_MS(3)); // 3秒刷新一次
+        ostime_delay(OS_SEC(3)); // 3秒刷新一次
     }
 }
 
@@ -596,4 +592,4 @@ void task_manage_init(void) noexcept
 {
     task_create(task_manage, STACKSIZE(800), "task_manage", TASK_MANAGE_ID, OS_MIN(5), E_TASK_REBOOT_SYSTEM);
 }
-} // namespace aipTaskMana
+} // namespace wotsen

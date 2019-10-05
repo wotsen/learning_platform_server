@@ -14,16 +14,20 @@
 #include <list>
 #include <memory>
 
-struct UserInfo {
+struct UserInfo
+{
+	std::string email;
 	std::string name;
 	std::string pass;
 	std::string token;
 };
 
-class UserManage {
-	private:
+class UserManage
+{
+private:
 	UserManage() {}
-	public:
+
+public:
 	~UserManage();
 
 	static UserManage *get_users(void);
@@ -33,7 +37,11 @@ class UserManage {
 		return user_list;
 	}
 
-	private:
+private:
 	static UserManage *users;
 	std::list<std::shared_ptr<UserInfo>> user_list;
 };
+
+bool user_register(struct UserInfo &user_info);
+bool user_release(struct UserInfo &user_info);
+bool user_verify(struct UserInfo &user_info);

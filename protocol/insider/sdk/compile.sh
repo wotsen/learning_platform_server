@@ -13,4 +13,4 @@ done
 echo "proto files : "
 echo $protos
 
-protoc --proto_path=./ --cpp_out=sdk_cpp_code --python_out=sdk_py_code --js_out=sdk_js_code $protos
+../../../service/bin/protoc --proto_path=./ --cpp_out=sdk_cpp_code --python_out=sdk_py_code --js_out=sdk_js_code $protos

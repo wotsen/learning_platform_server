@@ -315,7 +315,7 @@ failure:
 
   // int32 port = 1;
   if (this->port() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_port(), target);
   }
 
@@ -537,13 +537,13 @@ failure:
 
   // int64 in_time = 1;
   if (this->in_time() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(1, this->_internal_in_time(), target);
   }
 
   // int64 out_time = 2;
   if (this->out_time() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(2, this->_internal_out_time(), target);
   }
 
@@ -833,25 +833,25 @@ failure:
 
   // int64 msg_magic = 1;
   if (this->msg_magic() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(1, this->_internal_msg_magic(), target);
   }
 
   // int64 pack_len = 2;
   if (this->pack_len() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(2, this->_internal_pack_len(), target);
   }
 
   // int64 pack_id = 3;
   if (this->pack_id() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(3, this->_internal_pack_id(), target);
   }
 
   // .insider.sdk.DataTime time = 4;
   if (this->has_time()) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         4, _Internal::time(this), target, stream);
@@ -859,14 +859,14 @@ failure:
 
   // .insider.sdk.DataFlow data_dir = 5;
   if (this->data_dir() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       5, this->_internal_data_dir(), target);
   }
 
   // .insider.sdk.Host host = 6;
   if (this->has_host()) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         6, _Internal::host(this), target, stream);
@@ -874,14 +874,14 @@ failure:
 
   // .insider.sdk.TransProto trans_proto = 7;
   if (this->trans_proto() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       7, this->_internal_trans_proto(), target);
   }
 
   // .insider.sdk.DataProto data_proto = 8;
   if (this->data_proto() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       8, this->_internal_data_proto(), target);
   }

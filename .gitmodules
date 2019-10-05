@@ -1,0 +1,21 @@
+[submodule "service/third_party/c-log"]
+	path = service/third_party/c-log
+	url = https://github.com/wotsen/c-log
+[submodule "service/third_party/json"]
+	path = service/third_party/json
+	url = https://github.com/nlohmann/json
+[submodule "service/third_party/libuv"]
+	path = service/third_party/libuv
+	url = https://github.com/libuv/libuv
+[submodule "service/third_party/protobuf"]
+	path = service/third_party/protobuf
+	url = https://github.com/wotsen/protobuf
+[submodule "service/third_party/SQLiteCpp"]
+	path = service/third_party/SQLiteCpp
+	url = https://github.com/SRombauts/SQLiteCpp
+[submodule "service/third_party/tink"]
+	path = service/third_party/tink
+	url = https://github.com/google/tink
+[submodule "service/third_party/re2"]
+	path = service/third_party/re2
+	url = https://github.com/google/re2

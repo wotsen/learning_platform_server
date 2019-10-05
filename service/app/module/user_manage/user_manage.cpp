@@ -1,13 +1,17 @@
 /**
- * @file usr_apps.h
+ * @file user_manage.cpp
  * @author 余王亮 (wotsen@outlook.com)
  * @brief 
  * @version 0.1
- * @date 2019-08-17
+ * @date 2019-10-05
  * 
  * @copyright Copyright (c) 2019
  * 
  */
-#pragma once
+#include "user_manage.h"
 
-void usr_apps_init(void);
+bool user_db_init(void)
+{
+	return true;
+}
+

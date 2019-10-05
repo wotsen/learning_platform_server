@@ -173,7 +173,7 @@ failure:
 
   // int32 crc16 = 1;
   if (this->crc16() != 0) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_crc16(), target);
   }
 

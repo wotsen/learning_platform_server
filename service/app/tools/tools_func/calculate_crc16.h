@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-14 23:51:51
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-14 23:53:01
- */
 /**
  * @file calculate_crc16.h
  * @author 余王亮 (wotsen@outlook.com)

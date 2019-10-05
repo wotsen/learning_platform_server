@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-10 20:53:17
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-13 15:53:44
- */
 /**
  * @file common.cpp
  * @author 余王亮 (wotsen@outlook.com)
@@ -36,7 +31,8 @@ static void _elog_init(void)
         .log_lv = ELOG_LVL_VERBOSE
 #endif
     };
-    if (easylogger_setup(&elog_config)) {
+    if (easylogger_setup(&elog_config))
+    {
         log_i("日志模块初始化完成...");
     }
     else
@@ -52,7 +48,7 @@ static void _elog_init(void)
  */
 void sys_init(void)
 {
-    _elog_init();  // 先初始化日志
+    _elog_init(); // 先初始化日志
 
     sys_config_init(); // 初始化配置
 

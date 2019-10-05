@@ -8,8 +8,10 @@ MAKEFLAG := -s --no-print-directory
 CC := g++
 
 # compile flags
-INC := -I$(ROOT_DIR)/../includes -I$(ROOT_DIR)/../third_include
-LIBS := -lrt -lpthread -luv -L$(ROOT_DIR)/../libs -lCJsonObject -lfmt -ltfile -leasylogger -lprotobuf
+INC := -I$(ROOT_DIR)/../include
+# github三方库使用静态链接
+# LIBS := -Wl,-dn -L$(ROOT_DIR)/../lib -leasylogger -luv -lprotobuf -Wl,-dy -lrt -lpthread 
+LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lprotobuf -lrt -lpthread 
 DMARCROS := -DLANGUAGE_ZH #-DNDEBUG -DDEBUG 
 # -ggdb
 CCFLAG := -O0 -g3 -Wall $(DMARCROS) $(INC) $(LIBS) -std=c++17

@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-17 11:45:23
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 17:45:10
- */
 /**
  * @file usr_apps.cpp
  * @author 余王亮 (wotsen@outlook.com)
@@ -16,6 +11,7 @@
 #define LOG_TAG "USR_APPS"
 
 #include <easylogger/inc/elog.h>
+#include "../../tools/timer/timer.h"
 #include "usr_apps.h"
 #include "../../function/task_manage/task_manage.h"
 #include "../../function/upgrade/upgrade.h"
@@ -28,11 +24,13 @@ void usr_apps_init(void)
     wotsen::task_manage_init(); // 初始化任务队列
 
     task_uv_event_init();
+    ostime_delay(OS_MS(500)); // 等待500ms，让event初始化完成
 
     sdk_uv_net_init();
+
     task_sdk_package_distribution_init();
 
-    task_upgrade_init();  // 升级任务
+    task_upgrade_init(); // 升级任务
 
     // 通用网络协议接口，使用回调分发到各组业务的队列，使用非阻塞消息队列通知
     // 告警

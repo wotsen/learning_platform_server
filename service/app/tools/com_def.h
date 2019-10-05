@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-11 21:54:04
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-11 21:54:35
- */
 /**
  * @file com_def.h
  * @author 余王亮 (wotsen@outlook.com)

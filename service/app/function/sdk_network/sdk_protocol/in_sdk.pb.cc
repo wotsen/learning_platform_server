@@ -272,7 +272,7 @@ failure:
 
   // .insider.sdk.Header header = 1;
   if (this->has_header()) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
@@ -280,7 +280,7 @@ failure:
 
   // .insider.sdk.Body body = 2;
   if (this->has_body()) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::body(this), target, stream);
@@ -288,7 +288,7 @@ failure:
 
   // .insider.sdk.Footer footer = 3;
   if (this->has_footer()) {
-    stream->EnsureSpace(&target);
+    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::footer(this), target, stream);

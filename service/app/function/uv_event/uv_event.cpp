@@ -17,8 +17,11 @@ using namespace wotsen;
 
 UvEvent *UvEvent::uv_event = nullptr;
 
-void wait_for_a_while(uv_idle_t* handle) {
-	if (handle) {}
+void wait_for_a_while(uv_idle_t *handle)
+{
+	if (handle)
+	{
+	}
 	log_i("idle............................\n");
 }
 
@@ -66,14 +69,15 @@ void UvEvent::uv_event_run(void)
 	log_d("run error\n");
 }
 
-static void alive_uv_event(uv_timer_t *handle) {
-    task_alive(*(pthread_t *)(handle->data));          // 自身任务心跳
-	// log_d("......................\n");
+static void alive_uv_event(uv_timer_t *handle)
+{
+	task_alive(*(pthread_t *)(handle->data)); // 自身任务心跳
+											  // log_d("......................\n");
 }
 
-
-static void *task_uv_event(void *name) {
-    pthread_t tid = pthread_self();
+static void *task_uv_event(void *name)
+{
+	pthread_t tid = pthread_self();
 	UvEvent *event = UvEvent::get_uv_event();
 
 	uv_timer_t timer_req;
@@ -83,23 +87,23 @@ static void *task_uv_event(void *name) {
 	timer_req.data = (void *)&tid;
 	uv_timer_start(&timer_req, alive_uv_event, 0, 2000);
 
-    log_i("uv-event任务初始化完成...\n");
+	log_i("uv-event任务初始化完成...\n");
 
 	event->uv_event_run();
 	log_i("................\n");
 
 	// FIXME:资源回收
 
-    for (;;)
-    {
-        task_alive(tid);          // 自身任务心跳
+	for (;;)
+	{
+		task_alive(tid); // 自身任务心跳
 
-        ostime_delay(OS_MS(3)); // 3秒刷新一次
-    }
+		ostime_delay(OS_SEC(3)); // 3秒刷新一次
+	}
 	return (void *)0;
 }
 
 void task_uv_event_init(void)
 {
-    task_create(task_uv_event, STACKSIZE(10*1024), "task_uv_event", 0, OS_MIN(30), E_TASK_REBOOT_SYSTEM);
+	task_create(task_uv_event, STACKSIZE(10 * 1024), "task_uv_event", 0, OS_MIN(30), E_TASK_REBOOT_SYSTEM);
 }

@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-15 23:28:17
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 17:46:19
- */
 /**
  * @file task_manage.h
  * @author 余王亮 (wotsen@outlook.com)
@@ -31,11 +26,11 @@ using thread_clean = void (*)(void);
 
 enum
 {
-    TASK_MAIN_ID = 0,   // 主线程号
-    TASK_MANAGE_ID = 1, // 任务管理线程号
-    TASK_UPGRADE_ID = 2, // 升级任务
-    TASK_NETWORK_ID = 3, // 网络任务
-    TASK_ALARM_ID = 4, // 告警任务
+    TASK_MAIN_ID = 0,     // 主线程号
+    TASK_MANAGE_ID = 1,   // 任务管理线程号
+    TASK_UPGRADE_ID = 2,  // 升级任务
+    TASK_NETWORK_ID = 3,  // 网络任务
+    TASK_ALARM_ID = 4,    // 告警任务
     TASK_AI_SCHEDULE = 5, // ai调度
     // 前面的都算做是模块类的任务，之后的算作临时的
     TASK_NORMAL_ID // 普通短期线程
@@ -59,34 +54,34 @@ enum task_state
 
 struct task_record
 {
-#define MAX_THREAD_NAME_LEN 15          // 线程名最长长度
+#define MAX_THREAD_NAME_LEN 15 // 线程名最长长度
 
-#define STACKSIZE(k) ((k)*1024)         // 栈长度，传入数字以k为单位
+#define STACKSIZE(k) ((k)*1024) // 栈长度，传入数字以k为单位
 #ifndef PTHREAD_STACK_MIN
-#define PTHREAD_STACK_MIN 16384         // 最小栈
+#define PTHREAD_STACK_MIN 16384 // 最小栈
 #endif
 
-#define TASK_TIME_ERROR_RANGE 10        // 误差时间10s
-#define MAX_TASK_TIMEOUT_TIMES 3        // 超时次数
+#define TASK_TIME_ERROR_RANGE 10 // 误差时间10s
+#define MAX_TASK_TIMEOUT_TIMES 3 // 超时次数
 
-    uint16_t task_id;                  // 任务id
-    pthread_t tid;                     // 线程号
+    uint16_t task_id; // 任务id
+    pthread_t tid;    // 线程号
     char thread_name[MAX_THREAD_NAME_LEN + 1];
     pthread_attr_t attr; // 线程属性
     size_t stacksize;
     thread_func func;
     thread_clean clean;
 
-    uint32_t create_time;        // 创建时间
-    uint32_t alive_time;         // 生存时间
-    uint32_t last_update_time;   // 上次更新时间
-    uint8_t timeout_times; // 超时次数
+    uint32_t create_time;      // 创建时间
+    uint32_t alive_time;       // 生存时间
+    uint32_t last_update_time; // 上次更新时间
+    uint8_t timeout_times;     // 超时次数
 
-    pthread_mutex_t mutex;  // 线程锁
-    pthread_cond_t cond;  // 互斥条件
-    enum task_state state;  // 线程状态
+    pthread_mutex_t mutex; // 线程锁
+    pthread_cond_t cond;   // 互斥条件
+    enum task_state state; // 线程状态
 
-    enum task_deadlock action;  // 异常处理
+    enum task_deadlock action; // 异常处理
 };
 
 class TasksManage
@@ -94,11 +89,11 @@ class TasksManage
 private:
     TasksManage(){};
 
-    static TasksManage *task_pool;  // 任务管理句柄
-    pthread_mutex_t mutex;  // 任务锁
+    static TasksManage *task_pool; // 任务管理句柄
+    pthread_mutex_t mutex;         // 任务锁
 
-    static const uint32_t max_tasks = 128;  // 最大任务数
-    std::vector<std::shared_ptr<struct task_record>> tasks;  // 任务池
+    static const uint32_t max_tasks = 128;                  // 最大任务数
+    std::vector<std::shared_ptr<struct task_record>> tasks; // 任务池
 
 public:
     ~TasksManage();
@@ -155,8 +150,8 @@ bool task_create(thread_func func, const size_t stacksize, const char *thread_na
 void task_alive(const pthread_t tid) noexcept;
 
 // 设置任务名称
-void task_set_name(const char * name) noexcept;
+void task_set_name(const char *name) noexcept;
 
 // 任务管理初始化
 void task_manage_init(void) noexcept;
-} // namespace aipTaskMana
+} // namespace wotsen

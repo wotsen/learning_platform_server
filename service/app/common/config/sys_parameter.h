@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-11 21:42:59
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 14:09:45
- */
 /**
  * @file sys_parameter.h
  * @author 余王亮 (wotsen@outlook.com)

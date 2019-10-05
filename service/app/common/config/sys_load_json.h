@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-12 23:33:56
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 14:09:48
- */
 /**
  * @file sys_load_json.h
  * @author 余王亮 (wotsen@outlook.com)
@@ -31,8 +26,7 @@ public:
 
 protected:
     // tfile::Reader *file;
-	std::fstream json_file;
+    std::fstream json_file;
     // neb::CJsonObject *json;
     nlohmann::json j;
-
 };

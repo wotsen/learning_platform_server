@@ -1,8 +1,3 @@
-/*
- * @Date: 2019-08-10 20:46:55
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-08 10:49:09
- */
 /**
  * @file main.cpp
  * @author 余王亮 (wotsen@outlook.com)

@@ -1,14 +1,9 @@
-/*
- * @Date: 2019-08-14 23:12:24
- * @LastEditors: 余王亮
- * @LastEditTime: 2019-08-25 14:01:23
- */
 /**
  * @file sys_parameter.cpp
  * @author 余王亮 (wotsen@outlook.com)
- * @brief 系统参数
+ * @brief 
  * @version 0.1
- * @date 2019-08-14
+ * @date 2019-10-05
  * 
  * @copyright Copyright (c) 2019
  * 
@@ -46,7 +41,8 @@ SysParameter *SysParameter::get_sys_param(void)
     }
 
     // 解析
-    try {
+    try
+    {
         instance->json_file >> instance->j;
     }
     catch (nlohmann::detail::parse_error &err)
@@ -118,10 +114,10 @@ bool SysParameter::create_runtime_file(void)
     }
 
     // 拷贝默认配置文件到运行时配置文件
-	in.seekg(0, std::ios::beg);
-	this->json_file.seekp(0, std::ios::beg);
+    in.seekg(0, std::ios::beg);
+    this->json_file.seekp(0, std::ios::beg);
     this->json_file << in.rdbuf();
-	this->json_file.seekg(0, std::ios::beg);
+    this->json_file.seekg(0, std::ios::beg);
 
     in.close();
 
@@ -143,7 +139,7 @@ bool SysParameter::open_default_file(void)
 
 void SysParameter::save_param(void)
 {
-	this->json_file.seekp(0, std::ios::beg);
+    this->json_file.seekp(0, std::ios::beg);
     this->json_file << std::setw(4) << this->j;
 }
 
@@ -156,9 +152,12 @@ bool sys_parameter_init(void)
 {
     json j;
 
-    try {
+    try
+    {
         j = get_json_param();
-    } catch (std::string &err) {
+    }
+    catch (std::string &err)
+    {
         log_e("%s\n", err.c_str());
         exit(0);
         return false;
@@ -168,6 +167,10 @@ bool sys_parameter_init(void)
         exit(0);
         return false;
     }
+    log_d("sys_param json : %s\n", j.dump(4).c_str());
+    log_i("parser sys param json success!\n");
+
+    return true;
     log_d("sys_param json : %s\n", j.dump(4).c_str());
     log_i("parser sys param json success!\n");
 

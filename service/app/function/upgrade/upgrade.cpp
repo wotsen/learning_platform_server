@@ -33,13 +33,13 @@ static void *task_upgrade(void *name)
 
     for (;;)
     {
-        task_alive(tid);          // 自身任务心跳
+        task_alive(tid); // 自身任务心跳
 
-        ostime_delay(OS_MS(3)); // 3秒刷新一次
+        ostime_delay(OS_SEC(3)); // 3秒刷新一次
     }
 }
 
 void task_upgrade_init(void)
 {
-    task_create(task_upgrade, STACKSIZE(100*1024), "task_upgrade", TASK_UPGRADE_ID, OS_MIN(30), E_TASK_REBOOT_SYSTEM);
+    task_create(task_upgrade, STACKSIZE(100 * 1024), "task_upgrade", TASK_UPGRADE_ID, OS_MIN(30), E_TASK_REBOOT_SYSTEM);
 }
