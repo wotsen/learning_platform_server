@@ -134,12 +134,18 @@ static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, s
 {
 	Sdk req_msg;
 	Sdk res_msg;
+	size_t data_len = 0;
 	
 	uv_buf_t *req_buf = (uv_buf_t *)req->handle->data;
 
-	if (!req_msg.ParseFromArray(req_buf->base, req_buf->len))
+	// 解数据长度
+	memcpy(&data_len, req_buf->base, sizeof(data_len));
+
+	// 解析包
+	if (!req_msg.ParseFromArray(((char *)req_buf->base + sizeof(data_len)), data_len))
 	{
-		log_e("can not parse sdk protocol\n");
+		log_e("can not parse sdk protocol, string = [%s], len = [%d]\n",
+						((char *)req_buf->base + sizeof(data_len)), data_len);
 		return false;
 	}
 
@@ -155,13 +161,18 @@ static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, s
 		goto sdk_err;
 	}
 
-	// 响应包
-	if (!res_msg.SerializeToArray(res->res.base, res_msg.ByteSizeLong()))
+	// 响应包，转换为数组
+	if (!res_msg.SerializeToArray(((char *)res->res.base + sizeof(data_len)), res_msg.ByteSizeLong()))
 	{
 		log_e("serial response packet error\n");
 		goto sdk_err;
 	}
-	res->res.len = res_msg.ByteSizeLong();
+
+	// 长度
+	data_len = res_msg.ByteSizeLong();
+	memcpy(res->res.base, &data_len, sizeof(data_len));
+
+	res->res.len = data_len + sizeof(data_len);
 
 	google::protobuf::ShutdownProtobufLibrary();
 

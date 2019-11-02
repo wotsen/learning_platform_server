@@ -33,11 +33,11 @@ static void _elog_init(void)
     };
     if (easylogger_setup(&elog_config))
     {
-        log_i("日志模块初始化完成...");
+        log_i("日志模块初始化完成...\n");
     }
     else
     {
-        printf("日志模块初始化失败!");
+        printf("日志模块初始化失败!\n");
         exit(0);
     } // 初始化日志
 }

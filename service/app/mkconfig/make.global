@@ -10,8 +10,8 @@ CC := g++
 # compile flags
 INC := -I$(ROOT_DIR)/../include
 # github三方库使用静态链接
-# LIBS := -Wl,-dn -L$(ROOT_DIR)/../lib -leasylogger -luv -lprotobuf -Wl,-dy -lrt -lpthread 
-LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lprotobuf -lrt -lpthread 
+LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lprotobuf -lutil_pthread
+LIBS += $(LIBS) -lrt -lpthread
 DMARCROS := -DLANGUAGE_ZH #-DNDEBUG -DDEBUG 
 # -ggdb
 CCFLAG := -O0 -g3 -Wall $(DMARCROS) $(INC) $(LIBS) -std=c++17

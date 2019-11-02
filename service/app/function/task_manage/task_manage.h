@@ -17,11 +17,10 @@
 #include <inttypes.h>
 #include <time.h>
 #include <vector>
+#include <util_pthread/util_pthread.h>
 
 namespace wotsen
 {
-
-using thread_func = void *(*)(void *);
 using thread_clean = void (*)(void);
 
 enum
@@ -54,21 +53,15 @@ enum task_state
 
 struct task_record
 {
-#define MAX_THREAD_NAME_LEN 15 // 线程名最长长度
-
-#define STACKSIZE(k) ((k)*1024) // 栈长度，传入数字以k为单位
-#ifndef PTHREAD_STACK_MIN
-#define PTHREAD_STACK_MIN 16384 // 最小栈
-#endif
-
 #define TASK_TIME_ERROR_RANGE 10 // 误差时间10s
 #define MAX_TASK_TIMEOUT_TIMES 3 // 超时次数
 
     uint16_t task_id; // 任务id
     pthread_t tid;    // 线程号
     char thread_name[MAX_THREAD_NAME_LEN + 1];
-    pthread_attr_t attr; // 线程属性
+    // pthread_attr_t attr; // 线程属性
     size_t stacksize;
+    int priority;
     thread_func func;
     thread_clean clean;
 
@@ -145,12 +138,9 @@ void *task_run(TasksManage *tasks);
 // 创建任务外部接口
 bool task_create(thread_func func, const size_t stacksize, const char *thread_name,
                  const uint16_t task_id, const uint32_t alive_time, enum task_deadlock action,
-                 thread_clean clean = NULL) noexcept;
+                 thread_clean clean = NULL, const int priority = SYS_THREAD_PRI_LV) noexcept;
 // 刷新任务自身时间
 void task_alive(const pthread_t tid) noexcept;
-
-// 设置任务名称
-void task_set_name(const char *name) noexcept;
 
 // 任务管理初始化
 void task_manage_init(void) noexcept;

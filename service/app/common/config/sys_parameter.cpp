@@ -74,7 +74,7 @@ bool SysParameter::open_runtime_file(void)
 
     if (!this->json_file)
     {
-        log_e("can not open " SYS_RUNTIME_CONFIG_FILENAME);
+        log_e("can not open " SYS_RUNTIME_CONFIG_FILENAME "\n");
         return false;
     }
 
@@ -90,7 +90,7 @@ bool SysParameter::create_runtime_file(void)
 
     if (!this->json_file)
     {
-        log_e("can not create " SYS_RUNTIME_CONFIG_FILENAME);
+        log_e("can not create " SYS_RUNTIME_CONFIG_FILENAME "\n");
         return false;
     }
 
@@ -108,7 +108,7 @@ bool SysParameter::create_runtime_file(void)
 
     if (!in)
     {
-        log_e("can not open " SYS_DEFAULT_CONFIG_FILENAME);
+        log_e("can not open " SYS_DEFAULT_CONFIG_FILENAME "\n");
         this->json_file.close();
         return false;
     }
@@ -130,7 +130,7 @@ bool SysParameter::open_default_file(void)
 
     if (!in)
     {
-        log_e("can not open " SYS_DEFAULT_CONFIG_FILENAME);
+        log_e("can not open " SYS_DEFAULT_CONFIG_FILENAME "\n");
         return false;
     }
 

@@ -54,7 +54,6 @@ TasksManage::~TasksManage()
 
         pthread_mutex_unlock(&item->mutex);
         pthread_mutex_destroy(&item->mutex);
-        pthread_attr_destroy(&item->attr);
         pthread_cond_destroy(&item->cond);
     }
 
@@ -87,21 +86,12 @@ bool TasksManage::task_create(const struct task_record *task) noexcept
         goto err_return;
     }
 
-    // _task = std::make_shared<struct task_record>(*task);
     memcpy(&*_task, task, sizeof(struct task_record));
-
-    memset(&_task->attr, 0, sizeof(pthread_attr_t));
 
     pthread_mutex_init(&_task->mutex, NULL);
     pthread_cond_init(&_task->cond, NULL);
-    pthread_attr_init(&_task->attr);
 
-    if (pthread_attr_setdetachstate(&_task->attr, PTHREAD_CREATE_DETACHED) < 0)
-    { // 线程分离，自行回收资源，不用join，且无法切回PTHREAD_CREATE_JOINABLE状态
-        log_e("%s\n", strerror(errno));
-        goto err_return;
-    }
-    if (pthread_attr_setstacksize(&_task->attr, _task->stacksize) < 0)
+    if (!create_thread(&_task->tid, task->stacksize, task->priority, (thread_func)task_run, this))
     {
         log_e("%s\n", strerror(errno));
         goto err_return;
@@ -111,17 +101,6 @@ bool TasksManage::task_create(const struct task_record *task) noexcept
     _task->last_update_time = _task->create_time;
     _task->timeout_times = 0;
     _task->state = E_TASK_ALIVE;
-
-    // if (pthread_create(&_task->tid, &_task->attr, _task->func, (void *)_task->thread_name) < 0)
-    // {
-    //     log_e("%s\n", strerror(errno));
-    //     goto err_return;
-    // }
-    if (pthread_create(&_task->tid, &_task->attr, (thread_func)task_run, this) < 0)
-    {
-        log_e("%s\n", strerror(errno));
-        goto err_return;
-    }
 
     log_d("create task tid=[%zu], id=[%d], name=[%s]\n", _task->tid, _task->task_id, _task->thread_name);
 
@@ -133,7 +112,6 @@ bool TasksManage::task_create(const struct task_record *task) noexcept
 err_return:
     if (_task)
     {
-        pthread_attr_destroy(&_task->attr);
         pthread_mutex_destroy(&_task->mutex);
         pthread_cond_destroy(&_task->cond);
     }
@@ -143,23 +121,7 @@ err_return:
 
 bool TasksManage::task_exist_if(const pthread_t &tid) noexcept
 {
-    int pthread_kill_err;
-    pthread_kill_err = pthread_kill(tid, 0);
-
-    if (ESRCH == pthread_kill_err)
-    {
-        log_i("task=[%ld] is not exist!/n", tid);
-        return false;
-    }
-    else if (EINVAL == pthread_kill_err)
-    {
-        log_i("task=[%ld], send invalid signal to it!/n", tid);
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return if_thread_exsit(tid);
 }
 
 auto TasksManage::get_item_task(const pthread_t &tid) noexcept
@@ -268,7 +230,6 @@ void TasksManage::task_clean(void) noexcept
                                           [](auto _task) -> bool {
                                               if (E_TASK_DEAD == _task->state)
                                               {
-                                                  pthread_attr_destroy(&_task->attr);
                                                   pthread_mutex_unlock(&_task->mutex);
                                                   pthread_mutex_destroy(&_task->mutex);
                                                   pthread_cond_destroy(&_task->cond);
@@ -302,7 +263,6 @@ void TasksManage::task_overload(void) noexcept
 
     for (auto item : old_tasks)
     {
-        pthread_attr_destroy(&item->attr);
         pthread_mutex_unlock(&item->mutex);
         pthread_mutex_destroy(&item->mutex);
         pthread_cond_destroy(&item->cond);
@@ -314,7 +274,7 @@ void TasksManage::task_overload(void) noexcept
 
 void TasksManage::task_kill(std::shared_ptr<struct task_record> &_task) noexcept
 {
-    if (pthread_cancel(_task->tid) < 0)
+    if (!release_thread(_task->tid))
     {
         log_e("%s, can not kill thread=[%d]\n", strerror(errno), _task->tid);
     }
@@ -348,24 +308,6 @@ void TasksManage::task_reload(std::shared_ptr<struct task_record> &_task) noexce
 {
     task_pool->task_kill(_task);
     _task->state = E_TASK_OVERLOAD;
-    // struct task_record *task = new struct task_record(*_task);
-    // struct task_record *task = new struct task_record;
-
-    // memcpy(task, &*_task, sizeof(struct task_record));
-
-    // task_pool->task_destroy(_task);
-
-    // if (NULL != _task->clean)
-    // {
-    //     _task->clean();
-    // }
-
-    // if (!task_pool->task_create(task))
-    // {
-    //     log_e("reload tid=[%ld]\n", task->tid);
-    // }
-
-    // delete task;
 }
 
 /**
@@ -492,25 +434,6 @@ static void *task_manage(void *name) noexcept
     }
 }
 
-void task_set_name(const char *name) noexcept
-{
-    char pname[MAX_THREAD_NAME_LEN + 1] = {'\0'};
-    pthread_t tid = pthread_self();
-
-    // pid_t tid = gettid(); // 这玩意儿不能用?
-
-    if (NULL != name)
-    {
-        sprintf(pname, "%s", (char *)name);
-        prctl(PR_SET_NAME, pname);
-    }
-    else
-    {
-        sprintf(pname, "p%zu", tid);
-        prctl(PR_SET_NAME, pname);
-    }
-}
-
 /**
  * @brief 创建任务
  * 
@@ -525,7 +448,8 @@ void task_set_name(const char *name) noexcept
  * @return false 创建失败
  */
 bool task_create(thread_func func, const size_t stacksize, const char *thread_name,
-                 const uint16_t task_id, const uint32_t alive_time, enum task_deadlock action, thread_clean clean) noexcept
+                 const uint16_t task_id, const uint32_t alive_time, enum task_deadlock action,
+                 thread_clean clean, const int priority) noexcept
 {
     TasksManage *task_pool = TasksManage::get_task_pool();
     struct task_record task;
@@ -534,6 +458,7 @@ bool task_create(thread_func func, const size_t stacksize, const char *thread_na
 
     task.func = func;
     task.stacksize = stacksize;
+    task.priority = priority;
     snprintf(task.thread_name, MAX_THREAD_NAME_LEN + 1, "%s", thread_name);
     task.task_id = task_id;
     task.alive_time = alive_time;
@@ -576,7 +501,7 @@ void *task_run(TasksManage *tasks)
         return (void *)0;
     }
 
-    task_set_name((const char *)_task->thread_name);
+    set_thread_name((const char *)_task->thread_name);
 
     log_d("tid=[%zu], name=[%s] run\n", tid, _task->thread_name);
 

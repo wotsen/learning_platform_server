@@ -72,8 +72,9 @@ static void *task_sdk_stream_do(void *name) noexcept
 
 			package = stream_list.front();
 
-			if (sdk_protocol_do(SDK_TCP_DATA_TYPE, package, &res))
+			// if (sdk_protocol_do(SDK_TCP_DATA_TYPE, package, &res))
 			{
+				sdk_protocol_do(SDK_TCP_DATA_TYPE, package, &res);
 				package->write(package->handle, &res.res);
 			}
 

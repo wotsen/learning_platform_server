@@ -19,3 +19,6 @@
 [submodule "service/third_party/re2"]
 	path = service/third_party/re2
 	url = https://github.com/google/re2
+[submodule "service/third_party/util_pthread"]
+	path = service/third_party/util_pthread
+	url = https://github.com/wotsen/util_pthread

@@ -7,6 +7,11 @@ cd c-log
 make
 make MAKE_INSTALL_PREFIX=$install_dir install
 
+# 安装util_pthread
+cd ../util_pthread
+make
+make MAKE_INSTALL_PREFIX=$install_dir install
+
 # 安装json
 cd ../json
 cp single_include/* $install_dir/include -rf

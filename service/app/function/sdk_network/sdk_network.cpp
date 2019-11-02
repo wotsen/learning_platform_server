@@ -76,8 +76,8 @@ static void on_stream_write(uv_write_t *req, int status)
 {
 	write_req_t *wr = (write_req_t *)req;
 	uv_buf_t *recv = (uv_buf_t *)(wr->req.handle->data);
-	log_i("write recv addr = [%p]\n", recv);
-	log_i("write base addr = [%p]\n", recv->base);
+	// log_i("write recv addr = [%p]\n", recv);
+	// log_i("write base addr = [%p]\n", recv->base);
 
 	if (status)
 	{
@@ -113,7 +113,7 @@ static bool uv_stream_write(uv_stream_t *handle, const uv_buf_t *buf)
 static void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
 {
 	buf->base = new char[suggested_size];
-	log_d("read base addr = [%p]\n", buf->base);
+	// log_d("read base addr = [%p], size = [%zu]\n", buf->base, suggested_size);
 	buf->len = suggested_size;
 }
 
@@ -130,7 +130,7 @@ static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *
 
 		package->handle = client;
 		package->handle->data = (void *)data;
-		log_d("read recv addr = [%p]\n", data);
+		// log_d("read recv addr = [%p]\n", data);
 		// package->buf = uv_buf_init(buf->base, buf->len);
 		package->write = uv_stream_write;
 		push_sdk_package(package);

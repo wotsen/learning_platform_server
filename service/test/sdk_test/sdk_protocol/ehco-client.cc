@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <uv.h>
+#include "test_sdk_pack.h"
+
+using namespace std;
+using namespace insider::sdk;
 
 #define DEFAULT_PORT 7000
 #define DEFAULT_BACKLOG 128
@@ -26,7 +30,7 @@ void echo_read(uv_stream_t *server, ssize_t nread, const uv_buf_t *buf)
 
 	printf("read addr=[%p]\n", buf->base);
 	// 結果を buf から取得して表示
-	printf("result: %s\n", buf->base);
+	printf("result: %s\n", buf->base + sizeof(size_t));
 	free(buf->base);
 }
 
@@ -40,6 +44,8 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
 // サーバへデータ送信後, サーバからのレスポンスを読み込む
 void on_write_end(uv_write_t *req, int status)
 {
+	delete [] (char *)req->data;
+
 	if (status == -1)
 	{
 		fprintf(stderr, "error on_write_end");
@@ -58,23 +64,38 @@ void on_connect(uv_connect_t *req, int status)
 		return;
 	}
 
-	const char *message = "hello libuv";
+	std::cout << "connect" << std::endl;
 
-	// char buffer[100];
-	// uv_buf_t buf = uv_buf_init(buffer, sizeof(buffer));
-	// 这里的init函数是直接封装成一个结构体返回
-	uv_buf_t buf = uv_buf_init(message, strlen(message)+1);
+	Sdk msg;
 
+	test_sdk_pack(msg);
+
+	char *data = new char[msg.ByteSizeLong() + sizeof(size_t)];
+	size_t len = msg.ByteSizeLong();
+
+	msg.SerializeToArray(data + sizeof(size_t), msg.ByteSizeLong());
+	memcpy(data, &len, sizeof(size_t));
+
+	uv_buf_t buf = uv_buf_init(data, len + sizeof(len));
+
+	std::cout << "send data = " << buf.base + sizeof(size_t) << '\n';
+
+	std::cout << "data len = " << len << '\n';
+
+	// const char *message = "hello libuv";
+	// uv_buf_t buf;
 	// buf.len = strlen(message);
-	printf("send buf addr=[%p]\n", message);
-	printf("send buf addr=[%p]\n", buf.base);
-	// buf.base = message;
+	// printf("send buf addr=[%p]\n", message);
+	// printf("send buf addr=[%p]\n", buf.base);
+	// buf.base = (char *)message;
 
 	// ハンドルを取得
 	uv_stream_t *tcp = req->handle;
 
 	// 書き込み用構造体
 	uv_write_t write_req;
+
+	write_req.data = data;
 
 	int buf_count = 1;
 

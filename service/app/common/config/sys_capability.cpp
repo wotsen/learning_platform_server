@@ -84,7 +84,7 @@ bool sys_capability_init(void)
 
     if (j.empty())
     {
-        log_e("can not load capability json!");
+        log_e("can not load capability json!\n");
         exit(0);
         return false;
     }

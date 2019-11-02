@@ -95,7 +95,7 @@ bool sys_config_init(void)
 
     if (j.empty())
     {
-        log_e("can not load config json!");
+        log_e("can not load config json!\n");
         exit(0);
         return false;
     }
