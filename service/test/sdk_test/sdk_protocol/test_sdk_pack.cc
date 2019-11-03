@@ -11,13 +11,12 @@ void test_sdk_pack(Sdk &msg)
 
 	Header *header = msg.mutable_header();
 
-	header->set_msg_magic(0x123456789ABCDEF);
-	header->set_pack_len(2);
+	header->set_msg_magic(SdkMagic::SDK_MAGIC);
 	header->set_pack_id(3);
 	header->mutable_time()->set_in_time(2018);
 	header->mutable_time()->set_out_time(2019);
 	header->set_data_dir(DataFlow::DATA_IN);
-	header->mutable_host()->set_port(8001);
+	header->mutable_host()->set_port(9001);
 	header->mutable_host()->set_ipv4("127.0.0.1");
 	header->set_trans_proto(TransProto::TCP);
 	header->set_data_proto(DataProto::DATA_AI);
@@ -38,7 +37,7 @@ void test_sdk_pack(Sdk &msg)
 
 	Footer *footer = msg.mutable_footer();
 
-	footer->set_crc16(0x123);
+	footer->set_res(0x123);
 
 	// std::cout << msg.IsInitialized() << std::endl;
 

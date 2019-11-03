@@ -18,9 +18,9 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
-#include "common/config/version.h"
-#include "common/common.h"
-#include "common/usr_apps/usr_apps.h"
+#include "sys_ctrl/config/version.h"
+#include "sys_ctrl/sys_ctrl.h"
+#include "usr_apps/usr_apps.h"
 
 #define PID_FILE "/var/run/ai_plat_service.pid"
 

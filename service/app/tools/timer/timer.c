@@ -133,7 +133,7 @@ char *getostimestr(char *str)
  * @param  time            [description]
  * @return                 [description]
  */
-struct seria_time *get_serail_time(struct seria_time *time)
+struct serial_time *get_serail_time(struct serial_time *time)
 {
 	struct tm tm;
 

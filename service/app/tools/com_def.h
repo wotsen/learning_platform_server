@@ -10,4 +10,11 @@
  */
 #pragma once
 
-#define PACKED		__attribute__ ((packed)) /* 结构体对齐 */
+/* 结构体对齐 */
+#define PACKED		__attribute__ ((packed))
+
+/* 标识符转字符串 */
+#define TO_STR(expr) #expr
+
+/* 整形变量转字符串 */
+#define VAL_TO_STR(num) TO_STR(num)

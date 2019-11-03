@@ -32,9 +32,13 @@ message DataTime {
     int64 out_time = 2;
 }
 
+enum SdkMagic {
+    SDK_NON_MAGIC = 0;
+    SDK_MAGIC  = 0x01ABCDEF;
+}
+
 message Header {
-    int64 msg_magic = 1;
-    int64 pack_len = 2;
+    SdkMagic msg_magic = 1;
     int64 pack_id = 3;
     DataTime time = 4;
     DataFlow data_dir = 5;

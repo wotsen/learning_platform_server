@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <uv.h>
+#include "calculate_crc16.h"
 #include "test_sdk_pack.h"
 
 using namespace std;
@@ -18,6 +19,13 @@ typedef struct
 	uv_write_t req;
 	uv_buf_t buf;
 } write_req_t;
+
+struct SdkMsgProtocol
+{
+	size_t data_len;
+	uint16_t crc16;
+	char data[0];
+};
 
 // サーバからのレスポンスを表示
 void echo_read(uv_stream_t *server, ssize_t nread, const uv_buf_t *buf)
@@ -66,21 +74,22 @@ void on_connect(uv_connect_t *req, int status)
 
 	std::cout << "connect" << std::endl;
 
+	SdkMsgProtocol *pack = NULL;
 	Sdk msg;
 
 	test_sdk_pack(msg);
 
-	char *data = new char[msg.ByteSizeLong() + sizeof(size_t)];
-	size_t len = msg.ByteSizeLong();
+	char *data = new char[msg.ByteSizeLong() + sizeof(SdkMsgProtocol)];
 
-	msg.SerializeToArray(data + sizeof(size_t), msg.ByteSizeLong());
-	memcpy(data, &len, sizeof(size_t));
+	pack = (SdkMsgProtocol *)data;
+	pack->data_len = msg.ByteSizeLong();
 
-	uv_buf_t buf = uv_buf_init(data, len + sizeof(len));
+	msg.SerializeToArray(pack->data, pack->data_len);
+	pack->crc16 = calculate_crc16(0, (uint8_t *)pack->data, pack->data_len);
 
-	std::cout << "send data = " << buf.base + sizeof(size_t) << '\n';
+	uv_buf_t buf = uv_buf_init((char *)pack, pack->data_len + sizeof(SdkMsgProtocol));
 
-	std::cout << "data len = " << len << '\n';
+	std::cout << "data len = " << pack->data_len << '\n';
 
 	// const char *message = "hello libuv";
 	// uv_buf_t buf;

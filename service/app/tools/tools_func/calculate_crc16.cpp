@@ -48,9 +48,9 @@ static const uint16_t _crc16_table[] = {
 /**
  * @brief 计算crc16
  * 
- * @param crc 
- * @param ptr 
- * @param len 
+ * @param crc 前次crc
+ * @param ptr 数据地址
+ * @param len 数据长度
  * @return uint16_t 
  */
 uint16_t calculate_crc16(uint16_t crc, uint8_t *ptr, uint32_t len)

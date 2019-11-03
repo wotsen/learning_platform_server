@@ -3,7 +3,7 @@ TARGET := AIService
 MAIN_SRC := main.cpp
 
 # compile marcros
-DIRS := common function tools module
+DIRS := sys_ctrl base_fun module_fun third_fun usr_apps tools
 OBJS := 
 
 # intermedia compile marcros
