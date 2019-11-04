@@ -18,6 +18,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include "tools/tools_func/coredump.h"
 #include "sys_ctrl/config/version.h"
 #include "sys_ctrl/sys_ctrl.h"
 #include "usr_apps/usr_apps.h"
@@ -77,6 +78,13 @@ int main(int argc, char **argv)
     {
         return 0;
     }
+
+#if !defined(NDEBUG)
+    if (!setup_coredump("/home/wotsen/work", 1024*1024))
+    {
+        return 0;
+    }
+#endif
 
     std::cout << "start app..................version: " << get_service_version() << std::endl;
     sys_init();
