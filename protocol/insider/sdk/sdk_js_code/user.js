@@ -68,7 +68,9 @@ proto.insider.sdk.User.prototype.toObject = function(opt_includeInstance) {
 proto.insider.sdk.User.toObject = function(includeInstance, msg) {
   var f, obj = {
     userName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    userPass: jspb.Message.getFieldWithDefault(msg, 2, "")
+    userPass: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    email: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    phone: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -113,6 +115,14 @@ proto.insider.sdk.User.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setUserPass(value);
       break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setEmail(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPhone(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -156,6 +166,20 @@ proto.insider.sdk.User.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getEmail();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getPhone();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
 };
 
 
@@ -192,6 +216,42 @@ proto.insider.sdk.User.prototype.getUserPass = function() {
  */
 proto.insider.sdk.User.prototype.setUserPass = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string email = 3;
+ * @return {string}
+ */
+proto.insider.sdk.User.prototype.getEmail = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.insider.sdk.User} returns this
+ */
+proto.insider.sdk.User.prototype.setEmail = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string phone = 4;
+ * @return {string}
+ */
+proto.insider.sdk.User.prototype.getPhone = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.insider.sdk.User} returns this
+ */
+proto.insider.sdk.User.prototype.setPhone = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 

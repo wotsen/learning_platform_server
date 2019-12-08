@@ -37,3 +37,11 @@ cd build
 cmake -DCMAKE_INSTALL_PREFIX=$install_dir ..
 make
 make install
+
+cd sqlite3
+make install
+
+cd ../../
+
+mkdir ../include/sole/ -p
+cp sole/sole.hpp ../include/sole/ -f

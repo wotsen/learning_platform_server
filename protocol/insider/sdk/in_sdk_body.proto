@@ -5,6 +5,8 @@ package insider.sdk;
 message User {
     string user_name = 1;
     string user_pass = 2;
+    string email = 3;
+    string phone = 4;
 }
 
 message UserInfo {
@@ -12,10 +14,21 @@ message UserInfo {
         U_LOGIN = 0;  // 用户登录
         U_LOGOUT = 1;  // 用户等出
         U_VERI = 2;  // 用户已登录，只验证
+        U_REGISTER = 3; // 用户注册
     }
+
+    enum Result {
+        U_TOKEN_TIMEOUT = 0; // token过期
+        U_USER_EXIST = 1; // 用户已存在
+        U_OK = 2;
+        U_ERROR = 3;
+    }
+
     UserType user_type = 1;
-    repeated User user = 2;  // 用户名和密码，登录登出需要
-    repeated string token = 3;  // token，通信过程中需要，登陆时会返回给客户端
+    User user = 2;  // 用户名和密码，登录登出需要
+    string token = 3;  // token，通信过程中需要，登陆时会返回给客户端
+    uint64 alive_time = 4; // token生存时间
+    Result result = 5;
 }
 
 // 请求动作，参考http实现
@@ -26,20 +39,17 @@ enum OperationType {
     DELETE = 3;
 }
 
-enum ResponseResult {
-    OK = 0;
-    ERROR = 1;
-}
-
 // 数据内容
 message Content {
     int64 magic = 1;
+    // 所有的业务数据协议放在此处，都是可选字段
 }
+
+// 数组使用repeated
 
 message Body {
     UserInfo user = 1;
     string url = 2;  // 请求路径，所有请求的响应使用路径与函数映射
     OperationType method = 3;
-    repeated ResponseResult response_result = 4;  // 响应结果状态码，发送方并不需要
-    repeated Content content = 5;  // 数据内容，登录等处时并不需要
+    Content content = 5;  // 数据内容，登录等处时并不需要
 }

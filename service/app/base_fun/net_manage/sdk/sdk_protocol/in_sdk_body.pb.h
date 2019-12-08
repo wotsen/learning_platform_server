@@ -84,12 +84,13 @@ enum UserInfo_UserType : int {
   UserInfo_UserType_U_LOGIN = 0,
   UserInfo_UserType_U_LOGOUT = 1,
   UserInfo_UserType_U_VERI = 2,
+  UserInfo_UserType_U_REGISTER = 3,
   UserInfo_UserType_UserInfo_UserType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   UserInfo_UserType_UserInfo_UserType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool UserInfo_UserType_IsValid(int value);
 constexpr UserInfo_UserType UserInfo_UserType_UserType_MIN = UserInfo_UserType_U_LOGIN;
-constexpr UserInfo_UserType UserInfo_UserType_UserType_MAX = UserInfo_UserType_U_VERI;
+constexpr UserInfo_UserType UserInfo_UserType_UserType_MAX = UserInfo_UserType_U_REGISTER;
 constexpr int UserInfo_UserType_UserType_ARRAYSIZE = UserInfo_UserType_UserType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* UserInfo_UserType_descriptor();
@@ -105,6 +106,33 @@ inline bool UserInfo_UserType_Parse(
     const std::string& name, UserInfo_UserType* value) {
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<UserInfo_UserType>(
     UserInfo_UserType_descriptor(), name, value);
+}
+enum UserInfo_Result : int {
+  UserInfo_Result_U_TOKEN_TIMEOUT = 0,
+  UserInfo_Result_U_USER_EXIST = 1,
+  UserInfo_Result_U_OK = 2,
+  UserInfo_Result_U_ERROR = 3,
+  UserInfo_Result_UserInfo_Result_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  UserInfo_Result_UserInfo_Result_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool UserInfo_Result_IsValid(int value);
+constexpr UserInfo_Result UserInfo_Result_Result_MIN = UserInfo_Result_U_TOKEN_TIMEOUT;
+constexpr UserInfo_Result UserInfo_Result_Result_MAX = UserInfo_Result_U_ERROR;
+constexpr int UserInfo_Result_Result_ARRAYSIZE = UserInfo_Result_Result_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* UserInfo_Result_descriptor();
+template<typename T>
+inline const std::string& UserInfo_Result_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, UserInfo_Result>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function UserInfo_Result_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    UserInfo_Result_descriptor(), enum_t_value);
+}
+inline bool UserInfo_Result_Parse(
+    const std::string& name, UserInfo_Result* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<UserInfo_Result>(
+    UserInfo_Result_descriptor(), name, value);
 }
 enum OperationType : int {
   GET = 0,
@@ -132,31 +160,6 @@ inline bool OperationType_Parse(
     const std::string& name, OperationType* value) {
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<OperationType>(
     OperationType_descriptor(), name, value);
-}
-enum ResponseResult : int {
-  OK = 0,
-  ERROR = 1,
-  ResponseResult_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
-  ResponseResult_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
-};
-bool ResponseResult_IsValid(int value);
-constexpr ResponseResult ResponseResult_MIN = OK;
-constexpr ResponseResult ResponseResult_MAX = ERROR;
-constexpr int ResponseResult_ARRAYSIZE = ResponseResult_MAX + 1;
-
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ResponseResult_descriptor();
-template<typename T>
-inline const std::string& ResponseResult_Name(T enum_t_value) {
-  static_assert(::std::is_same<T, ResponseResult>::value ||
-    ::std::is_integral<T>::value,
-    "Incorrect type passed to function ResponseResult_Name.");
-  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-    ResponseResult_descriptor(), enum_t_value);
-}
-inline bool ResponseResult_Parse(
-    const std::string& name, ResponseResult* value) {
-  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<ResponseResult>(
-    ResponseResult_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -268,6 +271,8 @@ class User :
   enum : int {
     kUserNameFieldNumber = 1,
     kUserPassFieldNumber = 2,
+    kEmailFieldNumber = 3,
+    kPhoneFieldNumber = 4,
   };
   // string user_name = 1;
   void clear_user_name();
@@ -301,6 +306,38 @@ class User :
   std::string* _internal_mutable_user_pass();
   public:
 
+  // string email = 3;
+  void clear_email();
+  const std::string& email() const;
+  void set_email(const std::string& value);
+  void set_email(std::string&& value);
+  void set_email(const char* value);
+  void set_email(const char* value, size_t size);
+  std::string* mutable_email();
+  std::string* release_email();
+  void set_allocated_email(std::string* email);
+  private:
+  const std::string& _internal_email() const;
+  void _internal_set_email(const std::string& value);
+  std::string* _internal_mutable_email();
+  public:
+
+  // string phone = 4;
+  void clear_phone();
+  const std::string& phone() const;
+  void set_phone(const std::string& value);
+  void set_phone(std::string&& value);
+  void set_phone(const char* value);
+  void set_phone(const char* value, size_t size);
+  std::string* mutable_phone();
+  std::string* release_phone();
+  void set_allocated_phone(std::string* phone);
+  private:
+  const std::string& _internal_phone() const;
+  void _internal_set_phone(const std::string& value);
+  std::string* _internal_mutable_phone();
+  public:
+
   // @@protoc_insertion_point(class_scope:insider.sdk.User)
  private:
   class _Internal;
@@ -308,6 +345,8 @@ class User :
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_name_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_pass_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr email_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr phone_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_in_5fsdk_5fbody_2eproto;
 };
@@ -423,6 +462,8 @@ class UserInfo :
     UserInfo_UserType_U_LOGOUT;
   static constexpr UserType U_VERI =
     UserInfo_UserType_U_VERI;
+  static constexpr UserType U_REGISTER =
+    UserInfo_UserType_U_REGISTER;
   static inline bool UserType_IsValid(int value) {
     return UserInfo_UserType_IsValid(value);
   }
@@ -448,53 +489,78 @@ class UserInfo :
     return UserInfo_UserType_Parse(name, value);
   }
 
+  typedef UserInfo_Result Result;
+  static constexpr Result U_TOKEN_TIMEOUT =
+    UserInfo_Result_U_TOKEN_TIMEOUT;
+  static constexpr Result U_USER_EXIST =
+    UserInfo_Result_U_USER_EXIST;
+  static constexpr Result U_OK =
+    UserInfo_Result_U_OK;
+  static constexpr Result U_ERROR =
+    UserInfo_Result_U_ERROR;
+  static inline bool Result_IsValid(int value) {
+    return UserInfo_Result_IsValid(value);
+  }
+  static constexpr Result Result_MIN =
+    UserInfo_Result_Result_MIN;
+  static constexpr Result Result_MAX =
+    UserInfo_Result_Result_MAX;
+  static constexpr int Result_ARRAYSIZE =
+    UserInfo_Result_Result_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  Result_descriptor() {
+    return UserInfo_Result_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& Result_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, Result>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function Result_Name.");
+    return UserInfo_Result_Name(enum_t_value);
+  }
+  static inline bool Result_Parse(const std::string& name,
+      Result* value) {
+    return UserInfo_Result_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   enum : int {
-    kUserFieldNumber = 2,
     kTokenFieldNumber = 3,
+    kUserFieldNumber = 2,
     kUserTypeFieldNumber = 1,
+    kResultFieldNumber = 5,
+    kAliveTimeFieldNumber = 4,
   };
-  // repeated .insider.sdk.User user = 2;
-  int user_size() const;
+  // string token = 3;
+  void clear_token();
+  const std::string& token() const;
+  void set_token(const std::string& value);
+  void set_token(std::string&& value);
+  void set_token(const char* value);
+  void set_token(const char* value, size_t size);
+  std::string* mutable_token();
+  std::string* release_token();
+  void set_allocated_token(std::string* token);
   private:
-  int _internal_user_size() const;
+  const std::string& _internal_token() const;
+  void _internal_set_token(const std::string& value);
+  std::string* _internal_mutable_token();
+  public:
+
+  // .insider.sdk.User user = 2;
+  bool has_user() const;
+  private:
+  bool _internal_has_user() const;
   public:
   void clear_user();
-  ::insider::sdk::User* mutable_user(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::User >*
-      mutable_user();
+  const ::insider::sdk::User& user() const;
+  ::insider::sdk::User* release_user();
+  ::insider::sdk::User* mutable_user();
+  void set_allocated_user(::insider::sdk::User* user);
   private:
-  const ::insider::sdk::User& _internal_user(int index) const;
-  ::insider::sdk::User* _internal_add_user();
-  public:
-  const ::insider::sdk::User& user(int index) const;
-  ::insider::sdk::User* add_user();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::User >&
-      user() const;
-
-  // repeated string token = 3;
-  int token_size() const;
-  private:
-  int _internal_token_size() const;
-  public:
-  void clear_token();
-  const std::string& token(int index) const;
-  std::string* mutable_token(int index);
-  void set_token(int index, const std::string& value);
-  void set_token(int index, std::string&& value);
-  void set_token(int index, const char* value);
-  void set_token(int index, const char* value, size_t size);
-  std::string* add_token();
-  void add_token(const std::string& value);
-  void add_token(std::string&& value);
-  void add_token(const char* value);
-  void add_token(const char* value, size_t size);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& token() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_token();
-  private:
-  const std::string& _internal_token(int index) const;
-  std::string* _internal_add_token();
+  const ::insider::sdk::User& _internal_user() const;
+  ::insider::sdk::User* _internal_mutable_user();
   public:
 
   // .insider.sdk.UserInfo.UserType user_type = 1;
@@ -506,14 +572,34 @@ class UserInfo :
   void _internal_set_user_type(::insider::sdk::UserInfo_UserType value);
   public:
 
+  // .insider.sdk.UserInfo.Result result = 5;
+  void clear_result();
+  ::insider::sdk::UserInfo_Result result() const;
+  void set_result(::insider::sdk::UserInfo_Result value);
+  private:
+  ::insider::sdk::UserInfo_Result _internal_result() const;
+  void _internal_set_result(::insider::sdk::UserInfo_Result value);
+  public:
+
+  // uint64 alive_time = 4;
+  void clear_alive_time();
+  ::PROTOBUF_NAMESPACE_ID::uint64 alive_time() const;
+  void set_alive_time(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_alive_time() const;
+  void _internal_set_alive_time(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:insider.sdk.UserInfo)
  private:
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::User > user_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> token_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr token_;
+  ::insider::sdk::User* user_;
   int user_type_;
+  int result_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 alive_time_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_in_5fsdk_5fbody_2eproto;
 };
@@ -753,47 +839,11 @@ class Body :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kResponseResultFieldNumber = 4,
-    kContentFieldNumber = 5,
     kUrlFieldNumber = 2,
     kUserFieldNumber = 1,
+    kContentFieldNumber = 5,
     kMethodFieldNumber = 3,
   };
-  // repeated .insider.sdk.ResponseResult response_result = 4;
-  int response_result_size() const;
-  private:
-  int _internal_response_result_size() const;
-  public:
-  void clear_response_result();
-  private:
-  ::insider::sdk::ResponseResult _internal_response_result(int index) const;
-  void _internal_add_response_result(::insider::sdk::ResponseResult value);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>* _internal_mutable_response_result();
-  public:
-  ::insider::sdk::ResponseResult response_result(int index) const;
-  void set_response_result(int index, ::insider::sdk::ResponseResult value);
-  void add_response_result(::insider::sdk::ResponseResult value);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>& response_result() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>* mutable_response_result();
-
-  // repeated .insider.sdk.Content content = 5;
-  int content_size() const;
-  private:
-  int _internal_content_size() const;
-  public:
-  void clear_content();
-  ::insider::sdk::Content* mutable_content(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::Content >*
-      mutable_content();
-  private:
-  const ::insider::sdk::Content& _internal_content(int index) const;
-  ::insider::sdk::Content* _internal_add_content();
-  public:
-  const ::insider::sdk::Content& content(int index) const;
-  ::insider::sdk::Content* add_content();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::Content >&
-      content() const;
-
   // string url = 2;
   void clear_url();
   const std::string& url() const;
@@ -825,6 +875,21 @@ class Body :
   ::insider::sdk::UserInfo* _internal_mutable_user();
   public:
 
+  // .insider.sdk.Content content = 5;
+  bool has_content() const;
+  private:
+  bool _internal_has_content() const;
+  public:
+  void clear_content();
+  const ::insider::sdk::Content& content() const;
+  ::insider::sdk::Content* release_content();
+  ::insider::sdk::Content* mutable_content();
+  void set_allocated_content(::insider::sdk::Content* content);
+  private:
+  const ::insider::sdk::Content& _internal_content() const;
+  ::insider::sdk::Content* _internal_mutable_content();
+  public:
+
   // .insider.sdk.OperationType method = 3;
   void clear_method();
   ::insider::sdk::OperationType method() const;
@@ -839,11 +904,9 @@ class Body :
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField<int> response_result_;
-  mutable std::atomic<int> _response_result_cached_byte_size_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::Content > content_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr url_;
   ::insider::sdk::UserInfo* user_;
+  ::insider::sdk::Content* content_;
   int method_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_in_5fsdk_5fbody_2eproto;
@@ -979,6 +1042,126 @@ inline void User::set_allocated_user_pass(std::string* user_pass) {
   // @@protoc_insertion_point(field_set_allocated:insider.sdk.User.user_pass)
 }
 
+// string email = 3;
+inline void User::clear_email() {
+  email_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& User::email() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.User.email)
+  return _internal_email();
+}
+inline void User::set_email(const std::string& value) {
+  _internal_set_email(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.User.email)
+}
+inline std::string* User::mutable_email() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.User.email)
+  return _internal_mutable_email();
+}
+inline const std::string& User::_internal_email() const {
+  return email_.GetNoArena();
+}
+inline void User::_internal_set_email(const std::string& value) {
+  
+  email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void User::set_email(std::string&& value) {
+  
+  email_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:insider.sdk.User.email)
+}
+inline void User::set_email(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:insider.sdk.User.email)
+}
+inline void User::set_email(const char* value, size_t size) {
+  
+  email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:insider.sdk.User.email)
+}
+inline std::string* User::_internal_mutable_email() {
+  
+  return email_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* User::release_email() {
+  // @@protoc_insertion_point(field_release:insider.sdk.User.email)
+  
+  return email_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void User::set_allocated_email(std::string* email) {
+  if (email != nullptr) {
+    
+  } else {
+    
+  }
+  email_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), email);
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.User.email)
+}
+
+// string phone = 4;
+inline void User::clear_phone() {
+  phone_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& User::phone() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.User.phone)
+  return _internal_phone();
+}
+inline void User::set_phone(const std::string& value) {
+  _internal_set_phone(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.User.phone)
+}
+inline std::string* User::mutable_phone() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.User.phone)
+  return _internal_mutable_phone();
+}
+inline const std::string& User::_internal_phone() const {
+  return phone_.GetNoArena();
+}
+inline void User::_internal_set_phone(const std::string& value) {
+  
+  phone_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void User::set_phone(std::string&& value) {
+  
+  phone_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:insider.sdk.User.phone)
+}
+inline void User::set_phone(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  phone_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:insider.sdk.User.phone)
+}
+inline void User::set_phone(const char* value, size_t size) {
+  
+  phone_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:insider.sdk.User.phone)
+}
+inline std::string* User::_internal_mutable_phone() {
+  
+  return phone_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* User::release_phone() {
+  // @@protoc_insertion_point(field_release:insider.sdk.User.phone)
+  
+  return phone_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void User::set_allocated_phone(std::string* phone) {
+  if (phone != nullptr) {
+    
+  } else {
+    
+  }
+  phone_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), phone);
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.User.phone)
+}
+
 // -------------------------------------------------------------------
 
 // UserInfo
@@ -1003,117 +1186,164 @@ inline void UserInfo::set_user_type(::insider::sdk::UserInfo_UserType value) {
   // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.user_type)
 }
 
-// repeated .insider.sdk.User user = 2;
-inline int UserInfo::_internal_user_size() const {
-  return user_.size();
+// .insider.sdk.User user = 2;
+inline bool UserInfo::_internal_has_user() const {
+  return this != internal_default_instance() && user_ != nullptr;
 }
-inline int UserInfo::user_size() const {
-  return _internal_user_size();
+inline bool UserInfo::has_user() const {
+  return _internal_has_user();
 }
 inline void UserInfo::clear_user() {
-  user_.Clear();
+  if (GetArenaNoVirtual() == nullptr && user_ != nullptr) {
+    delete user_;
+  }
+  user_ = nullptr;
 }
-inline ::insider::sdk::User* UserInfo::mutable_user(int index) {
-  // @@protoc_insertion_point(field_mutable:insider.sdk.UserInfo.user)
-  return user_.Mutable(index);
+inline const ::insider::sdk::User& UserInfo::_internal_user() const {
+  const ::insider::sdk::User* p = user_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::insider::sdk::User*>(
+      &::insider::sdk::_User_default_instance_);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::User >*
-UserInfo::mutable_user() {
-  // @@protoc_insertion_point(field_mutable_list:insider.sdk.UserInfo.user)
-  return &user_;
-}
-inline const ::insider::sdk::User& UserInfo::_internal_user(int index) const {
-  return user_.Get(index);
-}
-inline const ::insider::sdk::User& UserInfo::user(int index) const {
+inline const ::insider::sdk::User& UserInfo::user() const {
   // @@protoc_insertion_point(field_get:insider.sdk.UserInfo.user)
-  return _internal_user(index);
+  return _internal_user();
 }
-inline ::insider::sdk::User* UserInfo::_internal_add_user() {
-  return user_.Add();
+inline ::insider::sdk::User* UserInfo::release_user() {
+  // @@protoc_insertion_point(field_release:insider.sdk.UserInfo.user)
+  
+  ::insider::sdk::User* temp = user_;
+  user_ = nullptr;
+  return temp;
 }
-inline ::insider::sdk::User* UserInfo::add_user() {
-  // @@protoc_insertion_point(field_add:insider.sdk.UserInfo.user)
-  return _internal_add_user();
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::User >&
-UserInfo::user() const {
-  // @@protoc_insertion_point(field_list:insider.sdk.UserInfo.user)
+inline ::insider::sdk::User* UserInfo::_internal_mutable_user() {
+  
+  if (user_ == nullptr) {
+    auto* p = CreateMaybeMessage<::insider::sdk::User>(GetArenaNoVirtual());
+    user_ = p;
+  }
   return user_;
 }
+inline ::insider::sdk::User* UserInfo::mutable_user() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.UserInfo.user)
+  return _internal_mutable_user();
+}
+inline void UserInfo::set_allocated_user(::insider::sdk::User* user) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete user_;
+  }
+  if (user) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      user = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, user, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  user_ = user;
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.UserInfo.user)
+}
 
-// repeated string token = 3;
-inline int UserInfo::_internal_token_size() const {
-  return token_.size();
-}
-inline int UserInfo::token_size() const {
-  return _internal_token_size();
-}
+// string token = 3;
 inline void UserInfo::clear_token() {
-  token_.Clear();
+  token_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* UserInfo::add_token() {
-  // @@protoc_insertion_point(field_add_mutable:insider.sdk.UserInfo.token)
-  return _internal_add_token();
-}
-inline const std::string& UserInfo::_internal_token(int index) const {
-  return token_.Get(index);
-}
-inline const std::string& UserInfo::token(int index) const {
+inline const std::string& UserInfo::token() const {
   // @@protoc_insertion_point(field_get:insider.sdk.UserInfo.token)
-  return _internal_token(index);
+  return _internal_token();
 }
-inline std::string* UserInfo::mutable_token(int index) {
+inline void UserInfo::set_token(const std::string& value) {
+  _internal_set_token(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.token)
+}
+inline std::string* UserInfo::mutable_token() {
   // @@protoc_insertion_point(field_mutable:insider.sdk.UserInfo.token)
-  return token_.Mutable(index);
+  return _internal_mutable_token();
 }
-inline void UserInfo::set_token(int index, const std::string& value) {
-  // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.token)
-  token_.Mutable(index)->assign(value);
+inline const std::string& UserInfo::_internal_token() const {
+  return token_.GetNoArena();
 }
-inline void UserInfo::set_token(int index, std::string&& value) {
-  // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.token)
-  token_.Mutable(index)->assign(std::move(value));
+inline void UserInfo::_internal_set_token(const std::string& value) {
+  
+  token_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void UserInfo::set_token(int index, const char* value) {
+inline void UserInfo::set_token(std::string&& value) {
+  
+  token_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:insider.sdk.UserInfo.token)
+}
+inline void UserInfo::set_token(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
-  token_.Mutable(index)->assign(value);
+  
+  token_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:insider.sdk.UserInfo.token)
 }
-inline void UserInfo::set_token(int index, const char* value, size_t size) {
-  token_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
+inline void UserInfo::set_token(const char* value, size_t size) {
+  
+  token_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:insider.sdk.UserInfo.token)
 }
-inline std::string* UserInfo::_internal_add_token() {
-  return token_.Add();
+inline std::string* UserInfo::_internal_mutable_token() {
+  
+  return token_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void UserInfo::add_token(const std::string& value) {
-  token_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:insider.sdk.UserInfo.token)
+inline std::string* UserInfo::release_token() {
+  // @@protoc_insertion_point(field_release:insider.sdk.UserInfo.token)
+  
+  return token_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void UserInfo::add_token(std::string&& value) {
-  token_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:insider.sdk.UserInfo.token)
+inline void UserInfo::set_allocated_token(std::string* token) {
+  if (token != nullptr) {
+    
+  } else {
+    
+  }
+  token_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), token);
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.UserInfo.token)
 }
-inline void UserInfo::add_token(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  token_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:insider.sdk.UserInfo.token)
+
+// uint64 alive_time = 4;
+inline void UserInfo::clear_alive_time() {
+  alive_time_ = PROTOBUF_ULONGLONG(0);
 }
-inline void UserInfo::add_token(const char* value, size_t size) {
-  token_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:insider.sdk.UserInfo.token)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 UserInfo::_internal_alive_time() const {
+  return alive_time_;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
-UserInfo::token() const {
-  // @@protoc_insertion_point(field_list:insider.sdk.UserInfo.token)
-  return token_;
+inline ::PROTOBUF_NAMESPACE_ID::uint64 UserInfo::alive_time() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.UserInfo.alive_time)
+  return _internal_alive_time();
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
-UserInfo::mutable_token() {
-  // @@protoc_insertion_point(field_mutable_list:insider.sdk.UserInfo.token)
-  return &token_;
+inline void UserInfo::_internal_set_alive_time(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  alive_time_ = value;
+}
+inline void UserInfo::set_alive_time(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_alive_time(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.alive_time)
+}
+
+// .insider.sdk.UserInfo.Result result = 5;
+inline void UserInfo::clear_result() {
+  result_ = 0;
+}
+inline ::insider::sdk::UserInfo_Result UserInfo::_internal_result() const {
+  return static_cast< ::insider::sdk::UserInfo_Result >(result_);
+}
+inline ::insider::sdk::UserInfo_Result UserInfo::result() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.UserInfo.result)
+  return _internal_result();
+}
+inline void UserInfo::_internal_set_result(::insider::sdk::UserInfo_Result value) {
+  
+  result_ = value;
+}
+inline void UserInfo::set_result(::insider::sdk::UserInfo_Result value) {
+  _internal_set_result(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.result)
 }
 
 // -------------------------------------------------------------------
@@ -1284,86 +1514,64 @@ inline void Body::set_method(::insider::sdk::OperationType value) {
   // @@protoc_insertion_point(field_set:insider.sdk.Body.method)
 }
 
-// repeated .insider.sdk.ResponseResult response_result = 4;
-inline int Body::_internal_response_result_size() const {
-  return response_result_.size();
+// .insider.sdk.Content content = 5;
+inline bool Body::_internal_has_content() const {
+  return this != internal_default_instance() && content_ != nullptr;
 }
-inline int Body::response_result_size() const {
-  return _internal_response_result_size();
-}
-inline void Body::clear_response_result() {
-  response_result_.Clear();
-}
-inline ::insider::sdk::ResponseResult Body::_internal_response_result(int index) const {
-  return static_cast< ::insider::sdk::ResponseResult >(response_result_.Get(index));
-}
-inline ::insider::sdk::ResponseResult Body::response_result(int index) const {
-  // @@protoc_insertion_point(field_get:insider.sdk.Body.response_result)
-  return _internal_response_result(index);
-}
-inline void Body::set_response_result(int index, ::insider::sdk::ResponseResult value) {
-  response_result_.Set(index, value);
-  // @@protoc_insertion_point(field_set:insider.sdk.Body.response_result)
-}
-inline void Body::_internal_add_response_result(::insider::sdk::ResponseResult value) {
-  response_result_.Add(value);
-}
-inline void Body::add_response_result(::insider::sdk::ResponseResult value) {
-  // @@protoc_insertion_point(field_add:insider.sdk.Body.response_result)
-  _internal_add_response_result(value);
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>&
-Body::response_result() const {
-  // @@protoc_insertion_point(field_list:insider.sdk.Body.response_result)
-  return response_result_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>*
-Body::_internal_mutable_response_result() {
-  return &response_result_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>*
-Body::mutable_response_result() {
-  // @@protoc_insertion_point(field_mutable_list:insider.sdk.Body.response_result)
-  return _internal_mutable_response_result();
-}
-
-// repeated .insider.sdk.Content content = 5;
-inline int Body::_internal_content_size() const {
-  return content_.size();
-}
-inline int Body::content_size() const {
-  return _internal_content_size();
+inline bool Body::has_content() const {
+  return _internal_has_content();
 }
 inline void Body::clear_content() {
-  content_.Clear();
+  if (GetArenaNoVirtual() == nullptr && content_ != nullptr) {
+    delete content_;
+  }
+  content_ = nullptr;
 }
-inline ::insider::sdk::Content* Body::mutable_content(int index) {
-  // @@protoc_insertion_point(field_mutable:insider.sdk.Body.content)
-  return content_.Mutable(index);
+inline const ::insider::sdk::Content& Body::_internal_content() const {
+  const ::insider::sdk::Content* p = content_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::insider::sdk::Content*>(
+      &::insider::sdk::_Content_default_instance_);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::Content >*
-Body::mutable_content() {
-  // @@protoc_insertion_point(field_mutable_list:insider.sdk.Body.content)
-  return &content_;
-}
-inline const ::insider::sdk::Content& Body::_internal_content(int index) const {
-  return content_.Get(index);
-}
-inline const ::insider::sdk::Content& Body::content(int index) const {
+inline const ::insider::sdk::Content& Body::content() const {
   // @@protoc_insertion_point(field_get:insider.sdk.Body.content)
-  return _internal_content(index);
+  return _internal_content();
 }
-inline ::insider::sdk::Content* Body::_internal_add_content() {
-  return content_.Add();
+inline ::insider::sdk::Content* Body::release_content() {
+  // @@protoc_insertion_point(field_release:insider.sdk.Body.content)
+  
+  ::insider::sdk::Content* temp = content_;
+  content_ = nullptr;
+  return temp;
 }
-inline ::insider::sdk::Content* Body::add_content() {
-  // @@protoc_insertion_point(field_add:insider.sdk.Body.content)
-  return _internal_add_content();
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::insider::sdk::Content >&
-Body::content() const {
-  // @@protoc_insertion_point(field_list:insider.sdk.Body.content)
+inline ::insider::sdk::Content* Body::_internal_mutable_content() {
+  
+  if (content_ == nullptr) {
+    auto* p = CreateMaybeMessage<::insider::sdk::Content>(GetArenaNoVirtual());
+    content_ = p;
+  }
   return content_;
+}
+inline ::insider::sdk::Content* Body::mutable_content() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.Body.content)
+  return _internal_mutable_content();
+}
+inline void Body::set_allocated_content(::insider::sdk::Content* content) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete content_;
+  }
+  if (content) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      content = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, content, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  content_ = content;
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.Body.content)
 }
 
 #ifdef __GNUC__
@@ -1388,15 +1596,15 @@ template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::UserInfo_UserType>() {
   return ::insider::sdk::UserInfo_UserType_descriptor();
 }
+template <> struct is_proto_enum< ::insider::sdk::UserInfo_Result> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::UserInfo_Result>() {
+  return ::insider::sdk::UserInfo_Result_descriptor();
+}
 template <> struct is_proto_enum< ::insider::sdk::OperationType> : ::std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::OperationType>() {
   return ::insider::sdk::OperationType_descriptor();
-}
-template <> struct is_proto_enum< ::insider::sdk::ResponseResult> : ::std::true_type {};
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::ResponseResult>() {
-  return ::insider::sdk::ResponseResult_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

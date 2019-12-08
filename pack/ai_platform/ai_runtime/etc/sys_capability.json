@@ -3,9 +3,20 @@
         "enable": "true"
     },
     "service": {
-        "network": {
-            "support-version": ["ipv4"],
-            "support-layer": ["tcp", "udp"]
+        "modules": {
+            "base_fun": {
+                "network": {
+                    "sdk":{
+                        "support-version": ["ipv4"],
+                        "support-layer": ["tcp", "udp"]
+                    }
+                }
+            },
+            "module_fun": {
+                "user_manage": {
+                    "max_users": 20
+                }
+            }
         }
     }
 }

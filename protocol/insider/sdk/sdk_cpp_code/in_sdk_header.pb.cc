@@ -77,7 +77,7 @@ static void InitDefaultsscc_info_Host_in_5fsdk_5fheader_2eproto() {
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Host_in_5fsdk_5fheader_2eproto}, {}};
 
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_in_5fsdk_5fheader_2eproto[3];
-static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_in_5fsdk_5fheader_2eproto[4];
+static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_in_5fsdk_5fheader_2eproto[5];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_in_5fsdk_5fheader_2eproto = nullptr;
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_in_5fsdk_5fheader_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -101,6 +101,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_in_5fsdk_5fheader_2eproto::off
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Header, msg_magic_),
+  PROTOBUF_FIELD_OFFSET(::insider::sdk::Header, version_),
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Header, pack_id_),
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Header, time_),
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Header, data_dir_),
@@ -123,21 +124,23 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 const char descriptor_table_protodef_in_5fsdk_5fheader_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\023in_sdk_header.proto\022\013insider.sdk\"\"\n\004Ho"
   "st\022\014\n\004port\030\001 \001(\005\022\014\n\004ipv4\030\002 \001(\t\"-\n\010DataTi"
-  "me\022\017\n\007in_time\030\001 \001(\003\022\020\n\010out_time\030\002 \001(\003\"\214\002"
+  "me\022\017\n\007in_time\030\001 \001(\003\022\020\n\010out_time\030\002 \001(\003\"\266\002"
   "\n\006Header\022(\n\tmsg_magic\030\001 \001(\0162\025.insider.sd"
-  "k.SdkMagic\022\017\n\007pack_id\030\003 \001(\003\022#\n\004time\030\004 \001("
-  "\0132\025.insider.sdk.DataTime\022\'\n\010data_dir\030\005 \001"
-  "(\0162\025.insider.sdk.DataFlow\022\037\n\004host\030\006 \001(\0132"
-  "\021.insider.sdk.Host\022,\n\013trans_proto\030\007 \001(\0162"
-  "\027.insider.sdk.TransProto\022*\n\ndata_proto\030\010"
-  " \001(\0162\026.insider.sdk.DataProto*\'\n\nTransPro"
-  "to\022\007\n\003ARP\020\000\022\007\n\003TCP\020\001\022\007\n\003UDP\020\002*z\n\tDataPro"
-  "to\022\020\n\014DATA_UPGRADE\020\000\022\027\n\023DATA_PARA_OPERAT"
-  "ION\020\001\022\016\n\nDATA_ALARM\020\002\022\023\n\017DATA_HEART_BEAT"
-  "\020\003\022\013\n\007DATA_AI\020\004\022\020\n\014DATA_PICTURE\020\005*%\n\010Dat"
-  "aFlow\022\013\n\007DATA_IN\020\000\022\014\n\010DATA_OUT\020\001*/\n\010SdkM"
-  "agic\022\021\n\rSDK_NON_MAGIC\020\000\022\020\n\tSDK_MAGIC\020\357\233\257"
-  "\rb\006proto3"
+  "k.SdkMagic\022(\n\007version\030\002 \001(\0162\027.insider.sd"
+  "k.SdkVersion\022\017\n\007pack_id\030\003 \001(\003\022#\n\004time\030\004 "
+  "\001(\0132\025.insider.sdk.DataTime\022\'\n\010data_dir\030\005"
+  " \001(\0162\025.insider.sdk.DataFlow\022\037\n\004host\030\006 \001("
+  "\0132\021.insider.sdk.Host\022,\n\013trans_proto\030\007 \001("
+  "\0162\027.insider.sdk.TransProto\022*\n\ndata_proto"
+  "\030\010 \001(\0162\026.insider.sdk.DataProto*\'\n\nTransP"
+  "roto\022\007\n\003ARP\020\000\022\007\n\003TCP\020\001\022\007\n\003UDP\020\002*z\n\tDataP"
+  "roto\022\020\n\014DATA_UPGRADE\020\000\022\027\n\023DATA_PARA_OPER"
+  "ATION\020\001\022\016\n\nDATA_ALARM\020\002\022\023\n\017DATA_HEART_BE"
+  "AT\020\003\022\013\n\007DATA_AI\020\004\022\020\n\014DATA_PICTURE\020\005*%\n\010D"
+  "ataFlow\022\013\n\007DATA_IN\020\000\022\014\n\010DATA_OUT\020\001*/\n\010Sd"
+  "kMagic\022\021\n\rSDK_NON_MAGIC\020\000\022\020\n\tSDK_MAGIC\020\357"
+  "\233\257\r*9\n\nSdkVersion\022\023\n\017SDK_NON_VERSION\020\000\022\026"
+  "\n\017SDK_CUR_VERSION\020\206\257\320\tb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_5fheader_2eproto_deps[1] = {
 };
@@ -149,7 +152,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_in_5fsdk_5fheader_2eproto_once;
 static bool descriptor_table_in_5fsdk_5fheader_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_in_5fsdk_5fheader_2eproto = {
-  &descriptor_table_in_5fsdk_5fheader_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fheader_2eproto, "in_sdk_header.proto", 649,
+  &descriptor_table_in_5fsdk_5fheader_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fheader_2eproto, "in_sdk_header.proto", 750,
   &descriptor_table_in_5fsdk_5fheader_2eproto_once, descriptor_table_in_5fsdk_5fheader_2eproto_sccs, descriptor_table_in_5fsdk_5fheader_2eproto_deps, 3, 0,
   schemas, file_default_instances, TableStruct_in_5fsdk_5fheader_2eproto::offsets,
   file_level_metadata_in_5fsdk_5fheader_2eproto, 3, file_level_enum_descriptors_in_5fsdk_5fheader_2eproto, file_level_service_descriptors_in_5fsdk_5fheader_2eproto,
@@ -214,6 +217,20 @@ bool SdkMagic_IsValid(int value) {
   switch (value) {
     case 0:
     case 28036591:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* SdkVersion_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_in_5fsdk_5fheader_2eproto);
+  return file_level_enum_descriptors_in_5fsdk_5fheader_2eproto[4];
+}
+bool SdkVersion_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 20191110:
       return true;
     default:
       return false;
@@ -702,9 +719,9 @@ Header::Header(const Header& from)
   } else {
     host_ = nullptr;
   }
-  ::memcpy(&pack_id_, &from.pack_id_,
+  ::memcpy(&msg_magic_, &from.msg_magic_,
     static_cast<size_t>(reinterpret_cast<char*>(&data_proto_) -
-    reinterpret_cast<char*>(&pack_id_)) + sizeof(data_proto_));
+    reinterpret_cast<char*>(&msg_magic_)) + sizeof(data_proto_));
   // @@protoc_insertion_point(copy_constructor:insider.sdk.Header)
 }
 
@@ -748,9 +765,9 @@ void Header::Clear() {
     delete host_;
   }
   host_ = nullptr;
-  ::memset(&pack_id_, 0, static_cast<size_t>(
+  ::memset(&msg_magic_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&data_proto_) -
-      reinterpret_cast<char*>(&pack_id_)) + sizeof(data_proto_));
+      reinterpret_cast<char*>(&msg_magic_)) + sizeof(data_proto_));
   _internal_metadata_.Clear();
 }
 
@@ -767,6 +784,14 @@ const char* Header::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::int
           ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
           CHK_(ptr);
           _internal_set_msg_magic(static_cast<::insider::sdk::SdkMagic>(val));
+        } else goto handle_unusual;
+        continue;
+      // .insider.sdk.SdkVersion version = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
+          CHK_(ptr);
+          _internal_set_version(static_cast<::insider::sdk::SdkVersion>(val));
         } else goto handle_unusual;
         continue;
       // int64 pack_id = 3;
@@ -847,6 +872,13 @@ failure:
       1, this->_internal_msg_magic(), target);
   }
 
+  // .insider.sdk.SdkVersion version = 2;
+  if (this->version() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      2, this->_internal_version(), target);
+  }
+
   // int64 pack_id = 3;
   if (this->pack_id() != 0) {
     target = stream->EnsureSpace(target);
@@ -920,17 +952,23 @@ size_t Header::ByteSizeLong() const {
         *host_);
   }
 
+  // .insider.sdk.SdkMagic msg_magic = 1;
+  if (this->msg_magic() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_msg_magic());
+  }
+
+  // .insider.sdk.SdkVersion version = 2;
+  if (this->version() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_version());
+  }
+
   // int64 pack_id = 3;
   if (this->pack_id() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64Size(
         this->_internal_pack_id());
-  }
-
-  // .insider.sdk.SdkMagic msg_magic = 1;
-  if (this->msg_magic() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_msg_magic());
   }
 
   // .insider.sdk.DataFlow data_dir = 5;
@@ -988,11 +1026,14 @@ void Header::MergeFrom(const Header& from) {
   if (from.has_host()) {
     _internal_mutable_host()->::insider::sdk::Host::MergeFrom(from._internal_host());
   }
-  if (from.pack_id() != 0) {
-    _internal_set_pack_id(from._internal_pack_id());
-  }
   if (from.msg_magic() != 0) {
     _internal_set_msg_magic(from._internal_msg_magic());
+  }
+  if (from.version() != 0) {
+    _internal_set_version(from._internal_version());
+  }
+  if (from.pack_id() != 0) {
+    _internal_set_pack_id(from._internal_pack_id());
   }
   if (from.data_dir() != 0) {
     _internal_set_data_dir(from._internal_data_dir());
@@ -1028,8 +1069,9 @@ void Header::InternalSwap(Header* other) {
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(time_, other->time_);
   swap(host_, other->host_);
-  swap(pack_id_, other->pack_id_);
   swap(msg_magic_, other->msg_magic_);
+  swap(version_, other->version_);
+  swap(pack_id_, other->pack_id_);
   swap(data_dir_, other->data_dir_);
   swap(trans_proto_, other->trans_proto_);
   swap(data_proto_, other->data_proto_);

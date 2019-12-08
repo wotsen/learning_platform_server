@@ -145,9 +145,7 @@ static bool uv_stream_write(uv_stream_t *handle, const uv_buf_t *buf)
 	wr = new write_req_t;
 	wr->buf = uv_buf_init(buf->base, buf->len);
 
-	log_d("send...........\n");
-
-	if (!buf || !buf->base || 0 == buf->len || uv_write((uv_write_t *)wr, handle, &wr->buf, 1, on_stream_write))
+	if (0 != uv_write((uv_write_t *)wr, handle, &wr->buf, 1, on_stream_write))
 	{
 		log_e("uv_write failed\n");
 		wr->req.handle = handle;

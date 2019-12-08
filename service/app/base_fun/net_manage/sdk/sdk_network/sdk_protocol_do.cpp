@@ -16,8 +16,8 @@
 #include <inttypes.h>
 #include <easylogger/easylogger_setup.h>
 #include "../../../../tools/tools_func/calculate_crc16.h"
-#include "../sdk_protocol/in_sdk.pb.h"
 #include "sdk_protocol_do.h"
+#include "sdk_midware.h"
 
 using namespace insider::sdk;
 
@@ -26,7 +26,7 @@ static bool sdk_body_do(const enum sdk_net_data_type type, Sdk &req, Sdk &res);
 
 // header数据处理
 template <typename T>
-bool sdk_header_do(const enum sdk_net_data_type type, Sdk &req, sdk_package<T> *uv_req);
+bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<T> *uv_req);
 
 // sdk消息处理
 template <typename T>
@@ -86,7 +86,7 @@ static bool sdk_body_do(const enum sdk_net_data_type type, Sdk &req, Sdk &res)
  * @return false 
  */
 template <>
-bool sdk_header_do(const enum sdk_net_data_type type, Sdk &req, sdk_package<uv_stream_t> *uv_req)
+bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<uv_stream_t> *uv_req)
 {
 	struct sockaddr_in addr;
 	Header *header = nullptr;
@@ -111,6 +111,12 @@ bool sdk_header_do(const enum sdk_net_data_type type, Sdk &req, sdk_package<uv_s
 	if (SdkMagic::SDK_MAGIC != header->msg_magic())
 	{
 		log_e("msg magic is %x\n", header->msg_magic());
+		return false;
+	}
+
+	if (SdkVersion::SDK_CUR_VERSION != header->version())
+	{
+		log_e("msg version is %x\n", header->version());
 		return false;
 	}
 
@@ -184,21 +190,9 @@ static bool check_sdk_protocol_head(SdkMsgProtocol *msg, const size_t real_recv_
 	return true;
 }
 
-/**
- * @brief sdk消息处理
- * 
- * @tparam T uv类型
- * @param type 网络类型
- * @param req 请求
- * @param res 响应
- * @return true 
- * @return false 
- */
 template <typename T>
-static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, struct SdkResponsePack *res)
+static bool sdk_req_msg_parser(sdk_package<T> *req, Sdk &req_msg)
 {
-	Sdk req_msg;
-	Sdk res_msg;
 	SdkMsgProtocol *msg = NULL;
 	uv_buf_t *req_buf = (uv_buf_t *)req->handle->data;
 
@@ -219,10 +213,70 @@ static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, s
 		return false;
 	}
 
-	// sdk头
-	if (!sdk_header_do(type, req_msg, req))
+	return true;
+}
+
+static bool sdk_pack_res_msg(struct SdkResponsePack *res, Sdk &res_msg)
+{
+	SdkMsgProtocol *msg = NULL;
+
+	// 响应sdk
+	msg = (SdkMsgProtocol *)res->res.base;
+
+	msg->data_len = res_msg.ByteSizeLong();
+	msg->crc16 = 0;
+
+	// TODO:添加响应信息
+
+	// 响应包，转换为数组
+	if (!res_msg.SerializeToArray(msg->data, res_msg.ByteSizeLong()))
+	{
+		log_e("serial response packet error\n");
+		return false;
+	}
+
+	msg->crc16 = calculate_crc16(0, (uint8_t *)msg->data, msg->data_len);
+
+	// 实际发送数据长度需要加上头部校验部分
+	res->res.len = msg->data_len + sizeof(SdkMsgProtocol);
+
+	return true;
+}
+
+/**
+ * @brief sdk消息处理
+ * 
+ * @tparam T uv类型
+ * @param type 网络类型
+ * @param req 请求
+ * @param res 响应
+ * @return true 
+ * @return false 
+ */
+template <typename T>
+static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, struct SdkResponsePack *res)
+{
+	Sdk req_msg;
+	Sdk res_msg;
+
+	// 解析sdk原始数据
+	if (!sdk_req_msg_parser(req, req_msg))
+	{
+		log_e("parser sdk msg failed\n");
+		return false;
+	}
+
+	// sdk头检查
+	if (!check_sdk_header(type, req_msg, req))
 	{
 		log_e("sdk header verify error\n");
+		goto sdk_err;
+	}
+
+	// 中间件
+	if (!sdk_midware_do(type, req, req_msg, res_msg))
+	{
+		log_e("sdk midware proc failed\n");
 		goto sdk_err;
 	}
 
@@ -233,23 +287,12 @@ static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, s
 		goto sdk_err;
 	}
 
-	// 响应sdk
-	msg = (SdkMsgProtocol *)res->res.base;
-
-	msg->data_len = res_msg.ByteSizeLong();
-	msg->crc16 = 0;
-
-	// 响应包，转换为数组
-	if (!res_msg.SerializeToArray(msg->data, res_msg.ByteSizeLong()))
+	// 组包
+	if (!sdk_pack_res_msg(res, res_msg))
 	{
-		log_e("serial response packet error\n");
+		log_e("pack response msg failed\n");
 		goto sdk_err;
 	}
-
-	msg->crc16 = calculate_crc16(0, (uint8_t *)msg->data, msg->data_len);
-
-	// 实际发送数据长度需要加上头部校验部分
-	res->res.len = msg->data_len + sizeof(SdkMsgProtocol);
 
 	google::protobuf::ShutdownProtobufLibrary();
 

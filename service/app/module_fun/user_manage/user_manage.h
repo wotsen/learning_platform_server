@@ -13,35 +13,12 @@
 #include <iostream>
 #include <list>
 #include <memory>
+#include "../../base_fun/net_manage/sdk/sdk_network/sdk_midware.h"
 
-struct UserInfo
-{
-	std::string email;
-	std::string name;
-	std::string pass;
-	std::string token;
-};
+bool user_manange_midware_do(const enum sdk_net_data_type type, void *req, insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res);
 
-class UserManage
-{
-private:
-	UserManage() {}
+bool user_register(void);
+bool user_release(void);
+bool user_verify(void);
 
-public:
-	~UserManage();
-
-	static UserManage *get_users(void);
-
-	std::list<std::shared_ptr<UserInfo>> &get_user_list(void)
-	{
-		return user_list;
-	}
-
-private:
-	static UserManage *users;
-	std::list<std::shared_ptr<UserInfo>> user_list;
-};
-
-bool user_register(struct UserInfo &user_info);
-bool user_release(struct UserInfo &user_info);
-bool user_verify(struct UserInfo &user_info);
+void user_manager_init(void);

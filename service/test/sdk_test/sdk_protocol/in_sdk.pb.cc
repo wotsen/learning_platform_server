@@ -15,7 +15,7 @@
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Body_in_5fsdk_5fbody_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5ffooter_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Footer_in_5fsdk_5ffooter_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5ffooter_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Footer_in_5fsdk_5ffooter_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fheader_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Header_in_5fsdk_5fheader_2eproto;
 namespace insider {
 namespace sdk {

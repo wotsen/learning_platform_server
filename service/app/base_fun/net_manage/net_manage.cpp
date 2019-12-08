@@ -15,6 +15,7 @@
 #include "uv_event/uv_event.h"
 #include "sdk/sdk_network/sdk_network.h"
 #include "sdk/sdk_network/sdk_package_distribution.h"
+#include "sdk_midware_register.h"
 #include "net_manage.h"
 
 void net_init(void)
@@ -29,4 +30,7 @@ void net_init(void)
 
 	// 初始化sdk消息分发任务
 	task_sdk_package_distribution_init();
+
+	// 注册sdk中间件
+	register_sdk_midwares();
 }

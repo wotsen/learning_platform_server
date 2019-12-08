@@ -85,6 +85,7 @@ static void *task_sdk_stream_do(void *name) noexcept
 	{
 		if (!stream_list.empty())
 		{
+			printf(".............pack\n");
 			res.res.len = 0;
 			memset(res_buf, 0, MAX_SDK_MSG_LEN);
 

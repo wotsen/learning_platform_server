@@ -181,6 +181,31 @@ inline bool SdkMagic_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<SdkMagic>(
     SdkMagic_descriptor(), name, value);
 }
+enum SdkVersion : int {
+  SDK_NON_VERSION = 0,
+  SDK_CUR_VERSION = 20191110,
+  SdkVersion_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  SdkVersion_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool SdkVersion_IsValid(int value);
+constexpr SdkVersion SdkVersion_MIN = SDK_NON_VERSION;
+constexpr SdkVersion SdkVersion_MAX = SDK_CUR_VERSION;
+constexpr int SdkVersion_ARRAYSIZE = SdkVersion_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* SdkVersion_descriptor();
+template<typename T>
+inline const std::string& SdkVersion_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, SdkVersion>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function SdkVersion_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    SdkVersion_descriptor(), enum_t_value);
+}
+inline bool SdkVersion_Parse(
+    const std::string& name, SdkVersion* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<SdkVersion>(
+    SdkVersion_descriptor(), name, value);
+}
 // ===================================================================
 
 class Host :
@@ -576,8 +601,9 @@ class Header :
   enum : int {
     kTimeFieldNumber = 4,
     kHostFieldNumber = 6,
-    kPackIdFieldNumber = 3,
     kMsgMagicFieldNumber = 1,
+    kVersionFieldNumber = 2,
+    kPackIdFieldNumber = 3,
     kDataDirFieldNumber = 5,
     kTransProtoFieldNumber = 7,
     kDataProtoFieldNumber = 8,
@@ -612,15 +638,6 @@ class Header :
   ::insider::sdk::Host* _internal_mutable_host();
   public:
 
-  // int64 pack_id = 3;
-  void clear_pack_id();
-  ::PROTOBUF_NAMESPACE_ID::int64 pack_id() const;
-  void set_pack_id(::PROTOBUF_NAMESPACE_ID::int64 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int64 _internal_pack_id() const;
-  void _internal_set_pack_id(::PROTOBUF_NAMESPACE_ID::int64 value);
-  public:
-
   // .insider.sdk.SdkMagic msg_magic = 1;
   void clear_msg_magic();
   ::insider::sdk::SdkMagic msg_magic() const;
@@ -628,6 +645,24 @@ class Header :
   private:
   ::insider::sdk::SdkMagic _internal_msg_magic() const;
   void _internal_set_msg_magic(::insider::sdk::SdkMagic value);
+  public:
+
+  // .insider.sdk.SdkVersion version = 2;
+  void clear_version();
+  ::insider::sdk::SdkVersion version() const;
+  void set_version(::insider::sdk::SdkVersion value);
+  private:
+  ::insider::sdk::SdkVersion _internal_version() const;
+  void _internal_set_version(::insider::sdk::SdkVersion value);
+  public:
+
+  // int64 pack_id = 3;
+  void clear_pack_id();
+  ::PROTOBUF_NAMESPACE_ID::int64 pack_id() const;
+  void set_pack_id(::PROTOBUF_NAMESPACE_ID::int64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int64 _internal_pack_id() const;
+  void _internal_set_pack_id(::PROTOBUF_NAMESPACE_ID::int64 value);
   public:
 
   // .insider.sdk.DataFlow data_dir = 5;
@@ -664,8 +699,9 @@ class Header :
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::insider::sdk::DataTime* time_;
   ::insider::sdk::Host* host_;
-  ::PROTOBUF_NAMESPACE_ID::int64 pack_id_;
   int msg_magic_;
+  int version_;
+  ::PROTOBUF_NAMESPACE_ID::int64 pack_id_;
   int data_dir_;
   int trans_proto_;
   int data_proto_;
@@ -829,6 +865,26 @@ inline void Header::_internal_set_msg_magic(::insider::sdk::SdkMagic value) {
 inline void Header::set_msg_magic(::insider::sdk::SdkMagic value) {
   _internal_set_msg_magic(value);
   // @@protoc_insertion_point(field_set:insider.sdk.Header.msg_magic)
+}
+
+// .insider.sdk.SdkVersion version = 2;
+inline void Header::clear_version() {
+  version_ = 0;
+}
+inline ::insider::sdk::SdkVersion Header::_internal_version() const {
+  return static_cast< ::insider::sdk::SdkVersion >(version_);
+}
+inline ::insider::sdk::SdkVersion Header::version() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.Header.version)
+  return _internal_version();
+}
+inline void Header::_internal_set_version(::insider::sdk::SdkVersion value) {
+  
+  version_ = value;
+}
+inline void Header::set_version(::insider::sdk::SdkVersion value) {
+  _internal_set_version(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.Header.version)
 }
 
 // int64 pack_id = 3;
@@ -1065,6 +1121,11 @@ template <> struct is_proto_enum< ::insider::sdk::SdkMagic> : ::std::true_type {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::SdkMagic>() {
   return ::insider::sdk::SdkMagic_descriptor();
+}
+template <> struct is_proto_enum< ::insider::sdk::SdkVersion> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::SdkVersion>() {
+  return ::insider::sdk::SdkVersion_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

@@ -8,13 +8,15 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
-goog.provide('proto.insider.sdk.ResponseResult');
+goog.provide('proto.insider.sdk.ContentResultE');
 
 /**
  * @enum {number}
  */
-proto.insider.sdk.ResponseResult = {
-  OK: 0,
-  ERROR: 1
+proto.insider.sdk.ContentResultE = {
+  R_CODE_OK: 0,
+  R_CODE_ERROR: 1,
+  R_CODE_USER_EXIST: 2,
+  R_CODE_USER_TOKEN_TIMEOUT: 3
 };
 

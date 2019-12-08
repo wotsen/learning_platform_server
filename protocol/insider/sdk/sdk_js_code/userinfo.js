@@ -9,6 +9,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 goog.provide('proto.insider.sdk.UserInfo');
+goog.provide('proto.insider.sdk.UserInfo.Result');
 goog.provide('proto.insider.sdk.UserInfo.UserType');
 
 goog.require('jspb.BinaryReader');
@@ -27,7 +28,7 @@ goog.require('proto.insider.sdk.User');
  * @constructor
  */
 proto.insider.sdk.UserInfo = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.insider.sdk.UserInfo.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.insider.sdk.UserInfo, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -37,13 +38,6 @@ if (goog.DEBUG && !COMPILED) {
    */
   proto.insider.sdk.UserInfo.displayName = 'proto.insider.sdk.UserInfo';
 }
-
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.insider.sdk.UserInfo.repeatedFields_ = [2,3];
 
 
 
@@ -77,9 +71,10 @@ proto.insider.sdk.UserInfo.prototype.toObject = function(opt_includeInstance) {
 proto.insider.sdk.UserInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
     userType: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    userList: jspb.Message.toObjectList(msg.getUserList(),
-    proto.insider.sdk.User.toObject, includeInstance),
-    tokenList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+    user: (f = msg.getUser()) && proto.insider.sdk.User.toObject(includeInstance, f),
+    token: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    aliveTime: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    result: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -123,11 +118,19 @@ proto.insider.sdk.UserInfo.deserializeBinaryFromReader = function(msg, reader) {
     case 2:
       var value = new proto.insider.sdk.User;
       reader.readMessage(value,proto.insider.sdk.User.deserializeBinaryFromReader);
-      msg.addUser(value);
+      msg.setUser(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.addToken(value);
+      msg.setToken(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setAliveTime(value);
+      break;
+    case 5:
+      var value = /** @type {!proto.insider.sdk.UserInfo.Result} */ (reader.readEnum());
+      msg.setResult(value);
       break;
     default:
       reader.skipField();
@@ -165,18 +168,32 @@ proto.insider.sdk.UserInfo.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getUserList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
+  f = message.getUser();
+  if (f != null) {
+    writer.writeMessage(
       2,
       f,
       proto.insider.sdk.User.serializeBinaryToWriter
     );
   }
-  f = message.getTokenList();
+  f = message.getToken();
   if (f.length > 0) {
-    writer.writeRepeatedString(
+    writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getAliveTime();
+  if (f !== 0) {
+    writer.writeUint64(
+      4,
+      f
+    );
+  }
+  f = message.getResult();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      5,
       f
     );
   }
@@ -189,7 +206,18 @@ proto.insider.sdk.UserInfo.serializeBinaryToWriter = function(message, writer) {
 proto.insider.sdk.UserInfo.UserType = {
   U_LOGIN: 0,
   U_LOGOUT: 1,
-  U_VERI: 2
+  U_VERI: 2,
+  U_REGISTER: 3
+};
+
+/**
+ * @enum {number}
+ */
+proto.insider.sdk.UserInfo.Result = {
+  U_TOKEN_TIMEOUT: 0,
+  U_USER_EXIST: 1,
+  U_OK: 2,
+  U_ERROR: 3
 };
 
 /**
@@ -211,77 +239,93 @@ proto.insider.sdk.UserInfo.prototype.setUserType = function(value) {
 
 
 /**
- * repeated User user = 2;
- * @return {!Array<!proto.insider.sdk.User>}
+ * optional User user = 2;
+ * @return {?proto.insider.sdk.User}
  */
-proto.insider.sdk.UserInfo.prototype.getUserList = function() {
-  return /** @type{!Array<!proto.insider.sdk.User>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.insider.sdk.User, 2));
+proto.insider.sdk.UserInfo.prototype.getUser = function() {
+  return /** @type{?proto.insider.sdk.User} */ (
+    jspb.Message.getWrapperField(this, proto.insider.sdk.User, 2));
 };
 
 
 /**
- * @param {!Array<!proto.insider.sdk.User>} value
+ * @param {?proto.insider.sdk.User|undefined} value
  * @return {!proto.insider.sdk.UserInfo} returns this
 */
-proto.insider.sdk.UserInfo.prototype.setUserList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 2, value);
+proto.insider.sdk.UserInfo.prototype.setUser = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
- * @param {!proto.insider.sdk.User=} opt_value
- * @param {number=} opt_index
- * @return {!proto.insider.sdk.User}
- */
-proto.insider.sdk.UserInfo.prototype.addUser = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 2, opt_value, proto.insider.sdk.User, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
+ * Clears the message field making it undefined.
  * @return {!proto.insider.sdk.UserInfo} returns this
  */
-proto.insider.sdk.UserInfo.prototype.clearUserList = function() {
-  return this.setUserList([]);
+proto.insider.sdk.UserInfo.prototype.clearUser = function() {
+  return this.setUser(undefined);
 };
 
 
 /**
- * repeated string token = 3;
- * @return {!Array<string>}
+ * Returns whether this field is set.
+ * @return {boolean}
  */
-proto.insider.sdk.UserInfo.prototype.getTokenList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
+proto.insider.sdk.UserInfo.prototype.hasUser = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 
 /**
- * @param {!Array<string>} value
- * @return {!proto.insider.sdk.UserInfo} returns this
+ * optional string token = 3;
+ * @return {string}
  */
-proto.insider.sdk.UserInfo.prototype.setTokenList = function(value) {
-  return jspb.Message.setField(this, 3, value || []);
+proto.insider.sdk.UserInfo.prototype.getToken = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
  * @param {string} value
- * @param {number=} opt_index
  * @return {!proto.insider.sdk.UserInfo} returns this
  */
-proto.insider.sdk.UserInfo.prototype.addToken = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+proto.insider.sdk.UserInfo.prototype.setToken = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * Clears the list making it empty but non-null.
+ * optional uint64 alive_time = 4;
+ * @return {number}
+ */
+proto.insider.sdk.UserInfo.prototype.getAliveTime = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
  * @return {!proto.insider.sdk.UserInfo} returns this
  */
-proto.insider.sdk.UserInfo.prototype.clearTokenList = function() {
-  return this.setTokenList([]);
+proto.insider.sdk.UserInfo.prototype.setAliveTime = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional Result result = 5;
+ * @return {!proto.insider.sdk.UserInfo.Result}
+ */
+proto.insider.sdk.UserInfo.prototype.getResult = function() {
+  return /** @type {!proto.insider.sdk.UserInfo.Result} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {!proto.insider.sdk.UserInfo.Result} value
+ * @return {!proto.insider.sdk.UserInfo} returns this
+ */
+proto.insider.sdk.UserInfo.prototype.setResult = function(value) {
+  return jspb.Message.setProto3EnumField(this, 5, value);
 };
 
 

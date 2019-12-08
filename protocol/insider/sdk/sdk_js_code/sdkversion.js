@@ -1,4 +1,4 @@
-// source: in_sdk_footer.proto
+// source: in_sdk_header.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -8,13 +8,13 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
-goog.provide('proto.insider.sdk.ResponseResult');
+goog.provide('proto.insider.sdk.SdkVersion');
 
 /**
  * @enum {number}
  */
-proto.insider.sdk.ResponseResult = {
-  OK: 0,
-  ERROR: 1
+proto.insider.sdk.SdkVersion = {
+  SDK_NON_VERSION: 0,
+  SDK_CUR_VERSION: 20191110
 };
 

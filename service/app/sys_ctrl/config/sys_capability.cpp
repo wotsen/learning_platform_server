@@ -93,3 +93,10 @@ bool sys_capability_init(void)
 
     return true;
 }
+
+uint32_t get_user_manage_max_users(void)
+{
+    json j = get_json_capability();
+
+    return j["service"]["modules"]["module_fun"]["user_manage"]["max_users"];
+}

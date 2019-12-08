@@ -22,3 +22,6 @@
 [submodule "service/third_party/util_pthread"]
 	path = service/third_party/util_pthread
 	url = https://github.com/wotsen/util_pthread
+[submodule "service/third_party/sole"]
+	path = service/third_party/sole
+	url = https://github.com/r-lyeh-archived/sole

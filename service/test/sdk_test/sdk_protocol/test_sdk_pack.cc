@@ -12,6 +12,7 @@ void test_sdk_pack(Sdk &msg)
 	Header *header = msg.mutable_header();
 
 	header->set_msg_magic(SdkMagic::SDK_MAGIC);
+	header->set_version(SdkVersion::SDK_CUR_VERSION);
 	header->set_pack_id(3);
 	header->mutable_time()->set_in_time(2018);
 	header->mutable_time()->set_out_time(2019);
@@ -24,15 +25,17 @@ void test_sdk_pack(Sdk &msg)
 	Body *body = msg.mutable_body();
 
 	body->mutable_user()->set_user_type(UserInfo::UserType::UserInfo_UserType_U_LOGIN);
+	body->mutable_user()->set_token("asdf");
+	body->mutable_user()->set_alive_time(3);
 
-	User *user = body->mutable_user()->add_user();
+	User *user = body->mutable_user()->mutable_user();
 
-	user->set_user_name("ai");
-	user->set_user_pass("123");
+	user->set_user_name("admin");
+	user->set_user_pass("admin");
 
 	body->set_url("xxx.com");
 	body->set_method(OperationType::GET);
-	body->add_response_result(ResponseResult::OK);
+	// body->add_response_result(ResponseResult::OK);
 	// body->add_response_result(ResponseResult::ERROR);
 
 	Footer *footer = msg.mutable_footer();

@@ -69,15 +69,6 @@ json &get_json_config(void)
     return SysConfig::get_sys_config()->get_json();
 }
 
-void get_sdk_tcp_host(std::string &ip_version, std::string &ip, int &port)
-{
-    json j = get_json_config();
-
-    ip_version = j["network"]["sdk"]["tcp"]["ip-version"];
-    ip = j["network"]["sdk"]["tcp"]["ipv4"];
-    port = j["network"]["sdk"]["tcp"]["port"];
-}
-
 bool sys_config_init(void)
 {
     json j;
@@ -103,4 +94,13 @@ bool sys_config_init(void)
     log_i("parser sys config json success!\n");
 
     return true;
+}
+
+void get_sdk_tcp_host(std::string &ip_version, std::string &ip, int &port)
+{
+    json j = get_json_config();
+
+    ip_version = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["ip-version"];
+    ip = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["ipv4"];
+    port = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["port"];
 }

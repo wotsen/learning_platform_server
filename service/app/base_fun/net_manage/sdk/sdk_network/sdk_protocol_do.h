@@ -11,8 +11,9 @@
 #pragma once
 
 #include <inttypes.h>
-#include "sdk_package_distribution.h"
 #include <uv.h>
+#include "../sdk_protocol/in_sdk.pb.h"
+#include "sdk_package_distribution.h"
 
 // 最大一包数据64k
 #define MAX_SDK_MSG_LEN (64 * 1024)

@@ -1,13 +1,17 @@
 {
-    "module" : {
-    },
-    "network": {
-        "sdk" : {
-            "tcp": {
-                "ip-version": "ipv4",
-                "ipv4" : "0.0.0.0",
-                "port" : 9001
+    "modules": {
+        "base_fun": {
+            "network": {
+                "sdk" : {
+                    "tcp": {
+                        "ip-version": "ipv4",
+                        "ipv4" : "0.0.0.0",
+                        "port" : 9001
+                    }
+                }
             }
+        },
+        "module_fun": {
         }
     }
 }

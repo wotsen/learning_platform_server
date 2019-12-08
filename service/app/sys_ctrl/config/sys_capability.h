@@ -33,5 +33,13 @@ private:
     static SysCapability *instance;
 };
 
+/*****************************************************
+ * 能力获取接口
+ *****************************************************/
+uint32_t get_user_manage_max_users(void);
+
+/*****************************************************
+ * 初始化接口接口
+ *****************************************************/
 bool sys_capability_init(void);
 nlohmann::json &get_json_capability(void);

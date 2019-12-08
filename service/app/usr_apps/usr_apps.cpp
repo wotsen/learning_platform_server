@@ -13,11 +13,14 @@
 #include <easylogger/inc/elog.h>
 #include "../tools/timer/timer.h"
 #include "../module_fun/upgrade/upgrade.h"
+#include "../module_fun/user_manage/user_manage.h"
 #include "usr_apps.h"
 
 void usr_apps_init(void)
 {
     task_upgrade_init(); // 升级任务
+
+    user_manager_init(); // 任务管理
 
     // 告警
     // 升级，文件传输校验以及如何安装，设计扩展

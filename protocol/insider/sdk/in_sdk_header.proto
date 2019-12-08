@@ -37,8 +37,14 @@ enum SdkMagic {
     SDK_MAGIC  = 0x01ABCDEF;
 }
 
+enum SdkVersion {
+    SDK_NON_VERSION = 0;
+    SDK_CUR_VERSION = 20191110;
+}
+
 message Header {
     SdkMagic msg_magic = 1;
+    SdkVersion version = 2;
     int64 pack_id = 3;
     DataTime time = 4;
     DataFlow data_dir = 5;

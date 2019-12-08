@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='insider.sdk',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11in_sdk_body.proto\x12\x0binsider.sdk\",\n\x04User\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x11\n\tuser_pass\x18\x02 \x01(\t\"\xa0\x01\n\x08UserInfo\x12\x31\n\tuser_type\x18\x01 \x01(\x0e\x32\x1e.insider.sdk.UserInfo.UserType\x12\x1f\n\x04user\x18\x02 \x03(\x0b\x32\x11.insider.sdk.User\x12\r\n\x05token\x18\x03 \x03(\t\"1\n\x08UserType\x12\x0b\n\x07U_LOGIN\x10\x00\x12\x0c\n\x08U_LOGOUT\x10\x01\x12\n\n\x06U_VERI\x10\x02\"\x18\n\x07\x43ontent\x12\r\n\x05magic\x18\x01 \x01(\x03\"\xc1\x01\n\x04\x42ody\x12#\n\x04user\x18\x01 \x01(\x0b\x32\x15.insider.sdk.UserInfo\x12\x0b\n\x03url\x18\x02 \x01(\t\x12*\n\x06method\x18\x03 \x01(\x0e\x32\x1a.insider.sdk.OperationType\x12\x34\n\x0fresponse_result\x18\x04 \x03(\x0e\x32\x1b.insider.sdk.ResponseResult\x12%\n\x07\x63ontent\x18\x05 \x03(\x0b\x32\x14.insider.sdk.Content*7\n\rOperationType\x12\x07\n\x03GET\x10\x00\x12\x08\n\x04POST\x10\x01\x12\x07\n\x03PUT\x10\x02\x12\n\n\x06\x44\x45LETE\x10\x03*#\n\x0eResponseResult\x12\x06\n\x02OK\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x11in_sdk_body.proto\x12\x0binsider.sdk\"J\n\x04User\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x11\n\tuser_pass\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\r\n\x05phone\x18\x04 \x01(\t\"\xba\x02\n\x08UserInfo\x12\x31\n\tuser_type\x18\x01 \x01(\x0e\x32\x1e.insider.sdk.UserInfo.UserType\x12\x1f\n\x04user\x18\x02 \x01(\x0b\x32\x11.insider.sdk.User\x12\r\n\x05token\x18\x03 \x01(\t\x12\x12\n\nalive_time\x18\x04 \x01(\x04\x12,\n\x06result\x18\x05 \x01(\x0e\x32\x1c.insider.sdk.UserInfo.Result\"A\n\x08UserType\x12\x0b\n\x07U_LOGIN\x10\x00\x12\x0c\n\x08U_LOGOUT\x10\x01\x12\n\n\x06U_VERI\x10\x02\x12\x0e\n\nU_REGISTER\x10\x03\"F\n\x06Result\x12\x13\n\x0fU_TOKEN_TIMEOUT\x10\x00\x12\x10\n\x0cU_USER_EXIST\x10\x01\x12\x08\n\x04U_OK\x10\x02\x12\x0b\n\x07U_ERROR\x10\x03\"\x18\n\x07\x43ontent\x12\r\n\x05magic\x18\x01 \x01(\x03\"\x8b\x01\n\x04\x42ody\x12#\n\x04user\x18\x01 \x01(\x0b\x32\x15.insider.sdk.UserInfo\x12\x0b\n\x03url\x18\x02 \x01(\t\x12*\n\x06method\x18\x03 \x01(\x0e\x32\x1a.insider.sdk.OperationType\x12%\n\x07\x63ontent\x18\x05 \x01(\x0b\x32\x14.insider.sdk.Content*7\n\rOperationType\x12\x07\n\x03GET\x10\x00\x12\x08\n\x04POST\x10\x01\x12\x07\n\x03PUT\x10\x02\x12\n\n\x06\x44\x45LETE\x10\x03\x62\x06proto3')
 )
 
 _OPERATIONTYPE = _descriptor.EnumDescriptor(
@@ -49,41 +49,16 @@ _OPERATIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=465,
-  serialized_end=520,
+  serialized_start=595,
+  serialized_end=650,
 )
 _sym_db.RegisterEnumDescriptor(_OPERATIONTYPE)
 
 OperationType = enum_type_wrapper.EnumTypeWrapper(_OPERATIONTYPE)
-_RESPONSERESULT = _descriptor.EnumDescriptor(
-  name='ResponseResult',
-  full_name='insider.sdk.ResponseResult',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='OK', index=0, number=0,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ERROR', index=1, number=1,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=522,
-  serialized_end=557,
-)
-_sym_db.RegisterEnumDescriptor(_RESPONSERESULT)
-
-ResponseResult = enum_type_wrapper.EnumTypeWrapper(_RESPONSERESULT)
 GET = 0
 POST = 1
 PUT = 2
 DELETE = 3
-OK = 0
-ERROR = 1
 
 
 _USERINFO_USERTYPE = _descriptor.EnumDescriptor(
@@ -104,13 +79,47 @@ _USERINFO_USERTYPE = _descriptor.EnumDescriptor(
       name='U_VERI', index=2, number=2,
       serialized_options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='U_REGISTER', index=3, number=3,
+      serialized_options=None,
+      type=None),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=192,
-  serialized_end=241,
+  serialized_start=288,
+  serialized_end=353,
 )
 _sym_db.RegisterEnumDescriptor(_USERINFO_USERTYPE)
+
+_USERINFO_RESULT = _descriptor.EnumDescriptor(
+  name='Result',
+  full_name='insider.sdk.UserInfo.Result',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='U_TOKEN_TIMEOUT', index=0, number=0,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='U_USER_EXIST', index=1, number=1,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='U_OK', index=2, number=2,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='U_ERROR', index=3, number=3,
+      serialized_options=None,
+      type=None),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=355,
+  serialized_end=425,
+)
+_sym_db.RegisterEnumDescriptor(_USERINFO_RESULT)
 
 
 _USER = _descriptor.Descriptor(
@@ -134,6 +143,20 @@ _USER = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='email', full_name='insider.sdk.User.email', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='phone', full_name='insider.sdk.User.phone', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -147,7 +170,7 @@ _USER = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=34,
-  serialized_end=78,
+  serialized_end=108,
 )
 
 
@@ -167,15 +190,29 @@ _USERINFO = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='user', full_name='insider.sdk.UserInfo.user', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='token', full_name='insider.sdk.UserInfo.token', index=2,
-      number=3, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='alive_time', full_name='insider.sdk.UserInfo.alive_time', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='result', full_name='insider.sdk.UserInfo.result', index=4,
+      number=5, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -185,6 +222,7 @@ _USERINFO = _descriptor.Descriptor(
   nested_types=[],
   enum_types=[
     _USERINFO_USERTYPE,
+    _USERINFO_RESULT,
   ],
   serialized_options=None,
   is_extendable=False,
@@ -192,8 +230,8 @@ _USERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=81,
-  serialized_end=241,
+  serialized_start=111,
+  serialized_end=425,
 )
 
 
@@ -223,8 +261,8 @@ _CONTENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=243,
-  serialized_end=267,
+  serialized_start=427,
+  serialized_end=451,
 )
 
 
@@ -257,16 +295,9 @@ _BODY = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='response_result', full_name='insider.sdk.Body.response_result', index=3,
-      number=4, type=14, cpp_type=8, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='content', full_name='insider.sdk.Body.content', index=4,
-      number=5, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='content', full_name='insider.sdk.Body.content', index=3,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -282,23 +313,23 @@ _BODY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=270,
-  serialized_end=463,
+  serialized_start=454,
+  serialized_end=593,
 )
 
 _USERINFO.fields_by_name['user_type'].enum_type = _USERINFO_USERTYPE
 _USERINFO.fields_by_name['user'].message_type = _USER
+_USERINFO.fields_by_name['result'].enum_type = _USERINFO_RESULT
 _USERINFO_USERTYPE.containing_type = _USERINFO
+_USERINFO_RESULT.containing_type = _USERINFO
 _BODY.fields_by_name['user'].message_type = _USERINFO
 _BODY.fields_by_name['method'].enum_type = _OPERATIONTYPE
-_BODY.fields_by_name['response_result'].enum_type = _RESPONSERESULT
 _BODY.fields_by_name['content'].message_type = _CONTENT
 DESCRIPTOR.message_types_by_name['User'] = _USER
 DESCRIPTOR.message_types_by_name['UserInfo'] = _USERINFO
 DESCRIPTOR.message_types_by_name['Content'] = _CONTENT
 DESCRIPTOR.message_types_by_name['Body'] = _BODY
 DESCRIPTOR.enum_types_by_name['OperationType'] = _OPERATIONTYPE
-DESCRIPTOR.enum_types_by_name['ResponseResult'] = _RESPONSERESULT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 User = _reflection.GeneratedProtocolMessageType('User', (_message.Message,), {
