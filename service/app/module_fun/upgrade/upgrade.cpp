@@ -25,6 +25,12 @@ using namespace wotsen;
 
 static void *task_upgrade(void *name);
 
+/**
+ * @brief 升级任务
+ * 
+ * @param name 
+ * @return void* 
+ */
 static void *task_upgrade(void *name)
 {
     pthread_t tid = pthread_self();
@@ -39,6 +45,10 @@ static void *task_upgrade(void *name)
     }
 }
 
+/**
+ * @brief 初始化升级任务
+ * 
+ */
 void task_upgrade_init(void)
 {
     task_create(task_upgrade, STACKSIZE(100 * 1024), "task_upgrade", TASK_UPGRADE_ID, OS_MIN(30), E_TASK_REBOOT_SYSTEM);

@@ -20,8 +20,14 @@ using json = nlohmann::json;
 
 SysParameter *SysParameter::instance = nullptr;
 
+/**
+ * @brief 获取系统参数指针
+ * 
+ * @return SysParameter* 
+ */
 SysParameter *SysParameter::get_sys_param(void)
 {
+    // 单例模式
     if (nullptr != instance)
     {
         return instance;
@@ -32,7 +38,7 @@ SysParameter *SysParameter::get_sys_param(void)
     // 打开运行时文件
     if (!instance->open_runtime_file())
     {
-        // 创建
+        // 打开失败就创建
         if (!instance->create_runtime_file())
         {
             delete instance;
@@ -60,6 +66,10 @@ SysParameter *SysParameter::get_sys_param(void)
     return instance;
 }
 
+/**
+ * @brief Destroy the Sys Parameter:: Sys Parameter object
+ * 
+ */
 SysParameter::~SysParameter()
 {
     if (this->json_file)
@@ -68,6 +78,12 @@ SysParameter::~SysParameter()
     }
 }
 
+/**
+ * @brief 打开运行时参数文件
+ * 
+ * @return true 成功
+ * @return false 失败
+ */
 bool SysParameter::open_runtime_file(void)
 {
     this->json_file.open(SYS_RUNTIME_CONFIG_FILENAME, std::ios::in | std::ios::out);
@@ -81,6 +97,12 @@ bool SysParameter::open_runtime_file(void)
     return true;
 }
 
+/**
+ * @brief 创建运行时参数文件
+ * 
+ * @return true 成功
+ * @return false 失败
+ */
 bool SysParameter::create_runtime_file(void)
 {
     std::fstream in;
@@ -124,6 +146,12 @@ bool SysParameter::create_runtime_file(void)
     return true;
 }
 
+/**
+ * @brief 打开默认的配置参数文件
+ * 
+ * @return true 
+ * @return false 
+ */
 bool SysParameter::open_default_file(void)
 {
     std::fstream in(SYS_DEFAULT_CONFIG_FILENAME, std::ios::in);
@@ -137,17 +165,32 @@ bool SysParameter::open_default_file(void)
     return true;
 }
 
+/**
+ * @brief 保存配置参数
+ * 
+ */
 void SysParameter::save_param(void)
 {
     this->json_file.seekp(0, std::ios::beg);
     this->json_file << std::setw(4) << this->j;
 }
 
+/**
+ * @brief Get the json param object
+ * 
+ * @return json& 
+ */
 json &get_json_param(void)
 {
     return SysParameter::get_sys_param()->get_json();
 }
 
+/**
+ * @brief 初始化配置参数
+ * 
+ * @return true 
+ * @return false 
+ */
 bool sys_parameter_init(void)
 {
     json j;

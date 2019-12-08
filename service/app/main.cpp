@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2019
  * 
  */
-
 #define LOG_TAG "MAIN"
 
 #include <iostream>
@@ -28,6 +27,14 @@
 static int lock_file(int fd);
 static bool alone_run(void);
 
+
+/**
+ * @brief 锁定文件
+ *
+ * @param fd : 文件描述符
+ *
+ * @return : 非0失败
+ */
 static int lock_file(int fd)
 {
     struct flock fl;
@@ -40,6 +47,11 @@ static int lock_file(int fd)
     return fcntl(fd, F_SETLK, &fl);
 }
 
+/**
+ * @brief 唯一程序运行处理
+ *
+ * @return true-无已经运行的程序; false-程序已经运行
+ */
 static bool alone_run(void)
 {
     int fd = -1;
@@ -62,11 +74,9 @@ static bool alone_run(void)
         }
         printf("can't lock %s: %s\n", PID_FILE, strerror(errno));
     }
-    ftruncate(fd, 0); //设置文件的大小为0
+    ftruncate(fd, 0);
     sprintf(buf, "%ld", (long)getpid());
     write(fd, buf, strlen(buf) + 1);
-
-    // 不用关闭fd?
 
     return true;
 }
@@ -80,6 +90,7 @@ int main(int argc, char **argv)
     }
 
 #if !defined(NDEBUG)
+    // 调试版本开启coredump
     if (!setup_coredump("/home/wotsen/work", 1024*1024))
     {
         return 0;
@@ -89,7 +100,7 @@ int main(int argc, char **argv)
     std::cout << "start app..................version: " << get_service_version() << std::endl;
     sys_init();
 
-    usr_apps_init(); // 应用初始化
+    usr_apps_init();
     // tail_work(); // 收尾工作
     while (1)
     {

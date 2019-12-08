@@ -13,8 +13,6 @@
 
 #include <iostream>
 
-#define VERSION "v1.0.0"
-
 // 获取版本号
 const std::string & get_service_version(void);
 

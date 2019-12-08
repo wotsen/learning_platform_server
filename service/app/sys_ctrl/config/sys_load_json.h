@@ -11,9 +11,7 @@
 #pragma once
 
 #include <fstream>
-// #include <tfile/tfile.h>
 #include <nlohmann/json.hpp>
-// #include <CJsonObject/CJsonObject.hpp>
 
 class AbsSysLoadJson
 {

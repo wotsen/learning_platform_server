@@ -10,4 +10,5 @@
  */
 #pragma once
 
+///< 初始化升级任务
 void task_upgrade_init(void);

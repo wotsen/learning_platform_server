@@ -31,8 +31,19 @@ using namespace insider::sdk;
 
 #define USER_TABLE "sdk_user"
 
-static Database *user_db = nullptr;
+class UserSession;
+class UserManager;
 
+static Database *user_db = nullptr;
+static std::unique_ptr<UserManager> user_manager;
+
+template <typename T>
+bool _user_manange_midware_do(const enum sdk_net_data_type type, sdk_package<T> *req, Sdk &sdk_req, Sdk &sdk_res);
+
+/**
+ * @brief 用户会话
+ * 
+ */
 class UserSession : public Session {
 public:
 	std::string token;
@@ -43,9 +54,13 @@ public:
 	UserSession() {}
 };
 
+/**
+ * @brief 用户管理
+ * 
+ */
 class UserManager : public SessionManager<UserSession> {
 private:
-	std::vector<std::shared_ptr<UserSession>> sessions;
+	// std::vector<std::shared_ptr<UserSession>> sessions;
 	pthread_mutex_t mutex;
 public:
 	UserManager(const uint32_t max_session) : SessionManager<UserSession>(max_session) {
@@ -56,6 +71,10 @@ public:
 		pthread_mutex_destroy(&mutex);
 	}
 
+	/**
+	 * @brief 更新会话
+	 * 
+	 */
 	void update_session(void)
 	{
 		pthread_mutex_lock(&mutex);
@@ -67,9 +86,11 @@ public:
 				continue;
 			}
 
+			// 刷新登陆时间
 			item->now--;
 		}
 
+		// 移除过期用户
 		sessions.erase(std::remove_if(sessions.begin(), sessions.end(), [](auto &_session) -> bool {
 							   return 0 == _session->now;
                         }),
@@ -78,6 +99,14 @@ public:
 		pthread_mutex_unlock(&mutex);
 	}
 
+	/**
+	 * @brief 搜索用户
+	 * 
+	 * @param token 
+	 * @param session 输出，搜索到的用户
+	 * @return true 搜索到
+	 * @return false 未搜索到
+	 */
 	bool search_user_session(const std::string &token, UserSession **session) const
 	{
 		for (auto &item : sessions)
@@ -91,7 +120,14 @@ public:
 		return false;
 	}
 
-	bool add_user_session(UserSession &session)
+	/**
+	 * @brief 增加用户会话
+	 * 
+	 * @param session 会话信息
+	 * @return true 
+	 * @return false 
+	 */
+	bool add_user_session(const UserSession &session)
 	{
 		UserSession *_session;
 		std::shared_ptr<UserSession> new_session(new UserSession);
@@ -114,6 +150,11 @@ public:
 		return true;
 	}
 
+	/**
+	 * @brief 删除用户会话信息
+	 * 
+	 * @param token 会话token
+	 */
 	void delete_user_session(const std::string &token)
 	{
 		pthread_mutex_lock(&mutex);
@@ -124,6 +165,12 @@ public:
 		pthread_mutex_unlock(&mutex);
 	}
 
+	/**
+	 * @brief 用户登陆
+	 * 
+	 * @param user_info 用户信息
+	 * @return enum UserInfo_Result 
+	 */
 	enum UserInfo_Result login(UserInfo &user_info)
 	{
 		Statement query(*user_db, "SELECT * FROM " USER_TABLE " where name = ? and password = ?");
@@ -155,12 +202,24 @@ public:
 		return UserInfo_Result::UserInfo_Result_U_ERROR;
 	}
 
+	/**
+	 * @brief 用户登出
+	 * 
+	 * @param user_info 用户信息
+	 * @return enum UserInfo_Result 
+	 */
 	enum UserInfo_Result logout(UserInfo &user_info)
 	{
 		delete_user_session(user_info.token());
 		return UserInfo_Result::UserInfo_Result_U_OK;
 	}
 
+	/**
+	 * @brief 用户验证
+	 * 
+	 * @param user_info 用户信息
+	 * @return enum UserInfo_Result 
+	 */
 	enum UserInfo_Result verify(UserInfo &user_info)
 	{
 		UserSession *_session;
@@ -176,6 +235,12 @@ public:
 		return UserInfo_Result::UserInfo_Result_U_TOKEN_TIMEOUT;
 	}
 
+	/**
+	 * @brief 用户注册
+	 * 
+	 * @param user_info 用户信息
+	 * @return enum UserInfo_Result 
+	 */
 	enum UserInfo_Result user_register(UserInfo &user_info)
 	{
 		Statement query(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
@@ -216,17 +281,23 @@ public:
 	}
 };
 
-static std::unique_ptr<UserManager> user_manager;
+// template<typename T, typename... Ts>
+// std::unique_ptr<T> make_unique(Ts&&... params)
+// {
+// 	return std::unique_ptr<T>(new T(std::forward<Ts>(params)...));
+// }
 
-template <typename T>
-bool _user_manange_midware_do(const enum sdk_net_data_type type, sdk_package<T> *req, Sdk &sdk_req, Sdk &sdk_res);
-
-template<typename T, typename... Ts>
-std::unique_ptr<T> make_unique(Ts&&... params)
-{
-	return std::unique_ptr<T>(new T(std::forward<Ts>(params)...));
-}
-
+/**
+ * @brief 用户管理中间件处理
+ * 
+ * @tparam  
+ * @param type 网络类型
+ * @param req 请求数据
+ * @param sdk_req sdk请求内容
+ * @param sdk_res sdk应答内容
+ * @return true 成功
+ * @return false 失败
+ */
 template <>
 bool _user_manange_midware_do(const enum sdk_net_data_type type, sdk_package<uv_stream_s> *req, Sdk &sdk_req, Sdk &sdk_res)
 {
@@ -289,6 +360,16 @@ bool _user_manange_midware_do(const enum sdk_net_data_type type, sdk_package<uv_
 	}
 }
 
+/**
+ * @brief 用户管理中间件
+ * 
+ * @param type 网络类型
+ * @param req 请求数据
+ * @param sdk_req sdk请求内容
+ * @param sdk_res sdk应答内容
+ * @return true 成功
+ * @return false 失败
+ */
 bool user_manange_midware_do(const enum sdk_net_data_type type, void *req, Sdk &sdk_req, Sdk &sdk_res)
 {
 	if (SDK_TCP_DATA_TYPE == type)
@@ -306,6 +387,12 @@ bool user_manange_midware_do(const enum sdk_net_data_type type, void *req, Sdk &
 	}
 }
 
+/**
+ * @brief 用户数据库初始化
+ * 
+ * @return true 
+ * @return false 
+ */
 bool user_db_init(void)
 {
 	try {
@@ -325,6 +412,12 @@ bool user_db_init(void)
 	return true;
 }
 
+/**
+ * @brief 用户管理任务
+ * 
+ * @param name 
+ * @return void* 
+ */
 static void *user_manage_task(void *name)
 {
 	pthread_t tid = pthread_self();
@@ -339,6 +432,10 @@ static void *user_manage_task(void *name)
     }
 }
 
+/**
+ * @brief 初始化用户管理
+ * 
+ */
 void user_manager_init(void)
 {
 	user_db_init();

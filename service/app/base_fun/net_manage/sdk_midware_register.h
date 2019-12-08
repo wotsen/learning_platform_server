@@ -11,6 +11,7 @@
 #ifndef __SDK_MIDWARE_REGISTER_H__
 #define __SDK_MIDWARE_REGISTER_H__
 
+///< 注册sdk中间件
 void register_sdk_midwares(void);
 
 #endif // !__SDK_MIDWARE_REGISTER_H__

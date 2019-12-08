@@ -21,6 +21,8 @@ public:
 #define SYS_CONFIG_FILE_MAX 2048
 
     ~SysConfig();
+
+    ///< 获取系统配置
     static SysConfig *get_sys_config(void);
 
 private:
@@ -32,5 +34,8 @@ private:
 /* 获取sdk tcp网络配置 */
 void get_sdk_tcp_host(std::string &ip_version, std::string &ip, int &port);
 
+///< 系统配置初始化
 bool sys_config_init(void);
+
+///< 配置参数json指针
 nlohmann::json &get_json_config(void);

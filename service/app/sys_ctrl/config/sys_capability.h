@@ -13,11 +13,6 @@
 #include <nlohmann/json.hpp>
 #include "sys_load_json.h"
 
-struct sys_capability
-{
-    /* data */
-};
-
 class SysCapability : public AbsSysLoadJson
 {
 public:
@@ -34,12 +29,16 @@ private:
 };
 
 /*****************************************************
+ * 初始化接口接口
+ *****************************************************/
+
+///< 能力集初始化
+bool sys_capability_init(void);
+
+///< 获取能力集json指针
+nlohmann::json &get_json_capability(void);
+
+/*****************************************************
  * 能力获取接口
  *****************************************************/
 uint32_t get_user_manage_max_users(void);
-
-/*****************************************************
- * 初始化接口接口
- *****************************************************/
-bool sys_capability_init(void);
-nlohmann::json &get_json_capability(void);

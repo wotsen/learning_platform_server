@@ -22,6 +22,9 @@
 
 static void _elog_init(void);
 
+/**
+ * @brief 初始化elog日志
+ */
 static void _elog_init(void)
 {
     struct elog_custom_config elog_config = {
@@ -29,6 +32,7 @@ static void _elog_init(void)
 #ifdef NDEBUG
         .log_lv = ELOG_LVL_INFO
 #else
+        // debug版本打印所有日志
         .log_lv = ELOG_LVL_VERBOSE
 #endif
     };
@@ -40,7 +44,7 @@ static void _elog_init(void)
     {
         printf("日志模块初始化失败!\n");
         exit(0);
-    } // 初始化日志
+    }
 }
 
 /**
@@ -49,17 +53,15 @@ static void _elog_init(void)
  */
 void sys_init(void)
 {
-    _elog_init(); // 先初始化日志
+    _elog_init();
 
-    sys_config_init(); // 初始化配置
+    sys_config_init();
 
-    sys_capability_init(); // 初始化能力
+    sys_capability_init();
 
-    sys_parameter_init(); // 加载参数
+    sys_parameter_init();
 
-    wotsen::task_manage_init(); // 初始化任务管理
+    wotsen::task_manage_init();
 
-    net_init(); // 初始化网络
-
-    // network_setup(); // 初始化网络
+    net_init();
 }

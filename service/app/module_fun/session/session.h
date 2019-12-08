@@ -13,6 +13,10 @@
 
 #include <inttypes.h>
 
+/**
+ * @brief 会话
+ * 
+ */
 class Session {
 public:
 	uint32_t sid;

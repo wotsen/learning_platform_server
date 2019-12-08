@@ -15,6 +15,11 @@
 #include <inttypes.h>
 #include "session.h"
 
+/**
+ * @brief 会话管理
+ * 
+ * @tparam T 会话类别
+ */
 template <typename T>
 class SessionManager {
 public:

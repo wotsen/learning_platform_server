@@ -174,6 +174,13 @@ auto TasksManage::get_item_task(const pthread_t &tid) noexcept
     return static_cast<std::shared_ptr<struct task_record>>(nullptr);
 }
 
+/**
+ * @brief 任务暂停
+ * 
+ * @param tid 任务id
+ * @return true 
+ * @return false 
+ */
 bool TasksManage::task_stop(const pthread_t &tid) noexcept
 {
     auto _task = get_item_task(tid);
@@ -189,6 +196,13 @@ bool TasksManage::task_stop(const pthread_t &tid) noexcept
     return true;
 }
 
+/**
+ * @brief 继续任务
+ * 
+ * @param tid 任务id
+ * @return true 
+ * @return false 
+ */
 bool TasksManage::task_continue(const pthread_t &tid) noexcept
 {
     auto _task = get_item_task(tid);
@@ -205,6 +219,11 @@ bool TasksManage::task_continue(const pthread_t &tid) noexcept
     return true;
 }
 
+/**
+ * @brief 等待任务
+ * 
+ * @param tid 
+ */
 void TasksManage::task_wait(const pthread_t &tid) noexcept
 {
     auto _task = get_item_task(tid);
@@ -245,6 +264,11 @@ void TasksManage::task_alive(const pthread_t &tid) noexcept
     return;
 }
 
+/**
+ * @brief 任务出栈
+ * 
+ * @param tid 
+ */
 void TasksManage::task_pop(const pthread_t &tid) noexcept
 {
     pthread_mutex_lock(&task_pool->mutex);
@@ -255,6 +279,10 @@ void TasksManage::task_pop(const pthread_t &tid) noexcept
     pthread_mutex_unlock(&task_pool->mutex);
 }
 
+/**
+ * @brief 任务清理
+ * 
+ */
 void TasksManage::task_clean(void) noexcept
 {
     pthread_mutex_lock(&task_pool->mutex);
@@ -274,6 +302,10 @@ void TasksManage::task_clean(void) noexcept
     pthread_mutex_unlock(&task_pool->mutex);
 }
 
+/**
+ * @brief 任务重载
+ * 
+ */
 void TasksManage::task_overload(void) noexcept
 {
     pthread_mutex_lock(&task_pool->mutex);
@@ -305,6 +337,11 @@ void TasksManage::task_overload(void) noexcept
     old_tasks.clear();
 }
 
+/**
+ * @brief 任务关闭
+ * 
+ * @param _task 
+ */
 void TasksManage::task_kill(std::shared_ptr<struct task_record> &_task) noexcept
 {
     if (!release_thread(_task->tid))
@@ -510,14 +547,13 @@ void task_alive(const pthread_t tid) noexcept
     task_pool->task_wait(tid);
 }
 
-// static void task_release_lock(struct task_record *_task)
-// {
-//     if (_task) {
-//         // FIXME:任务管理释放了这个
-//         pthread_mutex_unlock(&_task->mutex);
-//     }
-// }
-
+/**
+ * @brief 任务运行
+ *
+ * @param tasks : 任务管理器
+ *
+ * @return : none
+ */
 void *task_run(TasksManage *tasks)
 {
     pthread_t tid = pthread_self();
@@ -538,9 +574,7 @@ void *task_run(TasksManage *tasks)
 
     log_d("tid=[%zu], name=[%s] run\n", tid, _task->thread_name);
 
-    // pthread_cleanup_push(task_release_lock, &*_task);
     _task->func((void *)_task->thread_name);
-    // pthread_cleanup_pop(0);
 
     return (void *)0;
 }

@@ -15,10 +15,8 @@
 #include <memory>
 #include "../../base_fun/net_manage/sdk/sdk_network/sdk_midware.h"
 
+///< 用户管理中间件
 bool user_manange_midware_do(const enum sdk_net_data_type type, void *req, insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res);
 
-bool user_register(void);
-bool user_release(void);
-bool user_verify(void);
-
+///< 初始化用户管理
 void user_manager_init(void);

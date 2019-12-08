@@ -20,8 +20,14 @@ using json = nlohmann::json;
 
 SysConfig *SysConfig::instance = nullptr;
 
+/**
+ * @brief 获取系统配置
+ * 
+ * @return SysConfig* : 系统配置指针
+ */
 SysConfig *SysConfig::get_sys_config(void)
 {
+    // 单例模式
     if (nullptr != instance)
     {
         return instance;
@@ -29,6 +35,7 @@ SysConfig *SysConfig::get_sys_config(void)
 
     instance = new SysConfig();
 
+    // 配置文件是只读的
     instance->json_file.open(SYS_CONFIG_FILENAME, std::ios::in | std::ios::out);
 
     if (!instance->json_file)
@@ -56,6 +63,10 @@ SysConfig *SysConfig::get_sys_config(void)
     return instance;
 }
 
+/**
+ * @brief Destroy the Sys Config:: Sys Config object
+ * 
+ */
 SysConfig::~SysConfig()
 {
     if (this->json_file)
@@ -64,11 +75,22 @@ SysConfig::~SysConfig()
     }
 }
 
+/**
+ * @brief Get the json config object
+ * 
+ * @return json& : 配置参数json指针
+ */
 json &get_json_config(void)
 {
     return SysConfig::get_sys_config()->get_json();
 }
 
+/**
+ * @brief : 系统配置初始化
+ * 
+ * @return true 
+ * @return false 
+ */
 bool sys_config_init(void)
 {
     json j;
@@ -96,6 +118,13 @@ bool sys_config_init(void)
     return true;
 }
 
+/**
+ * @brief Get the sdk tcp host object
+ * 
+ * @param ip_version : ip版本
+ * @param ip : ip地址
+ * @param port : 端口
+ */
 void get_sdk_tcp_host(std::string &ip_version, std::string &ip, int &port)
 {
     json j = get_json_config();

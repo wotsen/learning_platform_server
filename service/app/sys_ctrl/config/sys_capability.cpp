@@ -18,6 +18,11 @@ using json = nlohmann::json;
 
 SysCapability *SysCapability::instance = nullptr;
 
+/**
+ * @brief 获取系统能力集
+ * 
+ * @return SysCapability* 
+ */
 SysCapability *SysCapability::get_sys_capability(void)
 {
     if (nullptr != instance)
@@ -54,6 +59,10 @@ SysCapability *SysCapability::get_sys_capability(void)
     return instance;
 }
 
+/**
+ * @brief Destroy the Sys Capability:: Sys Capability object
+ * 
+ */
 SysCapability::~SysCapability()
 {
     if (this->json_file)
@@ -62,11 +71,22 @@ SysCapability::~SysCapability()
     }
 }
 
+/**
+ * @brief Get the json capability object
+ * 
+ * @return json& 
+ */
 json &get_json_capability(void)
 {
     return SysCapability::get_sys_capability()->get_json();
 }
 
+/**
+ * @brief 能力集初始化
+ * 
+ * @return true 成功
+ * @return false 失败
+ */
 bool sys_capability_init(void)
 {
     json j;
@@ -94,6 +114,11 @@ bool sys_capability_init(void)
     return true;
 }
 
+/**
+ * @brief Get the user manage max users object
+ * 
+ * @return uint32_t 
+ */
 uint32_t get_user_manage_max_users(void)
 {
     json j = get_json_capability();

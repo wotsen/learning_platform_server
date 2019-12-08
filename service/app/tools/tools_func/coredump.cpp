@@ -18,6 +18,14 @@
 
 static const char * const core_format = "core-%e-%p-%t";
 
+/**
+ * @brief Set the up coredump object
+ * 
+ * @param path_dir : coredump生成路径
+ * @param core_size : 文件大小
+ * @return true : 设置成功
+ * @return false : 设置失败
+ */
 bool setup_coredump(const char *path_dir, size_t core_size)
 {
 	struct rlimit rlmt;
