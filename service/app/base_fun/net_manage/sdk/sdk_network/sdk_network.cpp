@@ -12,8 +12,8 @@
 
 #include <iostream>
 #include <easylogger/easylogger_setup.h>
+#include "util_time/util_time.h"
 #include "../../../../sys_ctrl/config/sys_config.h"
-#include "../../../../tools/timer/timer.h"
 #include "sdk_package_distribution.h"
 #include "sdk_network.h"
 

@@ -14,7 +14,7 @@
 #include <list>
 #include <cstring>
 #include <easylogger/easylogger_setup.h>
-#include "../../../../tools/timer/timer.h"
+#include "util_time/util_time.h"
 #include "../../../task_manage/task_manage.h"
 #include "sdk_protocol_do.h"
 #include "sdk_package_distribution.h"
@@ -53,7 +53,6 @@ template <> bool push_sdk_package<uv_stream_t>(sdk_package<uv_stream_t> *package
 		return false;
 	}
 
-	log_d("recv : %s\n", ((uv_buf_t *)(package->handle->data))->base);
 	stream_list.push_back(package);
 
 	return true;
@@ -85,7 +84,6 @@ static void *task_sdk_stream_do(void *name) noexcept
 	{
 		if (!stream_list.empty())
 		{
-			printf(".............pack\n");
 			res.res.len = 0;
 			memset(res_buf, 0, MAX_SDK_MSG_LEN);
 

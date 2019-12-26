@@ -38,3 +38,10 @@ tags
 .gitattributes
 *AIService
 /build/
+*.log
+*.cproject
+*.project
+service/bin
+service/include
+service/lib
+*.db3

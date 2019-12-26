@@ -10,7 +10,7 @@ CC := g++
 # compile flags
 INC := -I$(ROOT_DIR)/../include
 # github三方库使用静态链接
-LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lprotobuf -lutil_pthread -lSQLiteCpp -lsqlite3
+LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lutil_time -lprotobuf -lutil_pthread -lSQLiteCpp -lsqlite3
 LIBS += $(LIBS) -lrt -lpthread -ldl
 DMARCROS := -DLANGUAGE_ZH #-DNDEBUG -DDEBUG 
 # -ggdb

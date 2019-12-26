@@ -45,3 +45,8 @@ cd ../../
 
 mkdir ../include/sole/ -p
 cp sole/sole.hpp ../include/sole/ -f
+
+# 安装util_time
+cd util_time
+make
+make MAKE_INSTALL_PREFIX=$install_dir install

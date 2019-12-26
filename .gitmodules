@@ -25,3 +25,6 @@
 [submodule "service/third_party/sole"]
 	path = service/third_party/sole
 	url = https://github.com/r-lyeh-archived/sole
+[submodule "service/third_party/util_time"]
+	path = service/third_party/util_time
+	url = https://github.com/wotsen/c-time
