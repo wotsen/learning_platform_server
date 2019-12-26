@@ -24,11 +24,119 @@
 namespace wotsen
 {
 
-// 任务管理实例
-TasksManage *TasksManage::task_pool = nullptr;
+/**
+ * @brief 当前任务状态
+ * 
+ */
+enum task_state
+{
+    E_TASK_ALIVE,				///< 活跃
+    E_TASK_STOP,				///< 停止
+    E_TASK_DEAD,				///< 死亡
+    E_TASK_OVERLOAD				///< 等待重载
+};
+
+// 误差时间10s
+#define TASK_TIME_ERROR_RANGE 10
+// 超时次数
+#define MAX_TASK_TIMEOUT_TIMES 3
+
+/**
+ * @brief 任务记录信息
+ * 
+ */
+struct task_record
+{
+    pthread_t tid;                              ///< 线程号
+    char thread_name[MAX_THREAD_NAME_LEN + 1];  ///< 线程名
+    size_t stacksize;                           ///< 线程栈大小
+    int priority;                               ///< 线程优先级
+    thread_clean clean;                         ///< 任务清理
+
+    uint32_t create_time;                       ///< 创建时间
+    uint32_t alive_time;                        ///< 生存时间
+    uint32_t last_update_time;                  ///< 上次更新时间
+    uint8_t timeout_times;                      ///< 超时次数
+
+    pthread_mutex_t mutex;                      ///< 线程锁
+    pthread_cond_t cond;                        ///< 互斥条件
+    enum task_state state;                      ///< 线程状态
+
+    thread_func func;                           ///< 任务入口
+    enum task_deadlock action;                  ///< 异常处理
+};
+
+/**
+ * @brief 任务管理
+ * 
+ */
+class TasksManage
+{
+private:
+    TasksManage() {};
+
+    static TasksManage *task_pool;                          ///< 任务管理句柄
+    pthread_mutex_t mutex;                                  ///< 任务锁
+
+    static uint32_t max_tasks;                  			///< 最大任务数
+    std::vector<std::shared_ptr<struct task_record>> tasks; ///< 任务池
+
+public:
+    ~TasksManage();
+    // 获取任务管理句柄
+    static TasksManage *get_task_pool(void) noexcept;
+    // 创建任务
+    bool task_create(const struct task_record &task) noexcept;
+    // 任务激活(刷新生存时间)
+    void task_alive(const pthread_t &tid) noexcept;
+    // 任务等待信号
+    void task_wait(const pthread_t &tid) noexcept;
+    // 任务暂停
+    bool task_stop(const pthread_t &tid) noexcept;
+    // 任务继续
+    bool task_continue(const pthread_t &tid) noexcept;
+    /* 更新任务状态 */
+    void task_update(void) noexcept;
+
+    // 任务运行
+    friend static void *task_run(TasksManage *tasks);
+
+private:
+    // 获取目标任务
+    auto get_item_task(const pthread_t &tid) noexcept;
+    // 检测任务是否异常
+    bool task_exist_if(const pthread_t &tid) noexcept;
+    // 修正系统时间引起的时间跳变
+    void task_correction_time(void) noexcept;
+    // 检查任务超时
+    void task_check_timeout(void) noexcept;
+    // 任务超时处理
+    void task_timeout_handler(std::shared_ptr<struct task_record> &_task) noexcept;
+    // 任务重新启动
+    void task_reload(std::shared_ptr<struct task_record> &_task) noexcept;
+    // 任务出栈
+    void task_pop(const pthread_t &tid) noexcept;
+    // 杀死任务(FIXME:只能尝试处理，失败也没有办法，这里的kill任务也只用于超时的任务，一般是死锁了)
+    void task_kill(std::shared_ptr<struct task_record> &_task) noexcept;
+    // 任务注销
+    void task_destroy(std::shared_ptr<struct task_record> &_task) noexcept;
+
+    /* 清理死亡任务：包含手动注销、自动注销，异常退出 */
+    void task_clean(void) noexcept;
+    /* 重载超时任务 */
+    void task_overload(void) noexcept;
+};
+
+/* 任务运行 */
+static void *task_run(TasksManage *tasks);
 
 /* 任务管理主线程 */
 static void *task_manage(void *name) noexcept;
+
+// 任务管理实例
+static TasksManage *TasksManage::task_pool = nullptr;
+
+static uint32_t TasksManage::max_tasks = 128;
 
 /**
  * @brief 获取任务管理句柄
@@ -81,36 +189,36 @@ TasksManage::~TasksManage()
  * @return true 成功
  * @return false 失败
  */
-bool TasksManage::task_create(const struct task_record *task) noexcept
+bool TasksManage::task_create(const struct task_record &task) noexcept
 {
     std::shared_ptr<struct task_record> _task(new struct task_record);
 
-    if (NULL == task || NULL == task->func || NULL == task->thread_name)
+    if (NULL == task->func || NULL == task->thread_name)
     {
         log_e("can not create thread, parameter error!\n");
         return false;
     }
 
-    if (task->stacksize < PTHREAD_STACK_MIN)
+    if (task.stacksize < PTHREAD_STACK_MIN)
     {
-        log_e("stacksize too little : %zu, need over %zu\n", task->stacksize, PTHREAD_STACK_MIN);
+        log_e("stacksize too little : %zu, need over %zu\n", task.stacksize, PTHREAD_STACK_MIN);
         return false;
     }
 
     pthread_mutex_lock(&task_pool->mutex);
-    if (task_pool->tasks.size() > task_pool->max_tasks)
+    if (task_pool->tasks.size() > TasksManage::max_tasks)
     {
         log_e("task_pool full!\n");
         goto err_return;
     }
 
-    memcpy(&*_task, task, sizeof(struct task_record));
+    memcpy(&*_task, &task, sizeof(struct task_record));
 
     // 线程锁
     pthread_mutex_init(&_task->mutex, NULL);
     pthread_cond_init(&_task->cond, NULL);
 
-    if (!create_thread(&_task->tid, task->stacksize, task->priority, (thread_func)task_run, this))
+    if (!create_thread(&_task->tid, task.stacksize, task.priority, (thread_func)task_run, this))
     {
         log_e("%s\n", strerror(errno));
         goto err_return;
@@ -272,7 +380,7 @@ void TasksManage::task_alive(const pthread_t &tid) noexcept
 void TasksManage::task_pop(const pthread_t &tid) noexcept
 {
     pthread_mutex_lock(&task_pool->mutex);
-    task_pool->tasks.erase(std::remove_if(task_pool->tasks.begin(), task_pool->tasks.end(), [tid](auto _task) -> bool {
+    task_pool->tasks.erase(std::remove_if(task_pool->tasks.begin(), task_pool->tasks.end(), [tid](auto &_task) -> bool {
                                return _task->tid == tid;
                            }),
                            task_pool->tasks.end());
@@ -288,7 +396,7 @@ void TasksManage::task_clean(void) noexcept
     pthread_mutex_lock(&task_pool->mutex);
     task_pool->tasks.erase(std::remove_if(task_pool->tasks.begin(),
                                           task_pool->tasks.end(),
-                                          [](auto _task) -> bool {
+                                          [](auto &_task) -> bool {
                                               if (E_TASK_DEAD == _task->state)
                                               {
                                                   pthread_mutex_unlock(&_task->mutex);
@@ -456,6 +564,9 @@ void TasksManage::task_check_timeout(void) noexcept
             log_e("task tid=[%d], taskid=[%d], taskname=[%s]\n", item->tid, item->task_id, item->thread_name);
             if (item->timeout_times++ > MAX_TASK_TIMEOUT_TIMES)
             {
+				// TODO:超时任务应该记录到单独的文件里边
+				log_e("task tid=[%d], taskid=[%d], taskname=[%s] : timeout with [%x]\n",
+						item->tid, item->task_id, item->thread_name, item->action);
                 // 超时处理
                 task_timeout_handler(item);
             }
@@ -518,7 +629,7 @@ static void *task_manage(void *name) noexcept
  * @return false 创建失败
  */
 bool task_create(thread_func func, const size_t stacksize, const char *thread_name,
-                 const uint16_t task_id, const uint32_t alive_time, enum task_deadlock action,
+                 const uint32_t alive_time, const enum task_deadlock action,
                  thread_clean clean, const int priority) noexcept
 {
     TasksManage *task_pool = TasksManage::get_task_pool();
@@ -530,12 +641,11 @@ bool task_create(thread_func func, const size_t stacksize, const char *thread_na
     task.stacksize = stacksize;
     task.priority = priority;
     snprintf(task.thread_name, MAX_THREAD_NAME_LEN + 1, "%s", thread_name);
-    task.task_id = task_id;
     task.alive_time = alive_time;
     task.action = action;
     task.clean = clean;
 
-    return task_pool->task_create(&task);
+    return task_pool->task_create(task);
 }
 
 void task_alive(const pthread_t tid) noexcept
@@ -580,9 +690,10 @@ void *task_run(TasksManage *tasks)
 }
 
 // 初始出化任务管理任务
-void task_manage_init(void) noexcept
+void task_manage_init(const uint32_t max_tasks = 128) noexcept
 {
-    task_create(task_manage, STACKSIZE(800), "task_manage", TASK_MANAGE_ID, OS_MIN(5), E_TASK_REBOOT_SYSTEM);
+	TasksManage::max_tasks = max_tasks;
+    task_create(task_manage, STACKSIZE(800), "task_manage", OS_MIN(5), E_TASK_REBOOT_SYSTEM);
 }
 
 } // namespace wotsen

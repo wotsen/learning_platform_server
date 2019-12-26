@@ -22,9 +22,7 @@
 namespace wotsen
 {
 
-// 线程清理接口
-using thread_clean = void (*)(void);
-
+#if 0
 /**
  * @brief 任务编号
  * 
@@ -40,6 +38,7 @@ enum
     // 前面的都算做是模块类的任务，之后的算作临时的
     TASK_NORMAL_ID // 普通短期线程
 };
+#endif
 
 /**
  * @brief 任务崩溃处理
@@ -47,124 +46,24 @@ enum
  */
 enum task_deadlock
 {
-    E_TASK_RELOAD,
-    E_TASK_KILL,
-    E_TASK_REBOOT_SYSTEM,
-    E_TASK_IGNORE
+    E_TASK_RELOAD,				///< 任务重新启动
+    E_TASK_KILL,				///< 结束任务
+    E_TASK_REBOOT_SYSTEM,		///< 系统重启
+    E_TASK_IGNORE				///< 忽略
 };
 
-/**
- * @brief 当前任务状态
- * 
- */
-enum task_state
-{
-    E_TASK_ALIVE,
-    E_TASK_STOP,
-    E_TASK_DEAD,
-    E_TASK_OVERLOAD
-};
-
-/**
- * @brief 任务记录信息
- * 
- */
-struct task_record
-{
-// 误差时间10s
-#define TASK_TIME_ERROR_RANGE 10
-// 超时次数
-#define MAX_TASK_TIMEOUT_TIMES 3
-
-    uint16_t task_id;                           ///< 任务id
-    pthread_t tid;                              ///< 线程号
-    char thread_name[MAX_THREAD_NAME_LEN + 1];  ///< 线程名
-    size_t stacksize;                           ///< 线程栈大小
-    int priority;                               ///< 线程优先级
-    thread_func func;                           ///< 任务入口
-    thread_clean clean;                         ///< 任务清理
-
-    uint32_t create_time;                       ///< 创建时间
-    uint32_t alive_time;                        ///< 生存时间
-    uint32_t last_update_time;                  ///< 上次更新时间
-    uint8_t timeout_times;                      ///< 超时次数
-
-    pthread_mutex_t mutex;                      ///< 线程锁
-    pthread_cond_t cond;                        ///< 互斥条件
-    enum task_state state;                      ///< 线程状态
-
-    enum task_deadlock action;                  ///< 异常处理
-};
-
-/**
- * @brief 任务管理
- * 
- */
-class TasksManage
-{
-private:
-    TasksManage(){};
-
-    static TasksManage *task_pool;                          ///< 任务管理句柄
-    pthread_mutex_t mutex;                                  ///< 任务锁
-
-    static const uint32_t max_tasks = 128;                  ///< 最大任务数
-    std::vector<std::shared_ptr<struct task_record>> tasks; ///< 任务池
-
-public:
-    ~TasksManage();
-    // 获取任务管理句柄
-    static TasksManage *get_task_pool(void) noexcept;
-    // 创建任务
-    bool task_create(const struct task_record *task) noexcept;
-    // 任务激活(刷新生存时间)
-    void task_alive(const pthread_t &tid) noexcept;
-    // 任务等待信号
-    void task_wait(const pthread_t &tid) noexcept;
-    // 任务暂停
-    bool task_stop(const pthread_t &tid) noexcept;
-    // 任务继续
-    bool task_continue(const pthread_t &tid) noexcept;
-    /* 更新任务状态 */
-    void task_update(void) noexcept;
-
-    // 任务运行
-    friend void *task_run(TasksManage *tasks);
-
-private:
-    // 获取目标任务
-    auto get_item_task(const pthread_t &tid) noexcept;
-    // 检测任务是否异常
-    bool task_exist_if(const pthread_t &tid) noexcept;
-    // 修正系统时间引起的时间跳变
-    void task_correction_time(void) noexcept;
-    // 检查任务超时
-    void task_check_timeout(void) noexcept;
-    // 任务超时处理
-    void task_timeout_handler(std::shared_ptr<struct task_record> &_task) noexcept;
-    // 任务重新启动
-    void task_reload(std::shared_ptr<struct task_record> &_task) noexcept;
-    // 任务出栈
-    void task_pop(const pthread_t &tid) noexcept;
-    // 杀死任务
-    void task_kill(std::shared_ptr<struct task_record> &_task) noexcept;
-    // 任务注销
-    void task_destroy(std::shared_ptr<struct task_record> &_task) noexcept;
-
-    /* 清理死亡任务：包含手动注销、自动注销，异常退出 */
-    void task_clean(void) noexcept;
-    /* 重载超时任务 */
-    void task_overload(void) noexcept;
-};
-void *task_run(TasksManage *tasks);
+// 线程清理接口
+using thread_clean = void (*)(void);
 
 // 创建任务外部接口
 bool task_create(thread_func func, const size_t stacksize, const char *thread_name,
-                 const uint16_t task_id, const uint32_t alive_time, enum task_deadlock action,
+                 const uint32_t alive_time, const enum task_deadlock action,
                  thread_clean clean = NULL, const int priority = SYS_THREAD_PRI_LV) noexcept;
+
 // 刷新任务自身时间
 void task_alive(const pthread_t tid) noexcept;
 
 // 任务管理初始化
-void task_manage_init(void) noexcept;
+void task_manage_init(const uint32_t max_tasks = 128) noexcept;
+
 } // namespace wotsen
