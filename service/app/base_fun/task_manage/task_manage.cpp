@@ -72,13 +72,15 @@ struct task_record
  */
 class TasksManage
 {
+    static uint32_t max_tasks;                  			///< 最大任务数
+	static abnormal_task_do except_fun;						///< 异常任务外部处理接口
+
 private:
     TasksManage() {};
 
     static TasksManage *task_pool;                          ///< 任务管理句柄
     pthread_mutex_t mutex;                                  ///< 任务锁
 
-    static uint32_t max_tasks;                  			///< 最大任务数
     std::vector<std::shared_ptr<struct task_record>> tasks; ///< 任务池
 
 public:
@@ -137,6 +139,7 @@ static void *task_manage(void *name) noexcept;
 static TasksManage *TasksManage::task_pool = nullptr;
 
 static uint32_t TasksManage::max_tasks = 128;
+static TasksManage::abnormal_task_do except_fun = NULL;
 
 /**
  * @brief 获取任务管理句柄
@@ -564,9 +567,11 @@ void TasksManage::task_check_timeout(void) noexcept
             log_e("task tid=[%d], taskid=[%d], taskname=[%s]\n", item->tid, item->task_id, item->thread_name);
             if (item->timeout_times++ > MAX_TASK_TIMEOUT_TIMES)
             {
-				// TODO:超时任务应该记录到单独的文件里边
 				log_e("task tid=[%d], taskid=[%d], taskname=[%s] : timeout with [%x]\n",
 						item->tid, item->task_id, item->thread_name, item->action);
+				if (TasksManage::except_fun)
+				{
+				}
                 // 超时处理
                 task_timeout_handler(item);
             }
@@ -690,9 +695,10 @@ void *task_run(TasksManage *tasks)
 }
 
 // 初始出化任务管理任务
-void task_manage_init(const uint32_t max_tasks = 128) noexcept
+void task_manage_init(const uint32_t max_tasks = 128, abnormal_task_do except_fun = NULL) noexcept
 {
 	TasksManage::max_tasks = max_tasks;
+	TasksManage::except_fun = except_fun;
     task_create(task_manage, STACKSIZE(800), "task_manage", OS_MIN(5), E_TASK_REBOOT_SYSTEM);
 }
 

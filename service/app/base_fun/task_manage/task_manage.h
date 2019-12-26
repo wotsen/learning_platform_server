@@ -55,6 +55,8 @@ enum task_deadlock
 // 线程清理接口
 using thread_clean = void (*)(void);
 
+using abnormal_task_do = void (*)(const pthread_t tid, const char *thread_name, const char *reason);
+
 // 创建任务外部接口
 bool task_create(thread_func func, const size_t stacksize, const char *thread_name,
                  const uint32_t alive_time, const enum task_deadlock action,
@@ -64,6 +66,6 @@ bool task_create(thread_func func, const size_t stacksize, const char *thread_na
 void task_alive(const pthread_t tid) noexcept;
 
 // 任务管理初始化
-void task_manage_init(const uint32_t max_tasks = 128) noexcept;
+void task_manage_init(const uint32_t max_tasks = 128, abnormal_task_do except_fun = NULL) noexcept;
 
 } // namespace wotsen
