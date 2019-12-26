@@ -15,6 +15,7 @@
 #include <easylogger/easylogger_setup.h>
 #include "../base_fun/task_manage/task_manage.h"
 #include "../base_fun/net_manage/net_manage.h"
+#include "config/os_param.h"
 #include "config/sys_config.h"
 #include "config/sys_capability.h"
 #include "config/sys_parameter.h"
@@ -47,6 +48,11 @@ static void _elog_init(void)
     }
 }
 
+void except_task_alarm(const struct except_task_info &except_task)
+{
+    // TODO:记录到异常任务日志，告警上报
+}
+
 /**
  * @brief 系统初始化
  * 
@@ -61,7 +67,7 @@ void sys_init(void)
 
     sys_parameter_init();
 
-    wotsen::task_manage_init();
+    wotsen::task_manage_init(OS_SYS_TASK_NUM, reinterpret_cast<wotsen::abnormal_task_do>(except_task_alarm));
 
     net_init();
 }

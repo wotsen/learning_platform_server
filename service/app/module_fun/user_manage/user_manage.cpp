@@ -442,5 +442,5 @@ void user_manager_init(void)
 
 	user_manager = std::unique_ptr<UserManager>(new UserManager(get_user_manage_max_users()));
 
-	task_create(user_manage_task, STACKSIZE(8000), "user_manage", TASK_NORMAL_ID, OS_MIN(5), E_TASK_RELOAD);
+	task_create(user_manage_task, STACKSIZE(8000), "user_manage", OS_MIN(5), E_TASK_RELOAD);
 }

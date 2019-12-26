@@ -22,24 +22,6 @@
 namespace wotsen
 {
 
-#if 0
-/**
- * @brief 任务编号
- * 
- */
-enum
-{
-    TASK_MAIN_ID = 0,     // 主线程号
-    TASK_MANAGE_ID = 1,   // 任务管理线程号
-    TASK_UPGRADE_ID = 2,  // 升级任务
-    TASK_NETWORK_ID = 3,  // 网络任务
-    TASK_ALARM_ID = 4,    // 告警任务
-    TASK_AI_SCHEDULE = 5, // ai调度
-    // 前面的都算做是模块类的任务，之后的算作临时的
-    TASK_NORMAL_ID // 普通短期线程
-};
-#endif
-
 /**
  * @brief 任务崩溃处理
  * 
@@ -52,10 +34,17 @@ enum task_deadlock
     E_TASK_IGNORE				///< 忽略
 };
 
+struct except_task_info {
+    pthread_t tid;
+    std::string thread_name;
+    std::string reason;
+};
+
 // 线程清理接口
 using thread_clean = void (*)(void);
 
-using abnormal_task_do = void (*)(const pthread_t tid, const char *thread_name, const char *reason);
+// 异常任务外部处理回调接口
+using abnormal_task_do = void (*)(const struct except_task_info &);
 
 // 创建任务外部接口
 bool task_create(thread_func func, const size_t stacksize, const char *thread_name,

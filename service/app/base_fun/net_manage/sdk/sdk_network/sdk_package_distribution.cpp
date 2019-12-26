@@ -107,5 +107,5 @@ static void *task_sdk_stream_do(void *name) noexcept
  */
 void task_sdk_package_distribution_init(void)
 {
-    task_create(task_sdk_stream_do, STACKSIZE(50*1024), "task_sdk_stream_do", 0, OS_MIN(5), E_TASK_IGNORE);
+    task_create(task_sdk_stream_do, STACKSIZE(50*1024), "task_sdk_stream_do", OS_MIN(5), E_TASK_IGNORE);
 }

@@ -132,5 +132,5 @@ static void *task_uv_event(void *name)
  */
 void task_uv_event_init(void)
 {
-	task_create(task_uv_event, STACKSIZE(10 * 1024), "task_uv_event", 0, OS_MIN(30), E_TASK_REBOOT_SYSTEM);
+	task_create(task_uv_event, STACKSIZE(10 * 1024), "task_uv_event", OS_MIN(30), E_TASK_REBOOT_SYSTEM);
 }

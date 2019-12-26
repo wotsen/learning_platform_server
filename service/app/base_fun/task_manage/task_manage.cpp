@@ -66,12 +66,18 @@ struct task_record
     enum task_deadlock action;                  ///< 异常处理
 };
 
+class TasksManage;
+
+/* 任务运行 */
+static void *task_run(TasksManage *tasks);
+
 /**
  * @brief 任务管理
  * 
  */
 class TasksManage
 {
+public:
     static uint32_t max_tasks;                  			///< 最大任务数
 	static abnormal_task_do except_fun;						///< 异常任务外部处理接口
 
@@ -101,7 +107,7 @@ public:
     void task_update(void) noexcept;
 
     // 任务运行
-    friend static void *task_run(TasksManage *tasks);
+    friend void *task_run(TasksManage *tasks);
 
 private:
     // 获取目标任务
@@ -129,17 +135,14 @@ private:
     void task_overload(void) noexcept;
 };
 
-/* 任务运行 */
-static void *task_run(TasksManage *tasks);
-
 /* 任务管理主线程 */
 static void *task_manage(void *name) noexcept;
 
 // 任务管理实例
-static TasksManage *TasksManage::task_pool = nullptr;
+TasksManage *TasksManage::task_pool = nullptr;
 
-static uint32_t TasksManage::max_tasks = 128;
-static TasksManage::abnormal_task_do except_fun = NULL;
+uint32_t TasksManage::max_tasks = 128;
+abnormal_task_do TasksManage::except_fun = NULL;
 
 /**
  * @brief 获取任务管理句柄
@@ -196,7 +199,7 @@ bool TasksManage::task_create(const struct task_record &task) noexcept
 {
     std::shared_ptr<struct task_record> _task(new struct task_record);
 
-    if (NULL == task->func || NULL == task->thread_name)
+    if (NULL == task.func || NULL == task.thread_name)
     {
         log_e("can not create thread, parameter error!\n");
         return false;
@@ -232,7 +235,7 @@ bool TasksManage::task_create(const struct task_record &task) noexcept
     _task->timeout_times = 0;
     _task->state = E_TASK_ALIVE;
 
-    log_d("create task tid=[%zu], id=[%d], name=[%s]\n", _task->tid, _task->task_id, _task->thread_name);
+    log_d("create task tid=[%zu], name=[%s]\n", _task->tid, _task->thread_name);
 
     // 任务入队
     task_pool->tasks.push_back(std::move(_task));
@@ -442,7 +445,7 @@ void TasksManage::task_overload(void) noexcept
         pthread_mutex_unlock(&item->mutex);
         pthread_mutex_destroy(&item->mutex);
         pthread_cond_destroy(&item->cond);
-        task_pool->task_create(&*item);
+        task_pool->task_create(*item);
     }
 
     old_tasks.clear();
@@ -564,11 +567,11 @@ void TasksManage::task_check_timeout(void) noexcept
         pthread_mutex_lock(&item->mutex);
         if ((uint32_t)abs(now - item->last_update_time) > (item->alive_time + TASK_TIME_ERROR_RANGE))
         {
-            log_e("task tid=[%d], taskid=[%d], taskname=[%s]\n", item->tid, item->task_id, item->thread_name);
+            log_e("task tid=[%d], taskname=[%s]\n", item->tid, item->thread_name);
             if (item->timeout_times++ > MAX_TASK_TIMEOUT_TIMES)
             {
-				log_e("task tid=[%d], taskid=[%d], taskname=[%s] : timeout with [%x]\n",
-						item->tid, item->task_id, item->thread_name, item->action);
+				log_e("task tid=[%d], taskname=[%s] : timeout with [%x]\n",
+						item->tid, item->thread_name, item->action);
 				if (TasksManage::except_fun)
 				{
 				}
@@ -626,7 +629,6 @@ static void *task_manage(void *name) noexcept
  * @param func 任务主函数
  * @param stacksize 栈大小
  * @param thread_name 线程名
- * @param task_id 任务id
  * @param alive_time 超时时间
  * @param action 超时处理
  * @param clean 任务结束处理函数
@@ -695,7 +697,7 @@ void *task_run(TasksManage *tasks)
 }
 
 // 初始出化任务管理任务
-void task_manage_init(const uint32_t max_tasks = 128, abnormal_task_do except_fun = NULL) noexcept
+void task_manage_init(const uint32_t max_tasks, abnormal_task_do except_fun) noexcept
 {
 	TasksManage::max_tasks = max_tasks;
 	TasksManage::except_fun = except_fun;
