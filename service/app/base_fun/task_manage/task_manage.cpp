@@ -505,16 +505,10 @@ void TasksManage::task_timeout_handler(std::shared_ptr<struct task_record> &_tas
 {
     switch (_task->action)
     {
-    case E_TASK_KILL:
-        task_pool->task_destroy(_task);
-        break;
     case E_TASK_REBOOT_SYSTEM:
         // TODO: 如何自启-->守护进程
         break;
     case E_TASK_IGNORE:
-        break;
-    case E_TASK_RELOAD:
-        task_pool->task_reload(_task);
         break;
     default:
         break;
@@ -572,11 +566,21 @@ void TasksManage::task_check_timeout(void) noexcept
             {
 				log_e("task tid=[%d], taskname=[%s] : timeout with [%x]\n",
 						item->tid, item->thread_name, item->action);
-				if (TasksManage::except_fun)
-				{
-				}
+
                 // 超时处理
                 task_timeout_handler(item);
+
+                struct except_task_info err_info = {
+                    item->tid,
+                    item->thread_name,
+                    "task timeout",
+                };
+
+                // 错误信息给到外部
+				if (TasksManage::except_fun)
+				{
+                    TasksManage::except_fun(err_info);
+				}
             }
         }
         else

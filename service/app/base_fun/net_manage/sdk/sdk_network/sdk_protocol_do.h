@@ -11,8 +11,7 @@
 #pragma once
 
 #include <inttypes.h>
-#include <uv.h>
-#include "../sdk_protocol/in_sdk.pb.h"
+// #include <uv.h>
 #include "sdk_package_distribution.h"
 
 // 最大一包数据64k
@@ -22,16 +21,6 @@ enum sdk_net_data_type
 {
 	SDK_TCP_DATA_TYPE,
 	SDK_UDP_DATA_TYPE,
-};
-
-/**
- * @brief 响应数据包
- * 
- */
-struct SdkResponsePack
-{
-	uint64_t alloc_size; // 总共分配的内存
-	uv_buf_t res;		 // 包含的响应内存地址和响应长度
 };
 
 /**
@@ -46,5 +35,4 @@ struct SdkMsgProtocol
 };
 
 // sdk协议处理
-template <typename T>
-bool sdk_protocol_do(const enum sdk_net_data_type type, sdk_package<T> *req, struct SdkResponsePack *res);
+bool sdk_protocol_do(struct sdk_data_buf &req, struct sdk_data_buf &res);

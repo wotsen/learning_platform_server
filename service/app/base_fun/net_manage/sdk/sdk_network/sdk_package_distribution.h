@@ -12,6 +12,12 @@
 
 #include <uv.h>
 
+struct sdk_data_buf
+{
+	size_t len;	///< 实际接受长度
+    void *data;
+};
+
 /**
  * @brief sdk处理数据包
  * 
@@ -22,7 +28,7 @@ struct sdk_package
 {
 	T *handle;			///< uv handle
 	size_t recv_len;	///< 实际接受长度
-	uv_buf_t buf;		///< 数据部分
+	// uv_buf_t buf;		///< 数据部分
 	bool (*write)(T *handle, const uv_buf_t *buf);	///< 响应回调接口
 };
 

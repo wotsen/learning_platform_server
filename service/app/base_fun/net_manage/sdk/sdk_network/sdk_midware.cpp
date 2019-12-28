@@ -62,13 +62,13 @@ public:
 	 * @return true 成功
 	 * @return false 失败
 	 */
-	bool proc_midwares(const enum sdk_net_data_type type, void *req, insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res) const
+	bool proc_midwares(insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res) const
 	{
 		for (auto &item : midwares)
 		{
 			if (item->_midware && item->enable)
 			{
-				if (!item->_midware(type, req, sdk_req, sdk_res))
+				if (!item->_midware(sdk_req, sdk_res))
 				{
 					log_d("proc midware %s failed\n", item->name.c_str());
 					// 一个中间件处理失败不再向后传递
@@ -132,7 +132,7 @@ void _register_sdk_midware(const char *name, sdk_midware midware_fn, bool enable
  * @return true 成功
  * @return false 失败
  */
-bool sdk_midware_do(const enum sdk_net_data_type type, void *req, insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res)
+bool sdk_midware_do(insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res)
 {
-	return midware_mannager.proc_midwares(type, req, sdk_req, sdk_res);
+	return midware_mannager.proc_midwares(sdk_req, sdk_res);
 }

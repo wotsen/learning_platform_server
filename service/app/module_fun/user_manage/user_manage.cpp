@@ -21,7 +21,7 @@
 #include <sole/sole.hpp>
 #include "util_time/util_time.h"
 #include "../../base_fun/task_manage/task_manage.h"
-#include "../../sys_ctrl/config/sys_capability.h"
+#include "sys_capability.h"
 #include "../session/session_manage.h"
 #include "user_manage.h"
 
@@ -34,11 +34,13 @@ using namespace insider::sdk;
 class UserSession;
 class UserManager;
 
+static bool _module_state = false;
+
 static Database *user_db = nullptr;
 static std::unique_ptr<UserManager> user_manager;
 
 template <typename T>
-bool _user_manange_midware_do(const enum sdk_net_data_type type, sdk_package<T> *req, Sdk &sdk_req, Sdk &sdk_res);
+bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res);
 
 /**
  * @brief 用户会话
@@ -298,8 +300,7 @@ public:
  * @return true 成功
  * @return false 失败
  */
-template <>
-bool _user_manange_midware_do(const enum sdk_net_data_type type, sdk_package<uv_stream_s> *req, Sdk &sdk_req, Sdk &sdk_res)
+bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
 {
 	UserInfo user_info = sdk_req.mutable_body()->user();
 	enum UserInfo_Result user_ret = UserInfo_Result::UserInfo_Result_U_OK;
@@ -370,21 +371,14 @@ bool _user_manange_midware_do(const enum sdk_net_data_type type, sdk_package<uv_
  * @return true 成功
  * @return false 失败
  */
-bool user_manange_midware_do(const enum sdk_net_data_type type, void *req, Sdk &sdk_req, Sdk &sdk_res)
+bool user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
 {
-	if (SDK_TCP_DATA_TYPE == type)
-	{
-		return _user_manange_midware_do(type, (sdk_package<uv_stream_s> *)req, sdk_req, sdk_res);
-	}
-	else if (SDK_UDP_DATA_TYPE == type)
-	{
-		// sdk_package<uv_stream_t> *src_req = req; 
-		return false; // TODO:UDP
-	}
-	else
-	{
-		return false;
-	}
+    if (!_module_state)
+    {
+        return true;
+    }
+
+	return _user_manange_midware_do(sdk_req, sdk_res);
 }
 
 /**
@@ -396,7 +390,10 @@ bool user_manange_midware_do(const enum sdk_net_data_type type, void *req, Sdk &
 bool user_db_init(void)
 {
 	try {
-		user_db = new Database("../data/ai_platform_service_user.db3", OPEN_READWRITE|OPEN_CREATE);
+        if (!user_db)
+        {
+		    user_db = new Database("../data/ai_platform_service_user.db3", OPEN_READWRITE|OPEN_CREATE);
+        }
 	} catch (std::exception& e) {
 		log_e("%s\n", e.what());
 
@@ -405,6 +402,7 @@ bool user_db_init(void)
 
 	if (!user_db->tableExists(USER_TABLE))
 	{
+        // TODO:增加权限
 		user_db->exec("CREATE TABLE sdk_user (id INTEGER PRIMARY KEY, name CHAR(30), password CHAR(128), phone CHAR(24), email CHAR(128))");
 		user_db->exec("INSERT INTO sdk_user VALUES (1, \"admin\", \"admin\", \"15558198512\", \"wotsen@outlook.com\")");
 	}
@@ -422,7 +420,9 @@ static void *user_manage_task(void *name)
 {
 	pthread_t tid = pthread_self();
 
-	for (;;)
+    _module_state = true;
+
+	for (;!_module_state;)
     {
         task_alive(tid);          // 自身任务心跳
 
@@ -430,6 +430,26 @@ static void *user_manage_task(void *name)
 
 		user_manager->update_session();
     }
+
+	return (void *)0;
+}
+
+static void _module_clean(void)
+{
+    _module_state = false;
+}
+
+///< 反初始化用户管理
+void user_manager_finit(void)
+{
+    log_i("module can not support finit\n");
+    // _module_clean();
+}
+
+///< 用户管理模块状态
+bool user_manager_state(void)
+{
+    return _module_state;
 }
 
 /**
@@ -440,7 +460,10 @@ void user_manager_init(void)
 {
 	user_db_init();
 
-	user_manager = std::unique_ptr<UserManager>(new UserManager(get_user_manage_max_users()));
+    if (!user_manager)
+    {
+	    user_manager = std::unique_ptr<UserManager>(new UserManager(get_user_manage_max_users()));
+    }
 
-	task_create(user_manage_task, STACKSIZE(8000), "user_manage", OS_MIN(5), E_TASK_RELOAD);
+	task_create(user_manage_task, STACKSIZE(8000), "user_manage", OS_MIN(5), E_TASK_IGNORE, _module_clean);
 }

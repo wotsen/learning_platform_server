@@ -22,15 +22,13 @@
 using namespace insider::sdk;
 
 // body内容处理
-static bool sdk_body_do(const enum sdk_net_data_type type, Sdk &req, Sdk &res);
+static bool sdk_body_do(Sdk &req, Sdk &res);
 
 // header数据处理
-template <typename T>
-bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<T> *uv_req);
+static bool check_sdk_header(Sdk &req_sdk, struct sdk_data_buf &res);
 
 // sdk消息处理
-template <typename T>
-static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, struct SdkResponsePack *res);
+static bool sdk_msg_do(struct sdk_data_buf &req, struct sdk_data_buf &res);
 
 // sdk传输数据校验
 static bool check_sdk_protocol_head(SdkMsgProtocol *msg, const size_t real_recv_len);
@@ -44,7 +42,7 @@ static bool check_sdk_protocol_head(SdkMsgProtocol *msg, const size_t real_recv_
  * @return true 成功
  * @return false 失败
  */
-static bool sdk_body_do(const enum sdk_net_data_type type, Sdk &req, Sdk &res)
+static bool sdk_body_do(Sdk &req, Sdk &res)
 {
 	Body *body = req.mutable_body();
 	// UserInfo *user_info = nullptr;
@@ -85,12 +83,12 @@ static bool sdk_body_do(const enum sdk_net_data_type type, Sdk &req, Sdk &res)
  * @return true 
  * @return false 
  */
-template <>
-bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<uv_stream_t> *uv_req)
+bool check_sdk_header(Sdk &req_sdk, struct sdk_data_buf &res)
 {
 	struct sockaddr_in addr;
 	Header *header = nullptr;
 	int namelen = sizeof(struct sockaddr);
+	#if 0
 	uv_stream_t *client = NULL;
 
 	if (NULL == uv_req)
@@ -99,8 +97,9 @@ bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<u
 	}
 
 	client = (uv_stream_t *)uv_req->handle;
+	#endif
 
-	header = req.mutable_header();
+	header = req_sdk.mutable_header();
 
 	if (!header)
 	{
@@ -121,11 +120,13 @@ bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<u
 	}
 
 	// 网络类型匹配
+	#if 0 // TODO:网络类型
 	if (SDK_TCP_DATA_TYPE == type && TransProto::TCP != header->trans_proto())
 	{
 		log_e("trans proto not match\n");
 		return false;
 	}
+	#endif
 
 	// 时间错误，两边的时间不同步
 	if (time(NULL) < header->mutable_time()->in_time())
@@ -141,6 +142,8 @@ bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<u
 		return false;
 	}
 
+	// TODO：查找端口及ip信息
+#if 0
 	// TODO:验证端口地址
 	uv_tcp_getsockname((uv_tcp_t *)client, (struct sockaddr *)&addr, &namelen);
 
@@ -156,6 +159,7 @@ bool check_sdk_header(const enum sdk_net_data_type type, Sdk &req, sdk_package<u
 				header->mutable_host()->ipv4().c_str(), header->mutable_host()->port());
 		return false;
 	}
+#endif
 
 	return true;
 }
@@ -190,17 +194,15 @@ static bool check_sdk_protocol_head(SdkMsgProtocol *msg, const size_t real_recv_
 	return true;
 }
 
-template <typename T>
-static bool sdk_req_msg_parser(sdk_package<T> *req, Sdk &req_msg)
+static bool sdk_req_msg_parser(struct sdk_data_buf &req, Sdk &req_msg)
 {
 	SdkMsgProtocol *msg = NULL;
-	uv_buf_t *req_buf = (uv_buf_t *)req->handle->data;
 
 	// 转换为sdk协议消息
-	msg = (SdkMsgProtocol *)req_buf->base;
+	msg = (SdkMsgProtocol *)req.data;
 
 	// 校验消息有效性
-	if (!check_sdk_protocol_head(msg, req->recv_len))
+	if (!check_sdk_protocol_head(msg, req.len))
 	{
 		log_i("sdk msg head invalid\n");
 		return false;
@@ -216,12 +218,12 @@ static bool sdk_req_msg_parser(sdk_package<T> *req, Sdk &req_msg)
 	return true;
 }
 
-static bool sdk_pack_res_msg(struct SdkResponsePack *res, Sdk &res_msg)
+static bool sdk_pack_res_msg( struct sdk_data_buf &res, Sdk &res_msg)
 {
 	SdkMsgProtocol *msg = NULL;
 
 	// 响应sdk
-	msg = (SdkMsgProtocol *)res->res.base;
+	msg = (SdkMsgProtocol *)res.data;
 
 	msg->data_len = res_msg.ByteSizeLong();
 	msg->crc16 = 0;
@@ -238,7 +240,7 @@ static bool sdk_pack_res_msg(struct SdkResponsePack *res, Sdk &res_msg)
 	msg->crc16 = calculate_crc16(0, (uint8_t *)msg->data, msg->data_len);
 
 	// 实际发送数据长度需要加上头部校验部分
-	res->res.len = msg->data_len + sizeof(SdkMsgProtocol);
+	res.len = msg->data_len + sizeof(SdkMsgProtocol);
 
 	return true;
 }
@@ -253,8 +255,7 @@ static bool sdk_pack_res_msg(struct SdkResponsePack *res, Sdk &res_msg)
  * @return true 
  * @return false 
  */
-template <typename T>
-static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, struct SdkResponsePack *res)
+static bool sdk_msg_do(struct sdk_data_buf &req, struct sdk_data_buf &res)
 {
 	Sdk req_msg;
 	Sdk res_msg;
@@ -267,21 +268,21 @@ static bool sdk_msg_do(const enum sdk_net_data_type type, sdk_package<T> *req, s
 	}
 
 	// sdk头检查
-	if (!check_sdk_header(type, req_msg, req))
+	if (!check_sdk_header(req_msg, req))
 	{
 		log_e("sdk header verify error\n");
 		goto sdk_err;
 	}
 
 	// 中间件
-	if (!sdk_midware_do(type, req, req_msg, res_msg))
+	if (!sdk_midware_do(req_msg, res_msg))
 	{
 		log_e("sdk midware proc failed\n");
 		goto sdk_err;
 	}
 
 	// sdk内容部分
-	if (!sdk_body_do(type, req_msg, res_msg))
+	if (!sdk_body_do(req_msg, res_msg))
 	{
 		log_e("sdk body verify error\n");
 		goto sdk_err;
@@ -314,18 +315,17 @@ sdk_err:
  * @return true 
  * @return false 
  */
-template <>
-bool sdk_protocol_do(const enum sdk_net_data_type type, sdk_package<uv_stream_s> *req, struct SdkResponsePack *res)
+bool sdk_protocol_do(struct sdk_data_buf &req, struct sdk_data_buf &res)
 {
-	if (!res || !res->res.base || !req)
+	if (res.data)
 	{
 		return false;
 	}
 
-	if (res->alloc_size > MAX_SDK_MSG_LEN)
+	if (res.len > MAX_SDK_MSG_LEN)
 	{
 		return false;
 	}
 
-	return sdk_msg_do(SDK_TCP_DATA_TYPE, req, res);
+	return sdk_msg_do(req, res);
 }

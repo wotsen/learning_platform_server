@@ -28,8 +28,6 @@ namespace wotsen
  */
 enum task_deadlock
 {
-    E_TASK_RELOAD,				///< 任务重新启动
-    E_TASK_KILL,				///< 结束任务
     E_TASK_REBOOT_SYSTEM,		///< 系统重启
     E_TASK_IGNORE				///< 忽略
 };

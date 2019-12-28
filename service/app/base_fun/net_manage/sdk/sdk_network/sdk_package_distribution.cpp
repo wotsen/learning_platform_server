@@ -74,24 +74,42 @@ static void *task_sdk_stream_do(void *name) noexcept
 	sdk_package<uv_stream_t> *package = nullptr;
 
 	// 响应消息
-	struct SdkResponsePack res;
+	uv_buf_t res;
 
-	res.alloc_size = MAX_SDK_MSG_LEN;
-	res.res.len = 0;
-	res.res.base = res_buf;
+    // 消息缓存
+    struct sdk_data_buf req_data = {0, NULL};
+    struct sdk_data_buf res_data = {0, NULL};
+
+	res.len = 0;
+	res.base = res_buf;
+
+    res_data.data = res_buf;
 
 	for (;;)
 	{
 		if (!stream_list.empty())
 		{
-			res.res.len = 0;
+			res.len = 0;
 			memset(res_buf, 0, MAX_SDK_MSG_LEN);
 
 			// 获取队列首部消息
 			package = stream_list.front();
 
-			sdk_protocol_do(SDK_TCP_DATA_TYPE, package, &res);
-			package->write(package->handle, &res.res);
+            // 请求消息
+            req_data.len = package->recv_len;
+            req_data.data = package->handle->data;
+
+            // 响应消息内存长度
+            res_data.len = MAX_SDK_MSG_LEN;
+
+            // 协议处理
+			sdk_protocol_do(req_data, res_data);
+
+            // 响应消息实际长度
+			res.len = res_data.len;
+
+            // 发送响应消息
+			package->write(package->handle, &res);
 
 			// 消息出队
 			stream_list.pop_back();
