@@ -24,4 +24,5 @@
 void register_sdk_midwares(void)
 {
 	resgister_sdk_midware(user_manange_midware_do, true);
+	// TODO:记录访问者，ip，端口，时间(),json格式
 }

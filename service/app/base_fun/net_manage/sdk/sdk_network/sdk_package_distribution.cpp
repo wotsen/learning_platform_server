@@ -15,6 +15,7 @@
 #include <cstring>
 #include <easylogger/easylogger_setup.h>
 #include "util_time/util_time.h"
+#include "sys_config.h"
 #include "../../../task_manage/task_manage.h"
 #include "sdk_protocol_do.h"
 #include "sdk_package_distribution.h"
@@ -58,6 +59,44 @@ template <> bool push_sdk_package<uv_stream_t>(sdk_package<uv_stream_t> *package
 	return true;
 }
 
+static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface &interface)
+{
+	std::string ip_version;
+	std::string ip_version_cap;
+
+	struct sockaddr_in addr;
+	int namelen = sizeof(struct sockaddr);
+
+	if (!handle)
+	{
+		log_i("handle is null\n");
+		return ;
+	}
+
+	get_sdk_tcp_host_config(ip_version, interface.des_ip, (int &)interface.des_port);
+	get_net_interface_config(interface.interface);
+	get_net_gateway_config(interface.gateway);
+
+	interface.trans_protocol = insider::sdk::TransProto::TCP;
+
+	if (ip_version == "ipv4")
+	{
+		interface.ip_version = insider::sdk::IpVersion::IPV4;
+	}
+	else
+	{
+		interface.ip_version = insider::sdk::IpVersion::IPV6;
+	}
+
+	uv_tcp_getsockname((uv_tcp_t *)handle, (struct sockaddr *)&addr, &namelen);
+
+	// 源地址
+	interface.src_ip = inet_ntoa(addr.sin_addr);
+	interface.src_port = ntohs(addr.sin_port);
+
+	log_i("client ip = %s, port = %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+}
+
 /**
  * @brief tcp消息处理任务
  * 
@@ -79,6 +118,7 @@ static void *task_sdk_stream_do(void *name) noexcept
     // 消息缓存
     struct sdk_data_buf req_data = {0, NULL};
     struct sdk_data_buf res_data = {0, NULL};
+	struct sdk_net_interface interface;
 
 	res.len = 0;
 	res.base = res_buf;
@@ -95,6 +135,9 @@ static void *task_sdk_stream_do(void *name) noexcept
 			// 获取队列首部消息
 			package = stream_list.front();
 
+			// 获取uv 网络接口信息
+			_get_uv_tcp_interface(package->handle, interface);
+
             // 请求消息
             req_data.len = package->recv_len;
             req_data.data = package->handle->data;
@@ -103,7 +146,7 @@ static void *task_sdk_stream_do(void *name) noexcept
             res_data.len = MAX_SDK_MSG_LEN;
 
             // 协议处理
-			sdk_protocol_do(req_data, res_data);
+			sdk_protocol_do(interface, req_data, res_data);
 
             // 响应消息实际长度
 			res.len = res_data.len;

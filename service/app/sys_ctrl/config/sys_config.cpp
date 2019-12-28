@@ -125,11 +125,27 @@ bool sys_config_init(void)
  * @param ip : ip地址
  * @param port : 端口
  */
-void get_sdk_tcp_host(std::string &ip_version, std::string &ip, int &port)
+void get_sdk_tcp_host_config(std::string &ip_version, std::string &ip, int &port)
 {
     json j = get_json_config();
 
-    ip_version = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["ip-version"];
-    ip = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["ipv4"];
+    ip_version = j["modules"]["base_fun"]["network"]["ip-version"];
+    ip = j["modules"]["base_fun"]["network"]["ip"];
     port = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["port"];
+}
+
+// 获取网络接口
+void get_net_interface_config(std::string &interface)
+{
+    json j = get_json_config();
+
+    interface = j["modules"]["base_fun"]["network"]["interface"];
+}
+
+// 获取网络接口
+void get_net_gateway_config(std::string &gateway)
+{
+    json j = get_json_config();
+
+    gateway = j["modules"]["base_fun"]["network"]["gateway"];
 }

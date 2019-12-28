@@ -10,7 +10,12 @@
  */
 #pragma once
 
+#include <string>
 #include <uv.h>
+#include "../sdk_protocol/in_sdk.pb.h"
+
+// 最大一包数据64k
+#define MAX_SDK_MSG_LEN (64 * 1024)
 
 struct sdk_data_buf
 {
@@ -28,8 +33,22 @@ struct sdk_package
 {
 	T *handle;			///< uv handle
 	size_t recv_len;	///< 实际接受长度
-	// uv_buf_t buf;		///< 数据部分
 	bool (*write)(T *handle, const uv_buf_t *buf);	///< 响应回调接口
+};
+
+/**
+ * @brief sdk 网络接口
+ * 
+ */
+struct sdk_net_interface {
+	insider::sdk::IpVersion ip_version;				///< ip版本
+	insider::sdk::TransProto trans_protocol;		///< 传输层
+	std::string interface;							///< 本地网口
+	std::string gateway;							///< 本地网关
+	std::string src_ip;								///< 源地址
+	uint32_t src_port;								///< 源端口
+	std::string des_ip;								///< 目的地址
+	uint32_t des_port;								///< 目的端口
 };
 
 // 消息入队

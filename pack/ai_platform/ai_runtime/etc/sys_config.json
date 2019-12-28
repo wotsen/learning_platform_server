@@ -2,16 +2,18 @@
     "modules": {
         "base_fun": {
             "network": {
-                "sdk" : {
+                "ip-version": "ipv4",
+                "interface": "ens33",
+                "gateway": "0.0.0.0",
+                "ipmask": "0.0.0.0",
+                "ip": "0.0.0.0",
+                "sdk": {
                     "tcp": {
-                        "ip-version": "ipv4",
-                        "ipv4" : "0.0.0.0",
-                        "port" : 9001
+                        "port": 9001
                     }
                 }
             }
         },
-        "module_fun": {
-        }
+        "module_fun": {}
     }
 }

@@ -10,6 +10,7 @@
  */
 #pragma once
 
+#include <string>
 #include <nlohmann/json.hpp>
 #include "sys_load_json.h"
 
@@ -41,4 +42,6 @@ nlohmann::json &get_json_capability(void);
 /*****************************************************
  * 能力获取接口
  *****************************************************/
-uint32_t get_user_manage_max_users(void);
+uint32_t get_user_manage_max_users_capability(void);
+// 获取ip版能力
+void get_ip_version_capability(std::string &ip_version);

@@ -371,7 +371,7 @@ bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
  * @return true 成功
  * @return false 失败
  */
-bool user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
+bool user_manange_midware_do(struct sdk_net_interface &interface, Sdk &sdk_req, Sdk &sdk_res)
 {
     if (!_module_state)
     {
@@ -462,7 +462,7 @@ void user_manager_init(void)
 
     if (!user_manager)
     {
-	    user_manager = std::unique_ptr<UserManager>(new UserManager(get_user_manage_max_users()));
+	    user_manager = std::unique_ptr<UserManager>(new UserManager(get_user_manage_max_users_capability()));
     }
 
 	task_create(user_manage_task, STACKSIZE(8000), "user_manage", OS_MIN(5), E_TASK_IGNORE, _module_clean);

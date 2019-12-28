@@ -131,6 +131,31 @@ inline bool DataProto_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DataProto>(
     DataProto_descriptor(), name, value);
 }
+enum IpVersion : int {
+  IPV4 = 0,
+  IPV6 = 1,
+  IpVersion_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  IpVersion_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool IpVersion_IsValid(int value);
+constexpr IpVersion IpVersion_MIN = IPV4;
+constexpr IpVersion IpVersion_MAX = IPV6;
+constexpr int IpVersion_ARRAYSIZE = IpVersion_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* IpVersion_descriptor();
+template<typename T>
+inline const std::string& IpVersion_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, IpVersion>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function IpVersion_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    IpVersion_descriptor(), enum_t_value);
+}
+inline bool IpVersion_Parse(
+    const std::string& name, IpVersion* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<IpVersion>(
+    IpVersion_descriptor(), name, value);
+}
 enum DataFlow : int {
   DATA_IN = 0,
   DATA_OUT = 1,
@@ -314,26 +339,36 @@ class Host :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kIpv4FieldNumber = 2,
-    kPortFieldNumber = 1,
+    kIpFieldNumber = 3,
+    kIpVersionFieldNumber = 1,
+    kPortFieldNumber = 2,
   };
-  // string ipv4 = 2;
-  void clear_ipv4();
-  const std::string& ipv4() const;
-  void set_ipv4(const std::string& value);
-  void set_ipv4(std::string&& value);
-  void set_ipv4(const char* value);
-  void set_ipv4(const char* value, size_t size);
-  std::string* mutable_ipv4();
-  std::string* release_ipv4();
-  void set_allocated_ipv4(std::string* ipv4);
+  // string ip = 3;
+  void clear_ip();
+  const std::string& ip() const;
+  void set_ip(const std::string& value);
+  void set_ip(std::string&& value);
+  void set_ip(const char* value);
+  void set_ip(const char* value, size_t size);
+  std::string* mutable_ip();
+  std::string* release_ip();
+  void set_allocated_ip(std::string* ip);
   private:
-  const std::string& _internal_ipv4() const;
-  void _internal_set_ipv4(const std::string& value);
-  std::string* _internal_mutable_ipv4();
+  const std::string& _internal_ip() const;
+  void _internal_set_ip(const std::string& value);
+  std::string* _internal_mutable_ip();
   public:
 
-  // int32 port = 1;
+  // .insider.sdk.IpVersion ip_version = 1;
+  void clear_ip_version();
+  ::insider::sdk::IpVersion ip_version() const;
+  void set_ip_version(::insider::sdk::IpVersion value);
+  private:
+  ::insider::sdk::IpVersion _internal_ip_version() const;
+  void _internal_set_ip_version(::insider::sdk::IpVersion value);
+  public:
+
+  // int32 port = 2;
   void clear_port();
   ::PROTOBUF_NAMESPACE_ID::int32 port() const;
   void set_port(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -347,7 +382,8 @@ class Host :
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr ipv4_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr ip_;
+  int ip_version_;
   ::PROTOBUF_NAMESPACE_ID::int32 port_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_in_5fsdk_5fheader_2eproto;
@@ -719,7 +755,27 @@ class Header :
 #endif  // __GNUC__
 // Host
 
-// int32 port = 1;
+// .insider.sdk.IpVersion ip_version = 1;
+inline void Host::clear_ip_version() {
+  ip_version_ = 0;
+}
+inline ::insider::sdk::IpVersion Host::_internal_ip_version() const {
+  return static_cast< ::insider::sdk::IpVersion >(ip_version_);
+}
+inline ::insider::sdk::IpVersion Host::ip_version() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.Host.ip_version)
+  return _internal_ip_version();
+}
+inline void Host::_internal_set_ip_version(::insider::sdk::IpVersion value) {
+  
+  ip_version_ = value;
+}
+inline void Host::set_ip_version(::insider::sdk::IpVersion value) {
+  _internal_set_ip_version(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.Host.ip_version)
+}
+
+// int32 port = 2;
 inline void Host::clear_port() {
   port_ = 0;
 }
@@ -739,64 +795,64 @@ inline void Host::set_port(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:insider.sdk.Host.port)
 }
 
-// string ipv4 = 2;
-inline void Host::clear_ipv4() {
-  ipv4_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+// string ip = 3;
+inline void Host::clear_ip() {
+  ip_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& Host::ipv4() const {
-  // @@protoc_insertion_point(field_get:insider.sdk.Host.ipv4)
-  return _internal_ipv4();
+inline const std::string& Host::ip() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.Host.ip)
+  return _internal_ip();
 }
-inline void Host::set_ipv4(const std::string& value) {
-  _internal_set_ipv4(value);
-  // @@protoc_insertion_point(field_set:insider.sdk.Host.ipv4)
+inline void Host::set_ip(const std::string& value) {
+  _internal_set_ip(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.Host.ip)
 }
-inline std::string* Host::mutable_ipv4() {
-  // @@protoc_insertion_point(field_mutable:insider.sdk.Host.ipv4)
-  return _internal_mutable_ipv4();
+inline std::string* Host::mutable_ip() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.Host.ip)
+  return _internal_mutable_ip();
 }
-inline const std::string& Host::_internal_ipv4() const {
-  return ipv4_.GetNoArena();
+inline const std::string& Host::_internal_ip() const {
+  return ip_.GetNoArena();
 }
-inline void Host::_internal_set_ipv4(const std::string& value) {
+inline void Host::_internal_set_ip(const std::string& value) {
   
-  ipv4_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+  ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void Host::set_ipv4(std::string&& value) {
+inline void Host::set_ip(std::string&& value) {
   
-  ipv4_.SetNoArena(
+  ip_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:insider.sdk.Host.ipv4)
+  // @@protoc_insertion_point(field_set_rvalue:insider.sdk.Host.ip)
 }
-inline void Host::set_ipv4(const char* value) {
+inline void Host::set_ip(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  ipv4_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:insider.sdk.Host.ipv4)
+  ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:insider.sdk.Host.ip)
 }
-inline void Host::set_ipv4(const char* value, size_t size) {
+inline void Host::set_ip(const char* value, size_t size) {
   
-  ipv4_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:insider.sdk.Host.ipv4)
+  // @@protoc_insertion_point(field_set_pointer:insider.sdk.Host.ip)
 }
-inline std::string* Host::_internal_mutable_ipv4() {
+inline std::string* Host::_internal_mutable_ip() {
   
-  return ipv4_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return ip_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* Host::release_ipv4() {
-  // @@protoc_insertion_point(field_release:insider.sdk.Host.ipv4)
+inline std::string* Host::release_ip() {
+  // @@protoc_insertion_point(field_release:insider.sdk.Host.ip)
   
-  return ipv4_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return ip_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void Host::set_allocated_ipv4(std::string* ipv4) {
-  if (ipv4 != nullptr) {
+inline void Host::set_allocated_ip(std::string* ip) {
+  if (ip != nullptr) {
     
   } else {
     
   }
-  ipv4_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ipv4);
-  // @@protoc_insertion_point(field_set_allocated:insider.sdk.Host.ipv4)
+  ip_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ip);
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.Host.ip)
 }
 
 // -------------------------------------------------------------------
@@ -1111,6 +1167,11 @@ template <> struct is_proto_enum< ::insider::sdk::DataProto> : ::std::true_type 
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::DataProto>() {
   return ::insider::sdk::DataProto_descriptor();
+}
+template <> struct is_proto_enum< ::insider::sdk::IpVersion> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::IpVersion>() {
+  return ::insider::sdk::IpVersion_descriptor();
 }
 template <> struct is_proto_enum< ::insider::sdk::DataFlow> : ::std::true_type {};
 template <>

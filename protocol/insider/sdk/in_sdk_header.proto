@@ -17,9 +17,15 @@ enum DataProto {
     DATA_PICTURE = 5;   // 图像
 }
 
+enum IpVersion {
+    IPV4 = 0;
+    IPV6 = 1;
+}
+
 message Host {
-    int32 port = 1;
-    string ipv4 = 2;
+    IpVersion ip_version = 1;
+    int32 port = 2;
+    string ip = 3;
 }
 
 enum DataFlow {

@@ -13,7 +13,8 @@
 #include <iostream>
 #include <easylogger/easylogger_setup.h>
 #include "util_time/util_time.h"
-#include "../../../../sys_ctrl/config/sys_config.h"
+#include "sys_config.h"
+#include "sys_capability.h"
 #include "sdk_package_distribution.h"
 #include "sdk_network.h"
 
@@ -274,14 +275,27 @@ static void on_tcp_connection(uv_stream_t *server, int status)
 void sdk_uv_net_init(void)
 {
 	std::string ip_version;
-	std::string ipv4;
+	std::string ip_version_cap;
+	std::string ip;
 	int port;
 
 	uv_sdk_net_server = new UvSdkNetServer(UvEvent::get_uv_event()->get_uv_loop());
 
-	get_sdk_tcp_host(ip_version, ipv4, port);
+	get_sdk_tcp_host_config(ip_version, ip, port);
 
-	uv_sdk_net_server->create_tcp_server(ipv4, port);
+	get_ip_version_capability(ip_version_cap);
+
+	// 校验配置与能力
+	if (ip_version_cap != ip_version)
+	{
+		log_e("not support ip version : %s\n", ip_version.c_str());
+
+		return ;
+	} 
+
+	// FIXME:目前只实现ipv4
+
+	uv_sdk_net_server->create_tcp_server(ip, port);
 
 	log_i("sdk-uv网络任务初始化完成...\n");
 }

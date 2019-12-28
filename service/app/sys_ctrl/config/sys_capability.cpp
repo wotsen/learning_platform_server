@@ -119,9 +119,16 @@ bool sys_capability_init(void)
  * 
  * @return uint32_t 
  */
-uint32_t get_user_manage_max_users(void)
+uint32_t get_user_manage_max_users_capability(void)
 {
     json j = get_json_capability();
 
     return j["service"]["modules"]["module_fun"]["user_manage"]["max_users"];
+}
+
+void get_ip_version_capability(std::string &ip_version)
+{
+    json j = get_json_capability();
+
+    ip_version = j["service"]["modules"]["base_fun"]["network"]["sdk"]["support-version"][0];
 }
