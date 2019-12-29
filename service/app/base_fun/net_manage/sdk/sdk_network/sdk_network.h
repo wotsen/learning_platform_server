@@ -15,11 +15,6 @@
 #include <memory>
 #include "../../uv_event/uv_event.h"
 
-// 数据接收，通用网络协议使用统一数据接口，类似中间件
-// 协议解析
-// 内容分发
-// 回复回调
-
 /**
  * @brief sdk网络服务器
  * 

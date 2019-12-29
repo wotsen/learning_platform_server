@@ -50,6 +50,7 @@ template <> bool push_sdk_package<uv_stream_t>(sdk_package<uv_stream_t> *package
 	// 队列已满
 	if (stream_list.size() >= MAX_STREAM_LIST_LEN)
 	{
+		// FIXME:入队失败如何处理，入队失败直接进行处理,积累过多消息会导致资源不足
 		log_w("stream list full!\n");
 		return false;
 	}
@@ -59,6 +60,7 @@ template <> bool push_sdk_package<uv_stream_t>(sdk_package<uv_stream_t> *package
 	return true;
 }
 
+// 获取tcp地址信息
 static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface &interface)
 {
 	std::string ip_version;
@@ -73,6 +75,7 @@ static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface 
 		return ;
 	}
 
+    // 本地信息从配置获取
 	get_sdk_tcp_host_config(ip_version, interface.des_ip, (int &)interface.des_port);
 	get_net_interface_config(interface.interface);
 	get_net_gateway_config(interface.gateway);
@@ -106,7 +109,9 @@ static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface 
 static void *task_sdk_stream_do(void *name) noexcept
 {
     log_i("sdk stream 数据处理初始化完成...\n");
+    pthread_t tid = pthread_self();
 
+    // 响应消息缓存
 	char *res_buf = new char[MAX_SDK_MSG_LEN];
 
 	// 收到的消息
@@ -121,12 +126,16 @@ static void *task_sdk_stream_do(void *name) noexcept
 	struct sdk_net_interface interface;
 
 	res.len = 0;
+    // 响应消息基地址
 	res.base = res_buf;
 
+    // 响应数据
     res_data.data = res_buf;
 
 	for (;;)
 	{
+		task_alive(tid); // 自身任务心跳
+
 		if (!stream_list.empty())
 		{
 			res.len = 0;

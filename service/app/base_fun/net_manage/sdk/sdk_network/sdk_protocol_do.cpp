@@ -301,12 +301,7 @@ sdk_err:
  */
 bool sdk_protocol_do(struct sdk_net_interface &interface, struct sdk_data_buf &req, struct sdk_data_buf &res)
 {
-	if (res.data)
-	{
-		return false;
-	}
-
-	if (res.len > MAX_SDK_MSG_LEN)
+	if (!res.data || res.len > MAX_SDK_MSG_LEN)
 	{
 		return false;
 	}

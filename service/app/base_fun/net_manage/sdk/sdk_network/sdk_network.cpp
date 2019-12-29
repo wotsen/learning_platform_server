@@ -194,7 +194,6 @@ static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *
 		package->recv_len = nread;
 		package->handle->data = (void *)data;
 		package->write = uv_stream_write;
-		// FIXME:入队失败如何处理
 		push_sdk_package(package);
 	}
 

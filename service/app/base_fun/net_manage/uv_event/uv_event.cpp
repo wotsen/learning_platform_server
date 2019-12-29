@@ -115,8 +115,6 @@ static void *task_uv_event(void *name)
 	event->uv_event_run();
 	log_i("................\n");
 
-	// FIXME:资源回收
-
 	for (;;)
 	{
 		task_alive(tid); // 自身任务心跳

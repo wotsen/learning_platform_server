@@ -11,6 +11,7 @@
 #ifndef __NET_MANAGE_H__
 #define __NET_MANAGE_H__
 
+// 网络初始化
 void net_init(void);
 
 #endif // !__NET_MANAGE_H__
