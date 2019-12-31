@@ -422,7 +422,7 @@ static void *user_manage_task(void *name)
 
     _module_state = true;
 
-	for (;!_module_state;)
+	for (; _module_state; )
     {
         task_alive(tid);          // 自身任务心跳
 

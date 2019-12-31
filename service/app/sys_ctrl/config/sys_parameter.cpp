@@ -210,11 +210,7 @@ bool sys_parameter_init(void)
         exit(0);
         return false;
     }
-    log_d("sys_param json : %s\n", j.dump(4).c_str());
-    log_i("parser sys param json success!\n");
-
-    return true;
-    log_d("sys_param json : %s\n", j.dump(4).c_str());
+    // log_d("sys_param json : %s\n", j.dump(4).c_str());
     log_i("parser sys param json success!\n");
 
     return true;

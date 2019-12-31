@@ -28,6 +28,7 @@ namespace wotsen
  */
 enum task_deadlock
 {
+    E_TASK_DEFAULT,             ///< 默认(先执行清理接口，下次任务存在且仍旧超时，则尝试kill任务并移除管理队列)
     E_TASK_REBOOT_SYSTEM,		///< 系统重启
     E_TASK_IGNORE				///< 忽略
 };
@@ -46,11 +47,11 @@ using abnormal_task_do = void (*)(const struct except_task_info &);
 
 // 创建任务外部接口
 bool task_create(thread_func func, const size_t stacksize, const char *thread_name,
-                 const uint32_t alive_time, const enum task_deadlock action,
+                 const uint32_t alive_time, const enum task_deadlock action = E_TASK_DEFAULT,
                  thread_clean clean = NULL, const int priority = SYS_THREAD_PRI_LV) noexcept;
 
 // 刷新任务自身时间
-void task_alive(const pthread_t tid) noexcept;
+void task_alive(const pthread_t &tid) noexcept;
 
 // 任务管理初始化
 void task_manage_init(const uint32_t max_tasks = 128, abnormal_task_do except_fun = NULL) noexcept;

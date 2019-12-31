@@ -108,7 +108,7 @@ bool sys_capability_init(void)
         exit(0);
         return false;
     }
-    log_d("sys_capability json : %s\n", j.dump(4).c_str());
+    //  log_d("sys_capability json : %s\n", j.dump(4).c_str());
     log_i("parser sys capability json success!\n");
 
     return true;
