@@ -13,7 +13,7 @@
 #include <iostream>
 #include <list>
 #include <memory>
-#include "../../base_fun/net_manage/sdk/sdk_network/sdk_midware.h"
+#include "sdk_net/sdk_network/sdk_midware.h"
 
 ///< 用户管理中间件
 bool user_manange_midware_do(struct sdk_net_interface &interface, insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res);

@@ -12,7 +12,7 @@
 
 #include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
-#include "../../base_fun/task_manage/task_manage.h"
+#include "task_manage/task_manage.h"
 #include "upgrade.h"
 
 using namespace wotsen;

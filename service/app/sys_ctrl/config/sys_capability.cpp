@@ -11,6 +11,7 @@
 
 #define LOG_TAG "SYS_CAPABILITY"
 
+#include "os_param.h"
 #include "sys_capability.h"
 #include <easylogger/inc/elog.h>
 

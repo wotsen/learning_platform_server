@@ -17,7 +17,6 @@
 class SysCapability : public AbsSysLoadJson
 {
 public:
-#define SYS_CAPAABILITY_FILENAME "../etc/sys_capability.json"
 
     ~SysCapability();
 

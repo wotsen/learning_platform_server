@@ -10,7 +10,7 @@
  */
 #include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
-#include "../../task_manage/task_manage.h"
+#include "task_manage/task_manage.h"
 #include "uv_event.h"
 
 using namespace wotsen;
@@ -131,4 +131,7 @@ static void *task_uv_event(void *name)
 void task_uv_event_init(void)
 {
 	task_create(task_uv_event, STACKSIZE(10 * 1024), "task_uv_event", OS_MIN(30), E_TASK_REBOOT_SYSTEM);
+
+	// 等待500ms，让event初始化完成
+    ostime_delay(OS_MS(500));
 }

@@ -8,7 +8,12 @@ MAKEFLAG := -s --no-print-directory
 CC := g++
 
 # compile flags
-INC := -I$(ROOT_DIR)/../include -I$(ROOT_DIR)/sys_ctrl/config
+INC := -I$(ROOT_DIR)/../include \
+		-I$(ROOT_DIR)/sys_ctrl/config \
+		-I$(ROOT_DIR)/base_fun \
+		-I$(ROOT_DIR)/local_fun \
+		-I$(ROOT_DIR)/third_fun \
+		-I$(ROOT_DIR)/tools
 # github三方库使用静态链接
 LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lutil_time -lprotobuf -lutil_pthread -lSQLiteCpp -lsqlite3
 LIBS += $(LIBS) -lrt -lpthread -ldl

@@ -13,13 +13,16 @@
 #include <pthread.h>
 #include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
+#include "task_manage/task_manage.h"
+#include "uv_event/uv_event.h"
+#include "sdk_net/sdk_network/sdk_network.h"
 
 // 应用模块导入
 /**************************************************************************************/
 
 /* 私有模块 */
-#include "../module_fun/upgrade/upgrade.h"
-#include "../module_fun/user_manage/user_manage.h"
+#include "upgrade/upgrade.h"
+#include "user_manage/user_manage.h"
 
 /* 三方模块 */
 
@@ -28,7 +31,8 @@
 #include "os_param.h"
 #include "usr_apps.h"
 
-namespace {
+class AppModuleManager;
+struct app_module_config;
 
 using app_module_fun = void (*)(void);
 using app_module_status_fun = bool (*)(void);
@@ -170,31 +174,6 @@ class AppModuleManager {
         }
 };
 
-static bool enable = true;
-static bool disable = false;
-
-AppModuleManager *AppModuleManager::app_module_manager = nullptr;
-
-#define END_OF_APP_MODULE { {"", disable, E_APP_MODULE_BAD, E_APP_MODULE_CFG_PERMISSION_DISENABLE}, NULL, NULL, NULL }
-
-// 应用模块配置表
-struct app_module_config AppModuleManager::app_modules[OS_SYS_MAX_APP_MODULES] = {
-    // 升级模块
-    { { "system upgrade",      enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     system_upgrade_task_init,      NULL, system_upgrade_task_state},
-    // 用户管理模块
-    { { "user manage",         enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     user_manager_init,      NULL, user_manager_state},
-
-    /*******************************************************************************************************************************************************/ 
-
-    // more app modules
-
-    /*******************************************************************************************************************************************************/ 
-
-    END_OF_APP_MODULE
-};
-
-}
-
 // 获取模块信息
 std::vector<struct app_module_cout_info> &&app_modules_current_status(void) noexcept
 {
@@ -219,14 +198,74 @@ void finit_single_app_module(const uint32_t id, const std::string &name) noexcep
     app_module_manager->finit_single_app_module(id, name);
 }
 
-void usr_apps_init(void)
+static bool enable = true;
+static bool disable = false;
+
+AppModuleManager *AppModuleManager::app_module_manager = nullptr;
+
+#define END_OF_APP_MODULE { {"", disable, E_APP_MODULE_BAD, E_APP_MODULE_CFG_PERMISSION_DISENABLE}, NULL, NULL, NULL }
+
+// 应用模块配置表
+struct app_module_config AppModuleManager::app_modules[OS_SYS_MAX_APP_MODULES] = {
+    // 升级模块
+    { { "system upgrade",      enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     system_upgrade_task_init,      NULL, system_upgrade_task_state},
+    // 用户管理模块
+    { { "user manage",         enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     user_manager_init,      NULL, user_manager_state},
+
+    /*******************************************************************************************************************************************************/ 
+
+    // more app modules
+
+    /*******************************************************************************************************************************************************/ 
+
+    END_OF_APP_MODULE
+};
+
+// sdk中间件
+static void register_sdk_midwares(void)
+{
+	SDK_IMPORT_MIDWARE(user_manange_midware_do, true);
+	// TODO:记录访问者，ip，端口，时间(),json格式
+}
+
+// TODO:移到告警模块
+void except_task_alarm(const struct except_task_info &except_task)
+{
+    // TODO:记录到异常任务日志，告警上报
+}
+
+static void base_function_module_init(void)
+{
+    wotsen::task_manage_init(OS_SYS_TASK_NUM, reinterpret_cast<wotsen::abnormal_task_do>(except_task_alarm));
+
+	// 初始化uv任务
+	task_uv_event_init();
+
+	// 初始化sdk网络
+	sdk_uv_net_init();
+
+	// 注册sdk中间件
+	register_sdk_midwares();
+}
+
+static void applications_module_init(void)
 {
     AppModuleManager *app_module_manager = AppModuleManager::get_app_module_manager();
 
+    // 私有功能模块与第三方模块初始化
     app_module_manager->app_modules_init();
 
     // 告警
     // 升级，文件传输校验以及如何安装，设计扩展
     // 图像上传下载、图像信息、搜索
     // ai模型加载及运行，级联python
+}
+
+void usr_apps_init(void)
+{
+    // 基础模块初始化
+    base_function_module_init();
+
+    // 应用模块初始化
+    applications_module_init();
 }

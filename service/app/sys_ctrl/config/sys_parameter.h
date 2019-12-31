@@ -20,9 +20,6 @@
 class SysParameter : public AbsSysLoadJson
 {
 public:
-#define SYS_RUNTIME_CONFIG_FILENAME "../data/sys_runtime_param.json"
-#define SYS_DEFAULT_CONFIG_FILENAME "../data/sys_default_param.json"
-
 	~SysParameter();
 
 	///< 获取系统参数指针

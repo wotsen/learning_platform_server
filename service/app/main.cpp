@@ -17,6 +17,8 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include <easylogger/easylogger_setup.h>
+#include "os_param.h"
 #include "tools/tools_func/coredump.h"
 #include "sys_ctrl/config/version.h"
 #include "sys_ctrl/sys_ctrl.h"
@@ -26,7 +28,7 @@
 
 static int lock_file(int fd);
 static bool alone_run(void);
-
+static void elog_config(void);
 
 /**
  * @brief 锁定文件
@@ -81,23 +83,45 @@ static bool alone_run(void)
     return true;
 }
 
+/**
+ * @brief 初始化elog日志
+ */
+static void elog_config(void)
+{
+    struct elog_custom_config elog_config = {
+        .log_path = (char *)SYS_ELOG_PATH,
+#ifdef NDEBUG
+        .log_lv = ELOG_LVL_INFO
+#else
+        // debug版本打印所有日志
+        .log_lv = ELOG_LVL_VERBOSE
+#endif
+    };
+    if (easylogger_setup(&elog_config))
+    {
+        log_i("日志模块初始化完成...\n");
+    }
+    else
+    {
+        printf("日志模块初始化失败!\n");
+        exit(0);
+    }
+}
+
 int main(int argc, char **argv)
 {
     // 保证只有一个程序运行
-    if (!alone_run())
-    {
-        return 0;
-    }
+    alone_run() ? (void)0 : exit(0);
 
 #if !defined(NDEBUG)
     // 调试版本开启coredump
-    if (!setup_coredump("/home/wotsen/work", 1024*1024))
-    {
-        return 0;
-    }
+    setup_coredump("/home/wotsen/work", 1024*1024) ? (void)0 : exit(0);
 #endif
 
     std::cout << "start app..................version: " << get_service_version() << std::endl;
+
+    elog_config();
+
     sys_init();
 
     usr_apps_init();

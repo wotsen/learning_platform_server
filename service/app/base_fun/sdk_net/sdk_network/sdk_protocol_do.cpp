@@ -15,7 +15,7 @@
 #include <time.h>
 #include <inttypes.h>
 #include <easylogger/easylogger_setup.h>
-#include "../../../../tools/tools_func/calculate_crc16.h"
+#include "tools_func/calculate_crc16.h"
 #include "sdk_protocol_do.h"
 #include "sdk_midware.h"
 

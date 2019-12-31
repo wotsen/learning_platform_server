@@ -12,13 +12,9 @@
 
 #include "sys_load_json.h"
 
-#define SYS_ELOG_PATH "../log/elog_file.log"
-
 class SysConfig : public AbsSysLoadJson
 {
 public:
-#define SYS_CONFIG_FILENAME "../etc/sys_config.json"
-#define SYS_CONFIG_FILE_MAX 2048
 
     ~SysConfig();
 

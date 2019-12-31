@@ -13,8 +13,8 @@
 
 #include <iostream>
 #include <easylogger/inc/elog.h>
+#include "os_param.h"
 #include "sys_config.h"
-#include "../../tools/debug_print/debug_print.h"
 
 using json = nlohmann::json;
 

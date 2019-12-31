@@ -20,7 +20,7 @@
 #include <easylogger/easylogger_setup.h>
 #include <sole/sole.hpp>
 #include "util_time/util_time.h"
-#include "../../base_fun/task_manage/task_manage.h"
+#include "task_manage/task_manage.h"
 #include "sys_capability.h"
 #include "os_param.h"
 #include "../session/session_manage.h"

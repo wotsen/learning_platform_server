@@ -12,7 +12,8 @@
 
 #include <iostream>
 #include <iomanip>
-#include "../../tools/tools_func/calculate_crc16.h"
+#include "os_param.h"
+#include "tools_func/calculate_crc16.h"
 #include <easylogger/inc/elog.h>
 #include "sys_parameter.h"
 

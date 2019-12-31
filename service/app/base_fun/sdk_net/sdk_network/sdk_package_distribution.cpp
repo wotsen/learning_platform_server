@@ -16,7 +16,7 @@
 #include <easylogger/easylogger_setup.h>
 #include "util_time/util_time.h"
 #include "sys_config.h"
-#include "../../../task_manage/task_manage.h"
+#include "task_manage/task_manage.h"
 #include "sdk_protocol_do.h"
 #include "sdk_package_distribution.h"
 

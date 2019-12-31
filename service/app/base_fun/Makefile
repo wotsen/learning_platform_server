@@ -1,4 +1,4 @@
 OBJS := 
-DIRS := net_manage task_manage
+DIRS := sdk_net uv_event task_manage
 
 include $(SUB_MAKE_INCLUDE)
