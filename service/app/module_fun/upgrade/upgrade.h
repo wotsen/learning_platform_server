@@ -11,4 +11,7 @@
 #pragma once
 
 ///< 初始化升级任务
-void task_upgrade_init(void);
+void system_upgrade_task_init(void);
+
+///< 系统升级模块状态
+bool system_upgrade_task_state(void);

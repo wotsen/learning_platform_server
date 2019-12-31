@@ -13,8 +13,18 @@
 #include <pthread.h>
 #include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
+
+// 应用模块导入
+/**************************************************************************************/
+
+/* 私有模块 */
 #include "../module_fun/upgrade/upgrade.h"
 #include "../module_fun/user_manage/user_manage.h"
+
+/* 三方模块 */
+
+/**************************************************************************************/
+
 #include "os_param.h"
 #include "usr_apps.h"
 
@@ -170,9 +180,9 @@ AppModuleManager *AppModuleManager::app_module_manager = nullptr;
 // 应用模块配置表
 struct app_module_config AppModuleManager::app_modules[OS_SYS_MAX_APP_MODULES] = {
     // 升级模块
-    { { "system upgrade",      enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     task_upgrade_init,      NULL, NULL},
+    { { "system upgrade",      enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     system_upgrade_task_init,      NULL, system_upgrade_task_state},
     // 用户管理模块
-    { { "user manage",         enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     user_manager_init,      NULL, NULL},
+    { { "user manage",         enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     user_manager_init,      NULL, user_manager_state},
 
     /*******************************************************************************************************************************************************/ 
 
