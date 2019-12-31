@@ -100,6 +100,8 @@ public:
     void task_alive(const pthread_t &tid) noexcept;
     // 任务暂停,TODO:未使用
     bool task_stop(const pthread_t &tid) noexcept;
+    // 任务等待信号
+    void task_wait(const pthread_t &tid) noexcept;
     // 任务继续
     bool task_continue(const pthread_t &tid) noexcept;
     /* 更新任务状态 */
@@ -111,8 +113,6 @@ public:
 private:
     // 获取目标任务
     auto get_item_task(const pthread_t &tid) noexcept;
-    // 任务等待信号
-    void task_wait(const pthread_t &tid) noexcept;
     // 检测任务是否异常
     bool task_exist_if(const pthread_t &tid) noexcept;
     // 修正系统时间引起的时间跳变

@@ -10,8 +10,6 @@
  */
 #define LOG_TAG "USR_APPS"
 
-#include <inttypes.h>
-#include <vector>
 #include <pthread.h>
 #include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
@@ -20,36 +18,15 @@
 #include "os_param.h"
 #include "usr_apps.h"
 
+namespace {
+
 using app_module_fun = void (*)(void);
 using app_module_status_fun = bool (*)(void);
 
-enum app_module_state {
-    E_APP_MODULE_IDLE,              ///< 模块空闲
-    E_APP_MODULE_INIT,              ///< 模块初始化中
-    E_APP_MODULE_INSTALLED,         ///< 模块已经安装
-    E_APP_MODULE_BAD,               ///< 模块损坏
-};
-
-enum app_module_run_state {
-    E_APP_MODULE_RUN_ST_OK,         ///< 运行状态正常
-    E_APP_MODULE_RUN_ST_ERR,        ///< 运行状态异常
-    E_APP_MODULE_RUN_ST_UNKNOWN,    ///< 运行状态未知
-};
-
-enum app_module_cfg_permission {
-    E_APP_MODULE_CFG_PERMISSION_ENABLE,         ///< 可配置
-    E_APP_MODULE_CFG_PERMISSION_DISENABLE,      ///< 不可配置
-};
-
-// 模块基本信息
-struct app_module_base_info {
-    std::string name;               ///< 模块名称
-    bool enable;                    ///< 使能
-    enum app_module_state state;    ///< 模块状态
-    enum app_module_cfg_permission permission;  ///< 模块配置权限
-};
-
-// 模块配置
+/**
+ * @brief 模块配置信息
+ * 
+ */
 struct app_module_config {
     struct app_module_base_info base_info;  ///< 模块基本配置信息
     app_module_fun init;            ///< 模块初始化接口
@@ -57,14 +34,10 @@ struct app_module_config {
     app_module_status_fun status;   ///< 模块状态接口
 };
 
-// 模块输出信息
-struct app_module_cout_info {
-    uint32_t id;
-    enum app_module_run_state run_state;    ///< 模块运行状态
-    struct app_module_base_info base_info;  ///< 模块基本配置信息
-};
-
-// 模块管理器
+/**
+ * @brief 模块管理器
+ * 
+ */
 class AppModuleManager {
     private:
         static AppModuleManager *app_module_manager;
@@ -197,7 +170,7 @@ AppModuleManager *AppModuleManager::app_module_manager = nullptr;
 // 应用模块配置表
 struct app_module_config AppModuleManager::app_modules[OS_SYS_MAX_APP_MODULES] = {
     // 升级模块
-    { { "upgrade",             enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     task_upgrade_init,      NULL, NULL},
+    { { "system upgrade",      enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     task_upgrade_init,      NULL, NULL},
     // 用户管理模块
     { { "user manage",         enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     user_manager_init,      NULL, NULL},
 
@@ -209,6 +182,32 @@ struct app_module_config AppModuleManager::app_modules[OS_SYS_MAX_APP_MODULES] =
 
     END_OF_APP_MODULE
 };
+
+}
+
+// 获取模块信息
+std::vector<struct app_module_cout_info> &&app_modules_current_status(void) noexcept
+{
+    AppModuleManager *app_module_manager = AppModuleManager::get_app_module_manager();
+
+    return app_module_manager->app_modules_current_status();
+}
+
+// 初始化单个模块
+void init_single_app_module(const uint32_t id, const std::string &name) noexcept
+{
+    AppModuleManager *app_module_manager = AppModuleManager::get_app_module_manager();
+
+    app_module_manager->init_single_app_module(id, name);
+}
+
+// 反初始化单个模块
+void finit_single_app_module(const uint32_t id, const std::string &name) noexcept
+{
+    AppModuleManager *app_module_manager = AppModuleManager::get_app_module_manager();
+
+    app_module_manager->finit_single_app_module(id, name);
+}
 
 void usr_apps_init(void)
 {
