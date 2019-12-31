@@ -108,16 +108,19 @@ inline bool UserInfo_UserType_Parse(
     UserInfo_UserType_descriptor(), name, value);
 }
 enum UserInfo_Result : int {
-  UserInfo_Result_U_TOKEN_TIMEOUT = 0,
-  UserInfo_Result_U_USER_EXIST = 1,
-  UserInfo_Result_U_OK = 2,
-  UserInfo_Result_U_ERROR = 3,
+  UserInfo_Result_U_OK = 0,
+  UserInfo_Result_U_ERROR = 1,
+  UserInfo_Result_U_TOKEN_TIMEOUT = 2,
+  UserInfo_Result_U_USER_EXIST = 3,
+  UserInfo_Result_U_USER_NOT_EXIST = 4,
+  UserInfo_Result_U_USER_BLACK = 5,
+  UserInfo_Result_US_USER_NO_PERMISSION = 6,
   UserInfo_Result_UserInfo_Result_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   UserInfo_Result_UserInfo_Result_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool UserInfo_Result_IsValid(int value);
-constexpr UserInfo_Result UserInfo_Result_Result_MIN = UserInfo_Result_U_TOKEN_TIMEOUT;
-constexpr UserInfo_Result UserInfo_Result_Result_MAX = UserInfo_Result_U_ERROR;
+constexpr UserInfo_Result UserInfo_Result_Result_MIN = UserInfo_Result_U_OK;
+constexpr UserInfo_Result UserInfo_Result_Result_MAX = UserInfo_Result_US_USER_NO_PERMISSION;
 constexpr int UserInfo_Result_Result_ARRAYSIZE = UserInfo_Result_Result_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* UserInfo_Result_descriptor();
@@ -490,14 +493,20 @@ class UserInfo :
   }
 
   typedef UserInfo_Result Result;
-  static constexpr Result U_TOKEN_TIMEOUT =
-    UserInfo_Result_U_TOKEN_TIMEOUT;
-  static constexpr Result U_USER_EXIST =
-    UserInfo_Result_U_USER_EXIST;
   static constexpr Result U_OK =
     UserInfo_Result_U_OK;
   static constexpr Result U_ERROR =
     UserInfo_Result_U_ERROR;
+  static constexpr Result U_TOKEN_TIMEOUT =
+    UserInfo_Result_U_TOKEN_TIMEOUT;
+  static constexpr Result U_USER_EXIST =
+    UserInfo_Result_U_USER_EXIST;
+  static constexpr Result U_USER_NOT_EXIST =
+    UserInfo_Result_U_USER_NOT_EXIST;
+  static constexpr Result U_USER_BLACK =
+    UserInfo_Result_U_USER_BLACK;
+  static constexpr Result US_USER_NO_PERMISSION =
+    UserInfo_Result_US_USER_NO_PERMISSION;
   static inline bool Result_IsValid(int value) {
     return UserInfo_Result_IsValid(value);
   }
@@ -526,13 +535,14 @@ class UserInfo :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kTokenFieldNumber = 3,
+    kTokenFieldNumber = 4,
     kUserFieldNumber = 2,
     kUserTypeFieldNumber = 1,
-    kResultFieldNumber = 5,
-    kAliveTimeFieldNumber = 4,
+    kPermissionFieldNumber = 3,
+    kAliveTimeFieldNumber = 5,
+    kResultFieldNumber = 6,
   };
-  // string token = 3;
+  // string token = 4;
   void clear_token();
   const std::string& token() const;
   void set_token(const std::string& value);
@@ -572,22 +582,31 @@ class UserInfo :
   void _internal_set_user_type(::insider::sdk::UserInfo_UserType value);
   public:
 
-  // .insider.sdk.UserInfo.Result result = 5;
-  void clear_result();
-  ::insider::sdk::UserInfo_Result result() const;
-  void set_result(::insider::sdk::UserInfo_Result value);
+  // uint32 permission = 3;
+  void clear_permission();
+  ::PROTOBUF_NAMESPACE_ID::uint32 permission() const;
+  void set_permission(::PROTOBUF_NAMESPACE_ID::uint32 value);
   private:
-  ::insider::sdk::UserInfo_Result _internal_result() const;
-  void _internal_set_result(::insider::sdk::UserInfo_Result value);
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_permission() const;
+  void _internal_set_permission(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
-  // uint64 alive_time = 4;
+  // uint64 alive_time = 5;
   void clear_alive_time();
   ::PROTOBUF_NAMESPACE_ID::uint64 alive_time() const;
   void set_alive_time(::PROTOBUF_NAMESPACE_ID::uint64 value);
   private:
   ::PROTOBUF_NAMESPACE_ID::uint64 _internal_alive_time() const;
   void _internal_set_alive_time(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // .insider.sdk.UserInfo.Result result = 6;
+  void clear_result();
+  ::insider::sdk::UserInfo_Result result() const;
+  void set_result(::insider::sdk::UserInfo_Result value);
+  private:
+  ::insider::sdk::UserInfo_Result _internal_result() const;
+  void _internal_set_result(::insider::sdk::UserInfo_Result value);
   public:
 
   // @@protoc_insertion_point(class_scope:insider.sdk.UserInfo)
@@ -598,8 +617,9 @@ class UserInfo :
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr token_;
   ::insider::sdk::User* user_;
   int user_type_;
-  int result_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 permission_;
   ::PROTOBUF_NAMESPACE_ID::uint64 alive_time_;
+  int result_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_in_5fsdk_5fbody_2eproto;
 };
@@ -1246,7 +1266,27 @@ inline void UserInfo::set_allocated_user(::insider::sdk::User* user) {
   // @@protoc_insertion_point(field_set_allocated:insider.sdk.UserInfo.user)
 }
 
-// string token = 3;
+// uint32 permission = 3;
+inline void UserInfo::clear_permission() {
+  permission_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 UserInfo::_internal_permission() const {
+  return permission_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 UserInfo::permission() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.UserInfo.permission)
+  return _internal_permission();
+}
+inline void UserInfo::_internal_set_permission(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  
+  permission_ = value;
+}
+inline void UserInfo::set_permission(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_permission(value);
+  // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.permission)
+}
+
+// string token = 4;
 inline void UserInfo::clear_token() {
   token_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
@@ -1306,7 +1346,7 @@ inline void UserInfo::set_allocated_token(std::string* token) {
   // @@protoc_insertion_point(field_set_allocated:insider.sdk.UserInfo.token)
 }
 
-// uint64 alive_time = 4;
+// uint64 alive_time = 5;
 inline void UserInfo::clear_alive_time() {
   alive_time_ = PROTOBUF_ULONGLONG(0);
 }
@@ -1326,7 +1366,7 @@ inline void UserInfo::set_alive_time(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   // @@protoc_insertion_point(field_set:insider.sdk.UserInfo.alive_time)
 }
 
-// .insider.sdk.UserInfo.Result result = 5;
+// .insider.sdk.UserInfo.Result result = 6;
 inline void UserInfo::clear_result() {
   result_ = 0;
 }

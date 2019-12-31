@@ -22,6 +22,7 @@
 #include "util_time/util_time.h"
 #include "../../base_fun/task_manage/task_manage.h"
 #include "sys_capability.h"
+#include "os_param.h"
 #include "../session/session_manage.h"
 #include "user_manage.h"
 
@@ -29,17 +30,21 @@ using namespace SQLite;
 using namespace wotsen;
 using namespace insider::sdk;
 
-#define USER_TABLE "sdk_user"
+#define USER_TABLE SDK_USER_TABLE
 
 class UserSession;
 class UserManager;
 
+// 模块状态
 static bool _module_state = false;
 
+// 用户数据库
 static Database *user_db = nullptr;
+
+// 用户管理
 static std::unique_ptr<UserManager> user_manager;
 
-template <typename T>
+// 用户中间件处理接口
 bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res);
 
 /**
@@ -48,10 +53,10 @@ bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res);
  */
 class UserSession : public Session {
 public:
-	std::string token;
-	std::string name;
-	time_t alive_time;
-	time_t now;
+	std::string token_;
+	std::string name_;
+	time_t alive_time_;
+	time_t now_;
 
 	UserSession() {}
 };
@@ -63,15 +68,20 @@ public:
 class UserManager : public SessionManager<UserSession> {
 private:
 	// std::vector<std::shared_ptr<UserSession>> sessions;
-	pthread_mutex_t mutex;
+	pthread_mutex_t mutex_;
 public:
 	UserManager(const uint32_t max_session) : SessionManager<UserSession>(max_session) {
-		pthread_mutex_init(&mutex, NULL);
+		pthread_mutex_init(&mutex_, NULL);
 	}
 
 	~UserManager() {
-		pthread_mutex_destroy(&mutex);
+		pthread_mutex_destroy(&mutex_);
 	}
+
+	// TODO:修改密码
+	// TODO:查询用户信息
+	// TODO:用户权限校验中间件
+	// TODO:更多的返回结果类型完善
 
 	/**
 	 * @brief 更新会话
@@ -79,26 +89,26 @@ public:
 	 */
 	void update_session(void)
 	{
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&mutex_);
 
-		for (auto &item : sessions)
+		for (auto &item : sessions_)
 		{
-			if (0 == item->now)
+			if (0 == item->now_)
 			{
 				continue;
 			}
 
 			// 刷新登陆时间
-			item->now--;
+			item->now_--;
 		}
 
 		// 移除过期用户
-		sessions.erase(std::remove_if(sessions.begin(), sessions.end(), [](auto &_session) -> bool {
-							   return 0 == _session->now;
+		sessions_.erase(std::remove_if(sessions_.begin(), sessions_.end(), [](auto &_session) -> bool {
+							   return 0 == _session->now_;
                         }),
-                        sessions.end());
+                        sessions_.end());
 		
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex_);
 	}
 
 	/**
@@ -111,9 +121,9 @@ public:
 	 */
 	bool search_user_session(const std::string &token, UserSession **session) const
 	{
-		for (auto &item : sessions)
+		for (auto &item : sessions_)
 		{
-			if (token == item->token)
+			if (token == item->token_)
 			{
 				*session = &(*item);
 				return true;
@@ -129,25 +139,25 @@ public:
 	 * @return true 
 	 * @return false 
 	 */
-	bool add_user_session(const UserSession &session)
+	bool add_session(const UserSession &session)
 	{
 		UserSession *_session;
 		std::shared_ptr<UserSession> new_session(new UserSession);
 
-		pthread_mutex_lock(&mutex);
-		if (sessions.size() >= max_session || search_user_session(session.token, &_session))
+		pthread_mutex_lock(&mutex_);
+		if (sessions_.size() >= max_session_ || search_user_session(session.token_, &_session))
 		{
-			pthread_mutex_unlock(&mutex);
+			pthread_mutex_unlock(&mutex_);
 			return false;
 		}
 
-		new_session->token = session.token;
-		new_session->name = session.name;
-		new_session->alive_time = session.alive_time;
-		new_session->now = new_session->alive_time;
+		new_session->token_ = session.token_;
+		new_session->name_ = session.name_;
+		new_session->alive_time_ = session.alive_time_;
+		new_session->now_ = new_session->alive_time_;
 
-		sessions.push_back(new_session);
-		pthread_mutex_unlock(&mutex);
+		sessions_.push_back(new_session);
+		pthread_mutex_unlock(&mutex_);
 
 		return true;
 	}
@@ -157,20 +167,20 @@ public:
 	 * 
 	 * @param token 会话token
 	 */
-	void delete_user_session(const std::string &token)
+	void delete_session(const std::string &token)
 	{
-		pthread_mutex_lock(&mutex);
-		sessions.erase(std::remove_if(sessions.begin(), sessions.end(), [&token](auto &_session) -> bool {
-                               return _session->token == token;
+		pthread_mutex_lock(&mutex_);
+		sessions_.erase(std::remove_if(sessions_.begin(), sessions_.end(), [&token](auto &_session) -> bool {
+                               return _session->token_ == token;
                         }),
-                        sessions.end());
-		pthread_mutex_unlock(&mutex);
+                        sessions_.end());
+		pthread_mutex_unlock(&mutex_);
 	}
 
 	/**
 	 * @brief 用户登陆
 	 * 
-	 * @param user_info 用户信息
+	 * @param user_info 用户信息,FIXME:数据库操作未作异常处理
 	 * @return enum UserInfo_Result 
 	 */
 	enum UserInfo_Result login(UserInfo &user_info)
@@ -182,6 +192,7 @@ public:
 
 		query.executeStep();
 
+		// TODO:细分用户不存在，用户密码错误
 		if (!query.hasRow())
 		{
 			log_i("user : %s not exsit\n", user_info.user().user_name().c_str());
@@ -191,12 +202,12 @@ public:
 		UserSession session;
 		sole::uuid uid = sole::uuid4();
 
-		session.now = user_info.alive_time();
-		session.alive_time = user_info.alive_time();
-		session.token = uid.str();
+		session.now_ = user_info.alive_time();
+		session.alive_time_ = user_info.alive_time();
+		session.token_ = uid.str();
 		user_info.set_token(uid.str());
 
-		if (add_user_session(session))
+		if (add_session(session))
 		{
 			return UserInfo_Result::UserInfo_Result_U_OK;
 		}
@@ -212,7 +223,7 @@ public:
 	 */
 	enum UserInfo_Result logout(UserInfo &user_info)
 	{
-		delete_user_session(user_info.token());
+		delete_session(user_info.token());
 		return UserInfo_Result::UserInfo_Result_U_OK;
 	}
 
@@ -226,19 +237,19 @@ public:
 	{
 		UserSession *_session;
 
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&mutex_);
 		if (search_user_session(user_info.token(), &_session))
 		{
-			pthread_mutex_unlock(&mutex);
+			pthread_mutex_unlock(&mutex_);
 			return UserInfo_Result::UserInfo_Result_U_OK;
 		}
 
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex_);
 		return UserInfo_Result::UserInfo_Result_U_TOKEN_TIMEOUT;
 	}
 
 	/**
-	 * @brief 用户注册
+	 * @brief 用户注册 FIXME:数据库操作未作异常处理
 	 * 
 	 * @param user_info 用户信息
 	 * @return enum UserInfo_Result 
@@ -248,13 +259,16 @@ public:
 		Statement query(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
 
 		query.bind(1, user_info.user().user_name());
+
 		query.executeStep();
+
 		if (query.hasRow())
 		{
 			return UserInfo_Result::UserInfo_Result_U_USER_EXIST;
 		}
 
 		Statement insert(*user_db, "INSERT INTO " USER_TABLE " VALUES (NULL, ?, ?, ?, ?)");
+
 		insert.bind(1, user_info.user().user_name());
 		insert.bind(2, user_info.user().user_pass());
 		insert.bind(3, user_info.user().phone());
@@ -269,12 +283,12 @@ public:
 		UserSession session;
 		sole::uuid uid = sole::uuid4();
 
-		session.now = user_info.alive_time();
-		session.alive_time = user_info.alive_time();
-		session.token = uid.str();
+		session.now_ = user_info.alive_time();
+		session.alive_time_ = user_info.alive_time();
+		session.token_ = uid.str();
 		user_info.set_token(uid.str());
 
-		if (add_user_session(session))
+		if (add_session(session))
 		{
 			return UserInfo_Result::UserInfo_Result_U_OK;
 		}
@@ -392,7 +406,7 @@ bool user_db_init(void)
 	try {
         if (!user_db)
         {
-		    user_db = new Database("../data/ai_platform_service_user.db3", OPEN_READWRITE|OPEN_CREATE);
+		    user_db = new Database(OS_SYS_USER_DB_PATH, OPEN_READWRITE|OPEN_CREATE);
         }
 	} catch (std::exception& e) {
 		log_e("%s\n", e.what());
@@ -403,8 +417,21 @@ bool user_db_init(void)
 	if (!user_db->tableExists(USER_TABLE))
 	{
         // TODO:增加权限
-		user_db->exec("CREATE TABLE sdk_user (id INTEGER PRIMARY KEY, name CHAR(30), password CHAR(128), phone CHAR(24), email CHAR(128))");
+		user_db->exec("CREATE TABLE " USER_TABLE " (id INTEGER PRIMARY KEY, name CHAR(30), password CHAR(128), phone CHAR(24), email CHAR(128))");
 		user_db->exec("INSERT INTO sdk_user VALUES (1, \"admin\", \"admin\", \"15558198512\", \"wotsen@outlook.com\")");
+
+		#if 0 // TODO:完善表结构
+		user_db->exec("CREATE TABLE " USER_TABLE " ("
+								"id INTEGER PRIMARY KEY, "			///< 主键
+								"name CHAR(30), "					///< 用户名
+								"password CHAR(128), "				///< 密码
+								"phone CHAR(24), "					///< 电话号码
+								"email CHAR(128)), "				///< 邮件
+								"permission INT, "					///< 权限
+								"inuse INT8, "						///< 是否有效
+								"black INT8");						///< 是否黑名单
+		user_db->exec("INSERT INTO sdk_user VALUES (1, \"admin\", \"admin\", \"15558198512\", \"wotsen@outlook.com\", 0xffffffff, 1, 0)");
+		#endif
 	}
 
 	return true;
@@ -434,6 +461,7 @@ static void *user_manage_task(void *name)
 	return (void *)0;
 }
 
+// 模块清除接口
 static void _module_clean(void)
 {
     _module_state = false;

@@ -72,9 +72,10 @@ proto.insider.sdk.UserInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
     userType: jspb.Message.getFieldWithDefault(msg, 1, 0),
     user: (f = msg.getUser()) && proto.insider.sdk.User.toObject(includeInstance, f),
-    token: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    aliveTime: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    result: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    permission: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    token: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    aliveTime: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    result: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -121,14 +122,18 @@ proto.insider.sdk.UserInfo.deserializeBinaryFromReader = function(msg, reader) {
       msg.setUser(value);
       break;
     case 3:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setPermission(value);
+      break;
+    case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setToken(value);
       break;
-    case 4:
+    case 5:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setAliveTime(value);
       break;
-    case 5:
+    case 6:
       var value = /** @type {!proto.insider.sdk.UserInfo.Result} */ (reader.readEnum());
       msg.setResult(value);
       break;
@@ -176,24 +181,31 @@ proto.insider.sdk.UserInfo.serializeBinaryToWriter = function(message, writer) {
       proto.insider.sdk.User.serializeBinaryToWriter
     );
   }
+  f = message.getPermission();
+  if (f !== 0) {
+    writer.writeUint32(
+      3,
+      f
+    );
+  }
   f = message.getToken();
   if (f.length > 0) {
     writer.writeString(
-      3,
+      4,
       f
     );
   }
   f = message.getAliveTime();
   if (f !== 0) {
     writer.writeUint64(
-      4,
+      5,
       f
     );
   }
   f = message.getResult();
   if (f !== 0.0) {
     writer.writeEnum(
-      5,
+      6,
       f
     );
   }
@@ -214,10 +226,13 @@ proto.insider.sdk.UserInfo.UserType = {
  * @enum {number}
  */
 proto.insider.sdk.UserInfo.Result = {
-  U_TOKEN_TIMEOUT: 0,
-  U_USER_EXIST: 1,
-  U_OK: 2,
-  U_ERROR: 3
+  U_OK: 0,
+  U_ERROR: 1,
+  U_TOKEN_TIMEOUT: 2,
+  U_USER_EXIST: 3,
+  U_USER_NOT_EXIST: 4,
+  U_USER_BLACK: 5,
+  US_USER_NO_PERMISSION: 6
 };
 
 /**
@@ -276,11 +291,29 @@ proto.insider.sdk.UserInfo.prototype.hasUser = function() {
 
 
 /**
- * optional string token = 3;
+ * optional uint32 permission = 3;
+ * @return {number}
+ */
+proto.insider.sdk.UserInfo.prototype.getPermission = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.insider.sdk.UserInfo} returns this
+ */
+proto.insider.sdk.UserInfo.prototype.setPermission = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional string token = 4;
  * @return {string}
  */
 proto.insider.sdk.UserInfo.prototype.getToken = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
@@ -289,16 +322,16 @@ proto.insider.sdk.UserInfo.prototype.getToken = function() {
  * @return {!proto.insider.sdk.UserInfo} returns this
  */
 proto.insider.sdk.UserInfo.prototype.setToken = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
 /**
- * optional uint64 alive_time = 4;
+ * optional uint64 alive_time = 5;
  * @return {number}
  */
 proto.insider.sdk.UserInfo.prototype.getAliveTime = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
@@ -307,16 +340,16 @@ proto.insider.sdk.UserInfo.prototype.getAliveTime = function() {
  * @return {!proto.insider.sdk.UserInfo} returns this
  */
 proto.insider.sdk.UserInfo.prototype.setAliveTime = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
 /**
- * optional Result result = 5;
+ * optional Result result = 6;
  * @return {!proto.insider.sdk.UserInfo.Result}
  */
 proto.insider.sdk.UserInfo.prototype.getResult = function() {
-  return /** @type {!proto.insider.sdk.UserInfo.Result} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {!proto.insider.sdk.UserInfo.Result} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
@@ -325,7 +358,7 @@ proto.insider.sdk.UserInfo.prototype.getResult = function() {
  * @return {!proto.insider.sdk.UserInfo} returns this
  */
 proto.insider.sdk.UserInfo.prototype.setResult = function(value) {
-  return jspb.Message.setProto3EnumField(this, 5, value);
+  return jspb.Message.setProto3EnumField(this, 6, value);
 };
 
 

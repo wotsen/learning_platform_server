@@ -23,15 +23,15 @@
 template <typename T>
 class SessionManager {
 public:
-	uint32_t max_session;
-	std::vector<std::shared_ptr<T>> sessions;
+	uint32_t max_session_;
+	std::vector<std::shared_ptr<T>> sessions_;
 
 	// virtual bool add_session(const T &session);
 	// virtual bool delete_session(const T &session);
 
-	SessionManager(const uint32_t max_session) : max_session(max_session) {}
+	SessionManager(const uint32_t max_session) : max_session_(max_session) {}
 	virtual ~SessionManager() {
-		sessions.clear();
+		sessions_.clear();
 	}
 };
 
