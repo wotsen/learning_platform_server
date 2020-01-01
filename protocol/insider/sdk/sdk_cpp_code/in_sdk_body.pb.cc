@@ -15,18 +15,9 @@
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Content_in_5fsdk_5fbody_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_User_in_5fsdk_5fbody_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_UserInfo_in_5fsdk_5fbody_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_5fuser_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_UserSessionMsg_in_5fsdk_5fbody_5fuser_2eproto;
 namespace insider {
 namespace sdk {
-class UserDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<User> _instance;
-} _User_default_instance_;
-class UserInfoDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<UserInfo> _instance;
-} _UserInfo_default_instance_;
 class ContentDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Content> _instance;
@@ -50,7 +41,7 @@ static void InitDefaultsscc_info_Body_in_5fsdk_5fbody_2eproto() {
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Body_in_5fsdk_5fbody_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_Body_in_5fsdk_5fbody_2eproto}, {
-      &scc_info_UserInfo_in_5fsdk_5fbody_2eproto.base,
+      &scc_info_UserSessionMsg_in_5fsdk_5fbody_5fuser_2eproto.base,
       &scc_info_Content_in_5fsdk_5fbody_2eproto.base,}};
 
 static void InitDefaultsscc_info_Content_in_5fsdk_5fbody_2eproto() {
@@ -67,60 +58,11 @@ static void InitDefaultsscc_info_Content_in_5fsdk_5fbody_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Content_in_5fsdk_5fbody_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Content_in_5fsdk_5fbody_2eproto}, {}};
 
-static void InitDefaultsscc_info_User_in_5fsdk_5fbody_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::insider::sdk::_User_default_instance_;
-    new (ptr) ::insider::sdk::User();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::insider::sdk::User::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_User_in_5fsdk_5fbody_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_User_in_5fsdk_5fbody_2eproto}, {}};
-
-static void InitDefaultsscc_info_UserInfo_in_5fsdk_5fbody_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::insider::sdk::_UserInfo_default_instance_;
-    new (ptr) ::insider::sdk::UserInfo();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::insider::sdk::UserInfo::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_UserInfo_in_5fsdk_5fbody_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_UserInfo_in_5fsdk_5fbody_2eproto}, {
-      &scc_info_User_in_5fsdk_5fbody_2eproto.base,}};
-
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_in_5fsdk_5fbody_2eproto[4];
-static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_in_5fsdk_5fbody_2eproto[3];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_in_5fsdk_5fbody_2eproto[2];
+static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_in_5fsdk_5fbody_2eproto[1];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_in_5fsdk_5fbody_2eproto = nullptr;
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_in_5fsdk_5fbody_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::User, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::User, user_name_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::User, user_pass_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::User, email_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::User, phone_),
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::UserInfo, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::UserInfo, user_type_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::UserInfo, user_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::UserInfo, permission_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::UserInfo, token_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::UserInfo, alive_time_),
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::UserInfo, result_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Content, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -132,126 +74,54 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_in_5fsdk_5fbody_2eproto::offse
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::insider::sdk::Body, user_),
+  PROTOBUF_FIELD_OFFSET(::insider::sdk::Body, user_session_),
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Body, url_),
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Body, method_),
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Body, content_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::insider::sdk::User)},
-  { 9, -1, sizeof(::insider::sdk::UserInfo)},
-  { 20, -1, sizeof(::insider::sdk::Content)},
-  { 26, -1, sizeof(::insider::sdk::Body)},
+  { 0, -1, sizeof(::insider::sdk::Content)},
+  { 6, -1, sizeof(::insider::sdk::Body)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::insider::sdk::_User_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::insider::sdk::_UserInfo_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::insider::sdk::_Content_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::insider::sdk::_Body_default_instance_),
 };
 
 const char descriptor_table_protodef_in_5fsdk_5fbody_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\021in_sdk_body.proto\022\013insider.sdk\"J\n\004User"
-  "\022\021\n\tuser_name\030\001 \001(\t\022\021\n\tuser_pass\030\002 \001(\t\022\r"
-  "\n\005email\030\003 \001(\t\022\r\n\005phone\030\004 \001(\t\"\222\003\n\010UserInf"
-  "o\0221\n\tuser_type\030\001 \001(\0162\036.insider.sdk.UserI"
-  "nfo.UserType\022\037\n\004user\030\002 \001(\0132\021.insider.sdk"
-  ".User\022\022\n\npermission\030\003 \001(\r\022\r\n\005token\030\004 \001(\t"
-  "\022\022\n\nalive_time\030\005 \001(\004\022,\n\006result\030\006 \001(\0162\034.i"
-  "nsider.sdk.UserInfo.Result\"A\n\010UserType\022\013"
-  "\n\007U_LOGIN\020\000\022\014\n\010U_LOGOUT\020\001\022\n\n\006U_VERI\020\002\022\016\n"
-  "\nU_REGISTER\020\003\"\211\001\n\006Result\022\010\n\004U_OK\020\000\022\013\n\007U_"
-  "ERROR\020\001\022\023\n\017U_TOKEN_TIMEOUT\020\002\022\020\n\014U_USER_E"
-  "XIST\020\003\022\024\n\020U_USER_NOT_EXIST\020\004\022\020\n\014U_USER_B"
-  "LACK\020\005\022\031\n\025US_USER_NO_PERMISSION\020\006\"\030\n\007Con"
-  "tent\022\r\n\005magic\030\001 \001(\003\"\213\001\n\004Body\022#\n\004user\030\001 \001"
-  "(\0132\025.insider.sdk.UserInfo\022\013\n\003url\030\002 \001(\t\022*"
-  "\n\006method\030\003 \001(\0162\032.insider.sdk.OperationTy"
-  "pe\022%\n\007content\030\005 \001(\0132\024.insider.sdk.Conten"
-  "t*7\n\rOperationType\022\007\n\003GET\020\000\022\010\n\004POST\020\001\022\007\n"
-  "\003PUT\020\002\022\n\n\006DELETE\020\003b\006proto3"
+  "\n\021in_sdk_body.proto\022\013insider.sdk\032\026in_sdk"
+  "_body_user.proto\"\030\n\007Content\022\r\n\005magic\030\001 \001"
+  "(\003\"\231\001\n\004Body\0221\n\014user_session\030\001 \001(\0132\033.insi"
+  "der.sdk.UserSessionMsg\022\013\n\003url\030\002 \001(\t\022*\n\006m"
+  "ethod\030\003 \001(\0162\032.insider.sdk.OperationType\022"
+  "%\n\007content\030\005 \001(\0132\024.insider.sdk.Content*7"
+  "\n\rOperationType\022\007\n\003GET\020\000\022\010\n\004POST\020\001\022\007\n\003PU"
+  "T\020\002\022\n\n\006DELETE\020\003b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_5fbody_2eproto_deps[1] = {
+  &::descriptor_table_in_5fsdk_5fbody_5fuser_2eproto,
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_5fsdk_5fbody_2eproto_sccs[4] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_5fsdk_5fbody_2eproto_sccs[2] = {
   &scc_info_Body_in_5fsdk_5fbody_2eproto.base,
   &scc_info_Content_in_5fsdk_5fbody_2eproto.base,
-  &scc_info_User_in_5fsdk_5fbody_2eproto.base,
-  &scc_info_UserInfo_in_5fsdk_5fbody_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_in_5fsdk_5fbody_2eproto_once;
 static bool descriptor_table_in_5fsdk_5fbody_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_in_5fsdk_5fbody_2eproto = {
-  &descriptor_table_in_5fsdk_5fbody_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_2eproto, "in_sdk_body.proto", 746,
-  &descriptor_table_in_5fsdk_5fbody_2eproto_once, descriptor_table_in_5fsdk_5fbody_2eproto_sccs, descriptor_table_in_5fsdk_5fbody_2eproto_deps, 4, 0,
+  &descriptor_table_in_5fsdk_5fbody_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_2eproto, "in_sdk_body.proto", 303,
+  &descriptor_table_in_5fsdk_5fbody_2eproto_once, descriptor_table_in_5fsdk_5fbody_2eproto_sccs, descriptor_table_in_5fsdk_5fbody_2eproto_deps, 2, 1,
   schemas, file_default_instances, TableStruct_in_5fsdk_5fbody_2eproto::offsets,
-  file_level_metadata_in_5fsdk_5fbody_2eproto, 4, file_level_enum_descriptors_in_5fsdk_5fbody_2eproto, file_level_service_descriptors_in_5fsdk_5fbody_2eproto,
+  file_level_metadata_in_5fsdk_5fbody_2eproto, 2, file_level_enum_descriptors_in_5fsdk_5fbody_2eproto, file_level_service_descriptors_in_5fsdk_5fbody_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
 static bool dynamic_init_dummy_in_5fsdk_5fbody_2eproto = (  ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptors(&descriptor_table_in_5fsdk_5fbody_2eproto), true);
 namespace insider {
 namespace sdk {
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* UserInfo_UserType_descriptor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_in_5fsdk_5fbody_2eproto);
-  return file_level_enum_descriptors_in_5fsdk_5fbody_2eproto[0];
-}
-bool UserInfo_UserType_IsValid(int value) {
-  switch (value) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#if (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
-constexpr UserInfo_UserType UserInfo::U_LOGIN;
-constexpr UserInfo_UserType UserInfo::U_LOGOUT;
-constexpr UserInfo_UserType UserInfo::U_VERI;
-constexpr UserInfo_UserType UserInfo::U_REGISTER;
-constexpr UserInfo_UserType UserInfo::UserType_MIN;
-constexpr UserInfo_UserType UserInfo::UserType_MAX;
-constexpr int UserInfo::UserType_ARRAYSIZE;
-#endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* UserInfo_Result_descriptor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_in_5fsdk_5fbody_2eproto);
-  return file_level_enum_descriptors_in_5fsdk_5fbody_2eproto[1];
-}
-bool UserInfo_Result_IsValid(int value) {
-  switch (value) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#if (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
-constexpr UserInfo_Result UserInfo::U_OK;
-constexpr UserInfo_Result UserInfo::U_ERROR;
-constexpr UserInfo_Result UserInfo::U_TOKEN_TIMEOUT;
-constexpr UserInfo_Result UserInfo::U_USER_EXIST;
-constexpr UserInfo_Result UserInfo::U_USER_NOT_EXIST;
-constexpr UserInfo_Result UserInfo::U_USER_BLACK;
-constexpr UserInfo_Result UserInfo::US_USER_NO_PERMISSION;
-constexpr UserInfo_Result UserInfo::Result_MIN;
-constexpr UserInfo_Result UserInfo::Result_MAX;
-constexpr int UserInfo::Result_ARRAYSIZE;
-#endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* OperationType_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_in_5fsdk_5fbody_2eproto);
-  return file_level_enum_descriptors_in_5fsdk_5fbody_2eproto[2];
+  return file_level_enum_descriptors_in_5fsdk_5fbody_2eproto[0];
 }
 bool OperationType_IsValid(int value) {
   switch (value) {
@@ -263,661 +133,6 @@ bool OperationType_IsValid(int value) {
     default:
       return false;
   }
-}
-
-
-// ===================================================================
-
-void User::InitAsDefaultInstance() {
-}
-class User::_Internal {
- public:
-};
-
-User::User()
-  : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:insider.sdk.User)
-}
-User::User(const User& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _internal_metadata_(nullptr) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  user_name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_user_name().empty()) {
-    user_name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.user_name_);
-  }
-  user_pass_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_user_pass().empty()) {
-    user_pass_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.user_pass_);
-  }
-  email_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_email().empty()) {
-    email_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.email_);
-  }
-  phone_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_phone().empty()) {
-    phone_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.phone_);
-  }
-  // @@protoc_insertion_point(copy_constructor:insider.sdk.User)
-}
-
-void User::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_User_in_5fsdk_5fbody_2eproto.base);
-  user_name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  user_pass_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  email_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  phone_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-
-User::~User() {
-  // @@protoc_insertion_point(destructor:insider.sdk.User)
-  SharedDtor();
-}
-
-void User::SharedDtor() {
-  user_name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  user_pass_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  email_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  phone_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-
-void User::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const User& User::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_User_in_5fsdk_5fbody_2eproto.base);
-  return *internal_default_instance();
-}
-
-
-void User::Clear() {
-// @@protoc_insertion_point(message_clear_start:insider.sdk.User)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  user_name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  user_pass_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  email_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  phone_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  _internal_metadata_.Clear();
-}
-
-const char* User::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // string user_name = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(_internal_mutable_user_name(), ptr, ctx, "insider.sdk.User.user_name");
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // string user_pass = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(_internal_mutable_user_pass(), ptr, ctx, "insider.sdk.User.user_pass");
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // string email = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(_internal_mutable_email(), ptr, ctx, "insider.sdk.User.email");
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // string phone = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(_internal_mutable_phone(), ptr, ctx, "insider.sdk.User.phone");
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag, &_internal_metadata_, ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
-}
-
-::PROTOBUF_NAMESPACE_ID::uint8* User::InternalSerializeWithCachedSizesToArray(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:insider.sdk.User)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string user_name = 1;
-  if (this->user_name().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_user_name().data(), static_cast<int>(this->_internal_user_name().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "insider.sdk.User.user_name");
-    target = stream->WriteStringMaybeAliased(
-        1, this->_internal_user_name(), target);
-  }
-
-  // string user_pass = 2;
-  if (this->user_pass().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_user_pass().data(), static_cast<int>(this->_internal_user_pass().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "insider.sdk.User.user_pass");
-    target = stream->WriteStringMaybeAliased(
-        2, this->_internal_user_pass(), target);
-  }
-
-  // string email = 3;
-  if (this->email().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_email().data(), static_cast<int>(this->_internal_email().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "insider.sdk.User.email");
-    target = stream->WriteStringMaybeAliased(
-        3, this->_internal_email(), target);
-  }
-
-  // string phone = 4;
-  if (this->phone().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_phone().data(), static_cast<int>(this->_internal_phone().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "insider.sdk.User.phone");
-    target = stream->WriteStringMaybeAliased(
-        4, this->_internal_phone(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields(), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:insider.sdk.User)
-  return target;
-}
-
-size_t User::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:insider.sdk.User)
-  size_t total_size = 0;
-
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // string user_name = 1;
-  if (this->user_name().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_user_name());
-  }
-
-  // string user_pass = 2;
-  if (this->user_pass().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_user_pass());
-  }
-
-  // string email = 3;
-  if (this->email().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_email());
-  }
-
-  // string phone = 4;
-  if (this->phone().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_phone());
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
-}
-
-void User::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:insider.sdk.User)
-  GOOGLE_DCHECK_NE(&from, this);
-  const User* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<User>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:insider.sdk.User)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:insider.sdk.User)
-    MergeFrom(*source);
-  }
-}
-
-void User::MergeFrom(const User& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:insider.sdk.User)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.user_name().size() > 0) {
-
-    user_name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.user_name_);
-  }
-  if (from.user_pass().size() > 0) {
-
-    user_pass_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.user_pass_);
-  }
-  if (from.email().size() > 0) {
-
-    email_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.email_);
-  }
-  if (from.phone().size() > 0) {
-
-    phone_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.phone_);
-  }
-}
-
-void User::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:insider.sdk.User)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void User::CopyFrom(const User& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:insider.sdk.User)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool User::IsInitialized() const {
-  return true;
-}
-
-void User::InternalSwap(User* other) {
-  using std::swap;
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  user_name_.Swap(&other->user_name_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  user_pass_.Swap(&other->user_pass_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  email_.Swap(&other->email_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  phone_.Swap(&other->phone_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata User::GetMetadata() const {
-  return GetMetadataStatic();
-}
-
-
-// ===================================================================
-
-void UserInfo::InitAsDefaultInstance() {
-  ::insider::sdk::_UserInfo_default_instance_._instance.get_mutable()->user_ = const_cast< ::insider::sdk::User*>(
-      ::insider::sdk::User::internal_default_instance());
-}
-class UserInfo::_Internal {
- public:
-  static const ::insider::sdk::User& user(const UserInfo* msg);
-};
-
-const ::insider::sdk::User&
-UserInfo::_Internal::user(const UserInfo* msg) {
-  return *msg->user_;
-}
-UserInfo::UserInfo()
-  : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:insider.sdk.UserInfo)
-}
-UserInfo::UserInfo(const UserInfo& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _internal_metadata_(nullptr) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  token_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_token().empty()) {
-    token_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.token_);
-  }
-  if (from._internal_has_user()) {
-    user_ = new ::insider::sdk::User(*from.user_);
-  } else {
-    user_ = nullptr;
-  }
-  ::memcpy(&user_type_, &from.user_type_,
-    static_cast<size_t>(reinterpret_cast<char*>(&result_) -
-    reinterpret_cast<char*>(&user_type_)) + sizeof(result_));
-  // @@protoc_insertion_point(copy_constructor:insider.sdk.UserInfo)
-}
-
-void UserInfo::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_UserInfo_in_5fsdk_5fbody_2eproto.base);
-  token_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  ::memset(&user_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&result_) -
-      reinterpret_cast<char*>(&user_)) + sizeof(result_));
-}
-
-UserInfo::~UserInfo() {
-  // @@protoc_insertion_point(destructor:insider.sdk.UserInfo)
-  SharedDtor();
-}
-
-void UserInfo::SharedDtor() {
-  token_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (this != internal_default_instance()) delete user_;
-}
-
-void UserInfo::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const UserInfo& UserInfo::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_UserInfo_in_5fsdk_5fbody_2eproto.base);
-  return *internal_default_instance();
-}
-
-
-void UserInfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:insider.sdk.UserInfo)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  token_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (GetArenaNoVirtual() == nullptr && user_ != nullptr) {
-    delete user_;
-  }
-  user_ = nullptr;
-  ::memset(&user_type_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&result_) -
-      reinterpret_cast<char*>(&user_type_)) + sizeof(result_));
-  _internal_metadata_.Clear();
-}
-
-const char* UserInfo::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // .insider.sdk.UserInfo.UserType user_type = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
-          _internal_set_user_type(static_cast<::insider::sdk::UserInfo_UserType>(val));
-        } else goto handle_unusual;
-        continue;
-      // .insider.sdk.User user = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          ptr = ctx->ParseMessage(_internal_mutable_user(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // uint32 permission = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
-          permission_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // string token = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(_internal_mutable_token(), ptr, ctx, "insider.sdk.UserInfo.token");
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // uint64 alive_time = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
-          alive_time_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // .insider.sdk.UserInfo.Result result = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
-          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
-          _internal_set_result(static_cast<::insider::sdk::UserInfo_Result>(val));
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag, &_internal_metadata_, ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
-}
-
-::PROTOBUF_NAMESPACE_ID::uint8* UserInfo::InternalSerializeWithCachedSizesToArray(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:insider.sdk.UserInfo)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // .insider.sdk.UserInfo.UserType user_type = 1;
-  if (this->user_type() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      1, this->_internal_user_type(), target);
-  }
-
-  // .insider.sdk.User user = 2;
-  if (this->has_user()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        2, _Internal::user(this), target, stream);
-  }
-
-  // uint32 permission = 3;
-  if (this->permission() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(3, this->_internal_permission(), target);
-  }
-
-  // string token = 4;
-  if (this->token().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_token().data(), static_cast<int>(this->_internal_token().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "insider.sdk.UserInfo.token");
-    target = stream->WriteStringMaybeAliased(
-        4, this->_internal_token(), target);
-  }
-
-  // uint64 alive_time = 5;
-  if (this->alive_time() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(5, this->_internal_alive_time(), target);
-  }
-
-  // .insider.sdk.UserInfo.Result result = 6;
-  if (this->result() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      6, this->_internal_result(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields(), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:insider.sdk.UserInfo)
-  return target;
-}
-
-size_t UserInfo::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:insider.sdk.UserInfo)
-  size_t total_size = 0;
-
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // string token = 4;
-  if (this->token().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_token());
-  }
-
-  // .insider.sdk.User user = 2;
-  if (this->has_user()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *user_);
-  }
-
-  // .insider.sdk.UserInfo.UserType user_type = 1;
-  if (this->user_type() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_user_type());
-  }
-
-  // uint32 permission = 3;
-  if (this->permission() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32Size(
-        this->_internal_permission());
-  }
-
-  // uint64 alive_time = 5;
-  if (this->alive_time() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64Size(
-        this->_internal_alive_time());
-  }
-
-  // .insider.sdk.UserInfo.Result result = 6;
-  if (this->result() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_result());
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
-}
-
-void UserInfo::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:insider.sdk.UserInfo)
-  GOOGLE_DCHECK_NE(&from, this);
-  const UserInfo* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<UserInfo>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:insider.sdk.UserInfo)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:insider.sdk.UserInfo)
-    MergeFrom(*source);
-  }
-}
-
-void UserInfo::MergeFrom(const UserInfo& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:insider.sdk.UserInfo)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.token().size() > 0) {
-
-    token_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.token_);
-  }
-  if (from.has_user()) {
-    _internal_mutable_user()->::insider::sdk::User::MergeFrom(from._internal_user());
-  }
-  if (from.user_type() != 0) {
-    _internal_set_user_type(from._internal_user_type());
-  }
-  if (from.permission() != 0) {
-    _internal_set_permission(from._internal_permission());
-  }
-  if (from.alive_time() != 0) {
-    _internal_set_alive_time(from._internal_alive_time());
-  }
-  if (from.result() != 0) {
-    _internal_set_result(from._internal_result());
-  }
-}
-
-void UserInfo::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:insider.sdk.UserInfo)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UserInfo::CopyFrom(const UserInfo& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:insider.sdk.UserInfo)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UserInfo::IsInitialized() const {
-  return true;
-}
-
-void UserInfo::InternalSwap(UserInfo* other) {
-  using std::swap;
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  token_.Swap(&other->token_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  swap(user_, other->user_);
-  swap(user_type_, other->user_type_);
-  swap(permission_, other->permission_);
-  swap(alive_time_, other->alive_time_);
-  swap(result_, other->result_);
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata UserInfo::GetMetadata() const {
-  return GetMetadataStatic();
 }
 
 
@@ -1110,24 +325,30 @@ void Content::InternalSwap(Content* other) {
 // ===================================================================
 
 void Body::InitAsDefaultInstance() {
-  ::insider::sdk::_Body_default_instance_._instance.get_mutable()->user_ = const_cast< ::insider::sdk::UserInfo*>(
-      ::insider::sdk::UserInfo::internal_default_instance());
+  ::insider::sdk::_Body_default_instance_._instance.get_mutable()->user_session_ = const_cast< ::insider::sdk::UserSessionMsg*>(
+      ::insider::sdk::UserSessionMsg::internal_default_instance());
   ::insider::sdk::_Body_default_instance_._instance.get_mutable()->content_ = const_cast< ::insider::sdk::Content*>(
       ::insider::sdk::Content::internal_default_instance());
 }
 class Body::_Internal {
  public:
-  static const ::insider::sdk::UserInfo& user(const Body* msg);
+  static const ::insider::sdk::UserSessionMsg& user_session(const Body* msg);
   static const ::insider::sdk::Content& content(const Body* msg);
 };
 
-const ::insider::sdk::UserInfo&
-Body::_Internal::user(const Body* msg) {
-  return *msg->user_;
+const ::insider::sdk::UserSessionMsg&
+Body::_Internal::user_session(const Body* msg) {
+  return *msg->user_session_;
 }
 const ::insider::sdk::Content&
 Body::_Internal::content(const Body* msg) {
   return *msg->content_;
+}
+void Body::clear_user_session() {
+  if (GetArenaNoVirtual() == nullptr && user_session_ != nullptr) {
+    delete user_session_;
+  }
+  user_session_ = nullptr;
 }
 Body::Body()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
@@ -1142,10 +363,10 @@ Body::Body(const Body& from)
   if (!from._internal_url().empty()) {
     url_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.url_);
   }
-  if (from._internal_has_user()) {
-    user_ = new ::insider::sdk::UserInfo(*from.user_);
+  if (from._internal_has_user_session()) {
+    user_session_ = new ::insider::sdk::UserSessionMsg(*from.user_session_);
   } else {
-    user_ = nullptr;
+    user_session_ = nullptr;
   }
   if (from._internal_has_content()) {
     content_ = new ::insider::sdk::Content(*from.content_);
@@ -1159,9 +380,9 @@ Body::Body(const Body& from)
 void Body::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Body_in_5fsdk_5fbody_2eproto.base);
   url_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  ::memset(&user_, 0, static_cast<size_t>(
+  ::memset(&user_session_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&method_) -
-      reinterpret_cast<char*>(&user_)) + sizeof(method_));
+      reinterpret_cast<char*>(&user_session_)) + sizeof(method_));
 }
 
 Body::~Body() {
@@ -1171,7 +392,7 @@ Body::~Body() {
 
 void Body::SharedDtor() {
   url_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (this != internal_default_instance()) delete user_;
+  if (this != internal_default_instance()) delete user_session_;
   if (this != internal_default_instance()) delete content_;
 }
 
@@ -1191,10 +412,10 @@ void Body::Clear() {
   (void) cached_has_bits;
 
   url_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (GetArenaNoVirtual() == nullptr && user_ != nullptr) {
-    delete user_;
+  if (GetArenaNoVirtual() == nullptr && user_session_ != nullptr) {
+    delete user_session_;
   }
-  user_ = nullptr;
+  user_session_ = nullptr;
   if (GetArenaNoVirtual() == nullptr && content_ != nullptr) {
     delete content_;
   }
@@ -1210,10 +431,10 @@ const char* Body::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::inter
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
     switch (tag >> 3) {
-      // .insider.sdk.UserInfo user = 1;
+      // .insider.sdk.UserSessionMsg user_session = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ctx->ParseMessage(_internal_mutable_user(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_user_session(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1265,12 +486,12 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .insider.sdk.UserInfo user = 1;
-  if (this->has_user()) {
+  // .insider.sdk.UserSessionMsg user_session = 1;
+  if (this->has_user_session()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        1, _Internal::user(this), target, stream);
+        1, _Internal::user_session(this), target, stream);
   }
 
   // string url = 2;
@@ -1321,11 +542,11 @@ size_t Body::ByteSizeLong() const {
         this->_internal_url());
   }
 
-  // .insider.sdk.UserInfo user = 1;
-  if (this->has_user()) {
+  // .insider.sdk.UserSessionMsg user_session = 1;
+  if (this->has_user_session()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *user_);
+        *user_session_);
   }
 
   // .insider.sdk.Content content = 5;
@@ -1376,8 +597,8 @@ void Body::MergeFrom(const Body& from) {
 
     url_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.url_);
   }
-  if (from.has_user()) {
-    _internal_mutable_user()->::insider::sdk::UserInfo::MergeFrom(from._internal_user());
+  if (from.has_user_session()) {
+    _internal_mutable_user_session()->::insider::sdk::UserSessionMsg::MergeFrom(from._internal_user_session());
   }
   if (from.has_content()) {
     _internal_mutable_content()->::insider::sdk::Content::MergeFrom(from._internal_content());
@@ -1410,7 +631,7 @@ void Body::InternalSwap(Body* other) {
   _internal_metadata_.Swap(&other->_internal_metadata_);
   url_.Swap(&other->url_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  swap(user_, other->user_);
+  swap(user_session_, other->user_session_);
   swap(content_, other->content_);
   swap(method_, other->method_);
 }
@@ -1424,12 +645,6 @@ void Body::InternalSwap(Body* other) {
 }  // namespace sdk
 }  // namespace insider
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::insider::sdk::User* Arena::CreateMaybeMessage< ::insider::sdk::User >(Arena* arena) {
-  return Arena::CreateInternal< ::insider::sdk::User >(arena);
-}
-template<> PROTOBUF_NOINLINE ::insider::sdk::UserInfo* Arena::CreateMaybeMessage< ::insider::sdk::UserInfo >(Arena* arena) {
-  return Arena::CreateInternal< ::insider::sdk::UserInfo >(arena);
-}
 template<> PROTOBUF_NOINLINE ::insider::sdk::Content* Arena::CreateMaybeMessage< ::insider::sdk::Content >(Arena* arena) {
   return Arena::CreateInternal< ::insider::sdk::Content >(arena);
 }

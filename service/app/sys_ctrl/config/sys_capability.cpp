@@ -33,12 +33,12 @@ SysCapability *SysCapability::get_sys_capability(void)
 
     instance = new SysCapability();
 
-    instance->json_file.open(SYS_CAPAABILITY_FILENAME, std::ios::in | std::ios::out);
+    instance->json_file.open(OS_SYS_CAPAABILITY_FILENAME, std::ios::in | std::ios::out);
 
     if (!instance->json_file)
     {
         delete instance;
-        throw("can not open " SYS_CAPAABILITY_FILENAME);
+        throw("can not open " OS_SYS_CAPAABILITY_FILENAME);
     }
 
     try
@@ -49,12 +49,12 @@ SysCapability *SysCapability::get_sys_capability(void)
     {
         log_e("%s\n", err.what());
         delete instance;
-        throw("can not parse json : " SYS_CAPAABILITY_FILENAME);
+        throw("can not parse json : " OS_SYS_CAPAABILITY_FILENAME);
     }
     if (instance->j.empty())
     {
         delete instance;
-        throw("can not parse json : " SYS_CAPAABILITY_FILENAME);
+        throw("can not parse json : " OS_SYS_CAPAABILITY_FILENAME);
     }
 
     return instance;

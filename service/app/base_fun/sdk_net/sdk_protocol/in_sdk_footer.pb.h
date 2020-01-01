@@ -85,12 +85,16 @@ enum ContentResultE : int {
   R_CODE_ERROR = 1,
   R_CODE_USER_EXIST = 2,
   R_CODE_USER_TOKEN_TIMEOUT = 3,
+  R_CODE_USER_NOT_EXIST = 4,
+  R_CODE_USER_IN_BLACK_LIST = 5,
+  R_CODE_USER_NO_PERMISSION = 6,
+  R_CODE_USER_PASS_ERROR = 7,
   ContentResultE_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   ContentResultE_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool ContentResultE_IsValid(int value);
 constexpr ContentResultE ContentResultE_MIN = R_CODE_OK;
-constexpr ContentResultE ContentResultE_MAX = R_CODE_USER_TOKEN_TIMEOUT;
+constexpr ContentResultE ContentResultE_MAX = R_CODE_USER_PASS_ERROR;
 constexpr int ContentResultE_ARRAYSIZE = ContentResultE_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ContentResultE_descriptor();

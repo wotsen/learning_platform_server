@@ -1,39 +1,8 @@
 syntax = "proto3";
 
+import "in_sdk_body_user.proto";
+
 package insider.sdk;
-
-message User {
-    string user_name = 1;
-    string user_pass = 2;
-    string email = 3;
-    string phone = 4;
-}
-
-message UserInfo {
-    enum UserType {
-        U_LOGIN = 0;  // 用户登录
-        U_LOGOUT = 1;  // 用户等出
-        U_VERI = 2;  // 用户已登录，只验证
-        U_REGISTER = 3; // 用户注册
-    }
-
-    enum Result {
-        U_OK = 0;
-        U_ERROR = 1;
-        U_TOKEN_TIMEOUT = 2; // token过期
-        U_USER_EXIST = 3; // 用户已存在
-        U_USER_NOT_EXIST = 4; // 用户不存在
-        U_USER_BLACK = 5; // 用户被拉黑
-        US_USER_NO_PERMISSION = 6; // 用户权限不足
-    }
-
-    UserType user_type = 1;
-    User user = 2;  // 用户名和密码，登录登出需要
-    uint32 permission = 3; // 用户权限
-    string token = 4;  // token，通信过程中需要，登陆时会返回给客户端
-    uint64 alive_time = 5; // token生存时间
-    Result result = 6;
-}
 
 // 请求动作，参考http实现
 enum OperationType {
@@ -52,7 +21,7 @@ message Content {
 // 数组使用repeated
 
 message Body {
-    UserInfo user = 1;
+    UserSessionMsg user_session = 1;
     string url = 2;  // 请求路径，所有请求的响应使用路径与函数映射
     OperationType method = 3;
     Content content = 5;  // 数据内容，登录等处时并不需要

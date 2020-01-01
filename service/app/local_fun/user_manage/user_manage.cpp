@@ -79,9 +79,24 @@ public:
 	}
 
 	// TODO:修改密码
+	bool change_password(UserSessionMsg &user_info)
+	{
+		return true;
+	}
+
 	// TODO:查询用户信息
+	std::vector<UserAllInfo> query_user_list(void)
+	{
+		std::vector<UserAllInfo> user_list;
+		// FIXME:无法一次查完?
+		return user_list;
+	}
+
 	// TODO:用户权限校验中间件
-	// TODO:更多的返回结果类型完善
+	bool user_permisson_verify(const std::string &username, const UserPermissson &permission)
+	{
+		return true;
+	}
 
 	/**
 	 * @brief 更新会话
@@ -183,20 +198,32 @@ public:
 	 * @param user_info 用户信息,FIXME:数据库操作未作异常处理
 	 * @return enum UserInfo_Result 
 	 */
-	enum UserInfo_Result login(UserInfo &user_info)
+	enum ContentResultE login(UserSessionMsg &user_info)
 	{
-		Statement query(*user_db, "SELECT * FROM " USER_TABLE " where name = ? and password = ?");
+		Statement query_user(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
 
-		query.bind(1, user_info.user().user_name());
-		query.bind(2, user_info.user().user_pass());
+		query_user.bind(1, user_info.user().user_name());
 
-		query.executeStep();
+		query_user.executeStep();
 
-		// TODO:细分用户不存在，用户密码错误
-		if (!query.hasRow())
+		// 用户不存在
+		if (!query_user.hasRow())
 		{
 			log_i("user : %s not exsit\n", user_info.user().user_name().c_str());
-			return UserInfo_Result::UserInfo_Result_U_ERROR;
+			return ContentResultE::R_CODE_USER_NOT_EXIST;
+		}
+
+		// 密码错误
+		Statement query_user_pass(*user_db, "SELECT * FROM " USER_TABLE " where name = ? and password = ?");
+		query_user_pass.bind(1, user_info.user().user_name());
+		query_user_pass.bind(2, user_info.user().user_pass());
+
+		query_user_pass.executeStep();
+
+		if (!query_user_pass.hasRow())
+		{
+			log_i("user : %s password error\n", user_info.user().user_name().c_str());
+			return ContentResultE::R_CODE_USER_PASS_ERROR;
 		}
 
 		UserSession session;
@@ -207,12 +234,7 @@ public:
 		session.token_ = uid.str();
 		user_info.set_token(uid.str());
 
-		if (add_session(session))
-		{
-			return UserInfo_Result::UserInfo_Result_U_OK;
-		}
-
-		return UserInfo_Result::UserInfo_Result_U_ERROR;
+		return add_session(session) ? ContentResultE::R_CODE_OK : ContentResultE::R_CODE_ERROR;
 	}
 
 	/**
@@ -221,10 +243,10 @@ public:
 	 * @param user_info 用户信息
 	 * @return enum UserInfo_Result 
 	 */
-	enum UserInfo_Result logout(UserInfo &user_info)
+	enum ContentResultE logout(UserSessionMsg &user_info)
 	{
 		delete_session(user_info.token());
-		return UserInfo_Result::UserInfo_Result_U_OK;
+		return ContentResultE::R_CODE_OK;
 	}
 
 	/**
@@ -233,19 +255,22 @@ public:
 	 * @param user_info 用户信息
 	 * @return enum UserInfo_Result 
 	 */
-	enum UserInfo_Result verify(UserInfo &user_info)
+	enum ContentResultE verify(UserSessionMsg &user_info)
 	{
 		UserSession *_session;
 
 		pthread_mutex_lock(&mutex_);
 		if (search_user_session(user_info.token(), &_session))
 		{
+			// 刷新会话时间
+			_session->now_ = _session->alive_time_;
 			pthread_mutex_unlock(&mutex_);
-			return UserInfo_Result::UserInfo_Result_U_OK;
+			return ContentResultE::R_CODE_OK;
 		}
 
 		pthread_mutex_unlock(&mutex_);
-		return UserInfo_Result::UserInfo_Result_U_TOKEN_TIMEOUT;
+
+		return ContentResultE::R_CODE_USER_TOKEN_TIMEOUT;
 	}
 
 	/**
@@ -254,7 +279,7 @@ public:
 	 * @param user_info 用户信息
 	 * @return enum UserInfo_Result 
 	 */
-	enum UserInfo_Result user_register(UserInfo &user_info)
+	enum ContentResultE user_register(UserSessionMsg &user_info)
 	{
 		Statement query(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
 
@@ -264,7 +289,7 @@ public:
 
 		if (query.hasRow())
 		{
-			return UserInfo_Result::UserInfo_Result_U_USER_EXIST;
+			return ContentResultE::R_CODE_USER_EXIST;
 		}
 
 		Statement insert(*user_db, "INSERT INTO " USER_TABLE " VALUES (NULL, ?, ?, ?, ?)");
@@ -277,7 +302,7 @@ public:
 
 		if (SQLITE_DONE != user_db->getErrorCode())
 		{
-			return UserInfo_Result::UserInfo_Result_U_ERROR;
+			return ContentResultE::R_CODE_ERROR;
 		}
 
 		UserSession session;
@@ -288,12 +313,7 @@ public:
 		session.token_ = uid.str();
 		user_info.set_token(uid.str());
 
-		if (add_session(session))
-		{
-			return UserInfo_Result::UserInfo_Result_U_OK;
-		}
-
-		return UserInfo_Result::UserInfo_Result_U_ERROR;
+		return add_session(session) ? ContentResultE::R_CODE_OK : ContentResultE::R_CODE_ERROR;
 	}
 };
 
@@ -316,54 +336,77 @@ public:
  */
 bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
 {
-	UserInfo user_info = sdk_req.mutable_body()->user();
-	enum UserInfo_Result user_ret = UserInfo_Result::UserInfo_Result_U_OK;
+	UserSessionMsg user_info = sdk_req.mutable_body()->user_session();
+	enum ContentResultE user_ret = ContentResultE::R_CODE_OK;
 
 	log_i("%s %s\n", user_info.user().user_name().c_str(), user_info.user().user_pass().c_str());
 
 	switch (user_info.user_type())
 	{
-		case UserInfo_UserType::UserInfo_UserType_U_LOGIN:
+		case UserSessionMsg_UserMethod::UserSessionMsg_UserMethod_U_LOGIN:
 			user_ret = user_manager->login(user_info);
 			break;
-		case UserInfo_UserType::UserInfo_UserType_U_LOGOUT:
+		case UserSessionMsg_UserMethod::UserSessionMsg_UserMethod_U_LOGOUT:
 			user_ret = user_manager->logout(user_info);
 			break;
-		case UserInfo_UserType::UserInfo_UserType_U_VERI:
+		case UserSessionMsg_UserMethod::UserSessionMsg_UserMethod_U_VERI:
 			user_ret = user_manager->verify(user_info);
 			break;
-		case UserInfo_UserType::UserInfo_UserType_U_REGISTER:
+		case UserSessionMsg_UserMethod::UserSessionMsg_UserMethod_U_REGISTER:
 			user_ret = user_manager->user_register(user_info);
 			break;
 		default:
-			user_ret = UserInfo_Result::UserInfo_Result_U_ERROR;
+			user_ret = ContentResultE::R_CODE_ERROR;
 			break;
 	}
 
-	sdk_res.mutable_body()->mutable_user()->set_result(user_ret);
+	// sdk_res.mutable_body()->mutable_user_session()->set_result(user_ret);
+
+	sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(user_ret);
 
 	switch (user_ret)
 	{
-		case UserInfo_Result::UserInfo_Result_U_OK:
-			sdk_res.mutable_body()->mutable_user()->set_token(user_info.token());
+		case ContentResultE::R_CODE_OK:
+			sdk_res.mutable_body()->mutable_user_session()->set_token(user_info.token());
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::OK);
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("ok");
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(ContentResultE::R_CODE_OK);
 			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("ok");
 			return true;
-		
-		case UserInfo_Result::UserInfo_Result_U_USER_EXIST:
+
+		case ContentResultE::R_CODE_USER_EXIST:
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(ContentResultE::R_CODE_USER_EXIST);
 			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user exist");
 			return false;
 
-		case UserInfo_Result::UserInfo_Result_U_TOKEN_TIMEOUT:
+		case ContentResultE::R_CODE_USER_NOT_EXIST:
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(ContentResultE::R_CODE_USER_TOKEN_TIMEOUT);
+			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user not exist");
+			return false;
+
+		case ContentResultE::R_CODE_USER_TOKEN_TIMEOUT:
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
 			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user token timeout");
+			return false;
+
+		case ContentResultE::R_CODE_USER_IN_BLACK_LIST:
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
+			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user in balcklist");
+			return false;
+
+		case ContentResultE::R_CODE_USER_NO_PERMISSION:
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
+			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user no permission");
+			return false;
+
+		case ContentResultE::R_CODE_USER_PASS_ERROR:
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
+			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user password error");
 			return false;
 
 		default:

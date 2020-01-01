@@ -9,6 +9,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 goog.provide('proto.insider.sdk.UserInfo');
+goog.provide('proto.insider.sdk.UserInfo.Permissson');
 goog.provide('proto.insider.sdk.UserInfo.Result');
 goog.provide('proto.insider.sdk.UserInfo.UserType');
 
@@ -122,7 +123,7 @@ proto.insider.sdk.UserInfo.deserializeBinaryFromReader = function(msg, reader) {
       msg.setUser(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {!proto.insider.sdk.UserInfo.Permissson} */ (reader.readEnum());
       msg.setPermission(value);
       break;
     case 4:
@@ -182,8 +183,8 @@ proto.insider.sdk.UserInfo.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getPermission();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeEnum(
       3,
       f
     );
@@ -233,6 +234,15 @@ proto.insider.sdk.UserInfo.Result = {
   U_USER_NOT_EXIST: 4,
   U_USER_BLACK: 5,
   US_USER_NO_PERMISSION: 6
+};
+
+/**
+ * @enum {number}
+ */
+proto.insider.sdk.UserInfo.Permissson = {
+  U_PERMISSION_ADMIN: 0,
+  U_PERMISSION_ADVANCED: 1,
+  U_PERMOSSION_NORMAL: 2
 };
 
 /**
@@ -291,20 +301,20 @@ proto.insider.sdk.UserInfo.prototype.hasUser = function() {
 
 
 /**
- * optional uint32 permission = 3;
- * @return {number}
+ * optional Permissson permission = 3;
+ * @return {!proto.insider.sdk.UserInfo.Permissson}
  */
 proto.insider.sdk.UserInfo.prototype.getPermission = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {!proto.insider.sdk.UserInfo.Permissson} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
- * @param {number} value
+ * @param {!proto.insider.sdk.UserInfo.Permissson} value
  * @return {!proto.insider.sdk.UserInfo} returns this
  */
 proto.insider.sdk.UserInfo.prototype.setPermission = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 

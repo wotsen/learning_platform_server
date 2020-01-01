@@ -14,7 +14,7 @@ goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
 goog.require('jspb.Message');
 goog.require('proto.insider.sdk.Content');
-goog.require('proto.insider.sdk.UserInfo');
+goog.require('proto.insider.sdk.UserSessionMsg');
 
 goog.forwardDeclare('proto.insider.sdk.OperationType');
 /**
@@ -70,7 +70,7 @@ proto.insider.sdk.Body.prototype.toObject = function(opt_includeInstance) {
  */
 proto.insider.sdk.Body.toObject = function(includeInstance, msg) {
   var f, obj = {
-    user: (f = msg.getUser()) && proto.insider.sdk.UserInfo.toObject(includeInstance, f),
+    userSession: (f = msg.getUserSession()) && proto.insider.sdk.UserSessionMsg.toObject(includeInstance, f),
     url: jspb.Message.getFieldWithDefault(msg, 2, ""),
     method: jspb.Message.getFieldWithDefault(msg, 3, 0),
     content: (f = msg.getContent()) && proto.insider.sdk.Content.toObject(includeInstance, f)
@@ -111,9 +111,9 @@ proto.insider.sdk.Body.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.insider.sdk.UserInfo;
-      reader.readMessage(value,proto.insider.sdk.UserInfo.deserializeBinaryFromReader);
-      msg.setUser(value);
+      var value = new proto.insider.sdk.UserSessionMsg;
+      reader.readMessage(value,proto.insider.sdk.UserSessionMsg.deserializeBinaryFromReader);
+      msg.setUserSession(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
@@ -157,12 +157,12 @@ proto.insider.sdk.Body.prototype.serializeBinary = function() {
  */
 proto.insider.sdk.Body.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getUser();
+  f = message.getUserSession();
   if (f != null) {
     writer.writeMessage(
       1,
       f,
-      proto.insider.sdk.UserInfo.serializeBinaryToWriter
+      proto.insider.sdk.UserSessionMsg.serializeBinaryToWriter
     );
   }
   f = message.getUrl();
@@ -191,20 +191,20 @@ proto.insider.sdk.Body.serializeBinaryToWriter = function(message, writer) {
 
 
 /**
- * optional UserInfo user = 1;
- * @return {?proto.insider.sdk.UserInfo}
+ * optional UserSessionMsg user_session = 1;
+ * @return {?proto.insider.sdk.UserSessionMsg}
  */
-proto.insider.sdk.Body.prototype.getUser = function() {
-  return /** @type{?proto.insider.sdk.UserInfo} */ (
-    jspb.Message.getWrapperField(this, proto.insider.sdk.UserInfo, 1));
+proto.insider.sdk.Body.prototype.getUserSession = function() {
+  return /** @type{?proto.insider.sdk.UserSessionMsg} */ (
+    jspb.Message.getWrapperField(this, proto.insider.sdk.UserSessionMsg, 1));
 };
 
 
 /**
- * @param {?proto.insider.sdk.UserInfo|undefined} value
+ * @param {?proto.insider.sdk.UserSessionMsg|undefined} value
  * @return {!proto.insider.sdk.Body} returns this
 */
-proto.insider.sdk.Body.prototype.setUser = function(value) {
+proto.insider.sdk.Body.prototype.setUserSession = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
@@ -213,8 +213,8 @@ proto.insider.sdk.Body.prototype.setUser = function(value) {
  * Clears the message field making it undefined.
  * @return {!proto.insider.sdk.Body} returns this
  */
-proto.insider.sdk.Body.prototype.clearUser = function() {
-  return this.setUser(undefined);
+proto.insider.sdk.Body.prototype.clearUserSession = function() {
+  return this.setUserSession(undefined);
 };
 
 
@@ -222,7 +222,7 @@ proto.insider.sdk.Body.prototype.clearUser = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.insider.sdk.Body.prototype.hasUser = function() {
+proto.insider.sdk.Body.prototype.hasUserSession = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 

@@ -14,7 +14,7 @@
 #define OS_SYS_TASK_NUM 1024
 
 // 能力集配置文件
-#define SYS_CAPAABILITY_FILENAME "../etc/sys_capability.json"
+#define OS_SYS_CAPAABILITY_FILENAME "../etc/sys_capability.json"
 
 // 参数配置文件
 #define SYS_RUNTIME_CONFIG_FILENAME "../data/sys_runtime_param.json"

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='insider.sdk',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x13in_sdk_footer.proto\x12\x0binsider.sdk\"K\n\tSdkResult\x12\x30\n\x0bstatus_code\x18\x01 \x01(\x0e\x32\x1b.insider.sdk.ResponseResult\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\"O\n\rContentResult\x12\x30\n\x0bstatus_code\x18\x01 \x01(\x0e\x32\x1b.insider.sdk.ContentResultE\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\"h\n\x06Result\x12*\n\nsdk_result\x18\x01 \x01(\x0b\x32\x16.insider.sdk.SdkResult\x12\x32\n\x0e\x63ontent_result\x18\x02 \x01(\x0b\x32\x1a.insider.sdk.ContentResult\":\n\x06\x46ooter\x12\x0b\n\x03res\x18\x01 \x01(\x05\x12#\n\x06result\x18\x02 \x01(\x0b\x32\x13.insider.sdk.Result*g\n\x0e\x43ontentResultE\x12\r\n\tR_CODE_OK\x10\x00\x12\x10\n\x0cR_CODE_ERROR\x10\x01\x12\x15\n\x11R_CODE_USER_EXIST\x10\x02\x12\x1d\n\x19R_CODE_USER_TOKEN_TIMEOUT\x10\x03*#\n\x0eResponseResult\x12\x06\n\x02OK\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x13in_sdk_footer.proto\x12\x0binsider.sdk\"K\n\tSdkResult\x12\x30\n\x0bstatus_code\x18\x01 \x01(\x0e\x32\x1b.insider.sdk.ResponseResult\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\"O\n\rContentResult\x12\x30\n\x0bstatus_code\x18\x01 \x01(\x0e\x32\x1b.insider.sdk.ContentResultE\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\"h\n\x06Result\x12*\n\nsdk_result\x18\x01 \x01(\x0b\x32\x16.insider.sdk.SdkResult\x12\x32\n\x0e\x63ontent_result\x18\x02 \x01(\x0b\x32\x1a.insider.sdk.ContentResult\":\n\x06\x46ooter\x12\x0b\n\x03res\x18\x01 \x01(\x05\x12#\n\x06result\x18\x02 \x01(\x0b\x32\x13.insider.sdk.Result*\xdc\x01\n\x0e\x43ontentResultE\x12\r\n\tR_CODE_OK\x10\x00\x12\x10\n\x0cR_CODE_ERROR\x10\x01\x12\x15\n\x11R_CODE_USER_EXIST\x10\x02\x12\x1d\n\x19R_CODE_USER_TOKEN_TIMEOUT\x10\x03\x12\x19\n\x15R_CODE_USER_NOT_EXIST\x10\x04\x12\x1d\n\x19R_CODE_USER_IN_BLACK_LIST\x10\x05\x12\x1d\n\x19R_CODE_USER_NO_PERMISSION\x10\x06\x12\x1a\n\x16R_CODE_USER_PASS_ERROR\x10\x07*#\n\x0eResponseResult\x12\x06\n\x02OK\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x62\x06proto3')
 )
 
 _CONTENTRESULTE = _descriptor.EnumDescriptor(
@@ -46,11 +46,27 @@ _CONTENTRESULTE = _descriptor.EnumDescriptor(
       name='R_CODE_USER_TOKEN_TIMEOUT', index=3, number=3,
       serialized_options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='R_CODE_USER_NOT_EXIST', index=4, number=4,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='R_CODE_USER_IN_BLACK_LIST', index=5, number=5,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='R_CODE_USER_NO_PERMISSION', index=6, number=6,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='R_CODE_USER_PASS_ERROR', index=7, number=7,
+      serialized_options=None,
+      type=None),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=360,
-  serialized_end=463,
+  serialized_start=361,
+  serialized_end=581,
 )
 _sym_db.RegisterEnumDescriptor(_CONTENTRESULTE)
 
@@ -72,8 +88,8 @@ _RESPONSERESULT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=465,
-  serialized_end=500,
+  serialized_start=583,
+  serialized_end=618,
 )
 _sym_db.RegisterEnumDescriptor(_RESPONSERESULT)
 
@@ -82,6 +98,10 @@ R_CODE_OK = 0
 R_CODE_ERROR = 1
 R_CODE_USER_EXIST = 2
 R_CODE_USER_TOKEN_TIMEOUT = 3
+R_CODE_USER_NOT_EXIST = 4
+R_CODE_USER_IN_BLACK_LIST = 5
+R_CODE_USER_NO_PERMISSION = 6
+R_CODE_USER_PASS_ERROR = 7
 OK = 0
 ERROR = 1
 
