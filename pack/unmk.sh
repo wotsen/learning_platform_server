@@ -1,5 +1,5 @@
 
-cd ../service/app/
+cd ../src/
 
 make clean
 cd -

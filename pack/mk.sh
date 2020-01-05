@@ -1,4 +1,4 @@
-cd ../service/app/
+cd ../src/
 
 make
 cd -

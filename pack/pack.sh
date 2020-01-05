@@ -1,6 +1,6 @@
 # ！/bin/bash
 
-cd ../service/app/
+cd ../src/
 
 #make clean
 make
