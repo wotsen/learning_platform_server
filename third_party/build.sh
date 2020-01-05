@@ -19,7 +19,7 @@ cp single_include/* $install_dir/include -rf
 # 安装libuv
 cd ../libuv
 ./autogen.sh
-./configure --prefix=$install_dir
+./configure --prefix=$install_dir --enable-static
 make
 make install
 
