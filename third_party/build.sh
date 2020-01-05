@@ -32,21 +32,23 @@ make install
 
 # 安装SQLITE_CPP
 cd ../SQLiteCpp
-mkdir build
+mkdir build -p
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$install_dir ..
+cmake -DCMAKE_INSTALL_PREFIX=$install_dir
 make
 make install
 
 cd sqlite3
-make install
-
+cp libsqlite3.a $install_dir/lib/ -f
 cd ../../
+cp sqlite3/sqlite3.h $install_dir/include/SQLiteCpp/ -f
+
+cd ../
 
 mkdir ../include/sole/ -p
 cp sole/sole.hpp ../include/sole/ -f
 
 # 安装util_time
-cd util_time
+cd c-time
 make
 make MAKE_INSTALL_PREFIX=$install_dir install

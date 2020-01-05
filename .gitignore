@@ -41,7 +41,7 @@ tags
 *.log
 *.cproject
 *.project
-service/bin
-service/include
-service/lib
+bin
+include
+lib
 *.db3

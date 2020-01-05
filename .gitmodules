@@ -1,30 +1,24 @@
-[submodule "service/third_party/c-log"]
-	path = service/third_party/c-log
+[submodule "third_party/c-log"]
+	path = third_party/c-log
 	url = https://github.com/wotsen/c-log
-[submodule "service/third_party/json"]
-	path = service/third_party/json
-	url = https://github.com/nlohmann/json
-[submodule "service/third_party/libuv"]
-	path = service/third_party/libuv
+[submodule "third_party/libuv"]
+	path = third_party/libuv
 	url = https://github.com/libuv/libuv
-[submodule "service/third_party/protobuf"]
-	path = service/third_party/protobuf
+[submodule "third_party/protobuf"]
+	path = third_party/protobuf
 	url = https://github.com/wotsen/protobuf
-[submodule "service/third_party/SQLiteCpp"]
-	path = service/third_party/SQLiteCpp
-	url = https://github.com/SRombauts/SQLiteCpp
-[submodule "service/third_party/tink"]
-	path = service/third_party/tink
-	url = https://github.com/google/tink
-[submodule "service/third_party/re2"]
-	path = service/third_party/re2
-	url = https://github.com/google/re2
-[submodule "service/third_party/util_pthread"]
-	path = service/third_party/util_pthread
+[submodule "third_party/util_pthread"]
+	path = third_party/util_pthread
 	url = https://github.com/wotsen/util_pthread
-[submodule "service/third_party/sole"]
-	path = service/third_party/sole
+[submodule "third_party/sole"]
+	path = third_party/sole
 	url = https://github.com/r-lyeh-archived/sole
-[submodule "service/third_party/util_time"]
-	path = service/third_party/util_time
+[submodule "third_party/c-time"]
+	path = third_party/c-time
 	url = https://github.com/wotsen/c-time
+[submodule "third_party/json"]
+	path = third_party/json
+	url = https://github.com/nlohmann/json
+[submodule "third_party/SQLiteCpp"]
+	path = third_party/SQLiteCpp
+	url = https://github.com/SRombauts/SQLiteCpp

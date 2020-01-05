@@ -16,15 +16,5 @@
 
 ## 外部依赖
 
-分为项目自带库和系统自带库。
-
 [参考](https://github.com/programthink/opensource/blob/master/libs/cpp.wiki#21)
-
-### 需要操作系统安装的库
-
-- `boost`库，覆盖`c++`很全的库
-- https://pocoproject.org/docs/package-Foundation.Filesystem.html  和`boost`一样很全面
-- `openssl`库
-
-### 项目自带的外部开源依赖库
 
