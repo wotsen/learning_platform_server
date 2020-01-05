@@ -21,7 +21,7 @@ default: show-info all
 #@echo -e "\t" CC $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG)
 $(TARGET): build-subdirs $(OBJS) find-all-objs
 	@echo -e "\t" CC $@
-	@$(CC) -static $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG) 
+	@$(CC) $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG) 
 	@cp $(TARGET) ../pack/ai_platform/ai_runtime/bin 
 
 # phony targets
