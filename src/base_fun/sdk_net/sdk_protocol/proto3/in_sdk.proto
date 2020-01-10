@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "in_sdk_header.proto";
+import "in_sdk_body.proto";
+import "in_sdk_footer.proto";
+
+package insider.sdk;
+
+
+// double
+// float
+// int32
+// sint32: 编码为负数时，比int32高效
+// int 64
+// sint64
+// fixed32:
+// fixed64:
+// sfixed32:
+// sfixed64:
+// bool: utf-8 或 7-bit ascii
+// string:
+// bytes:
+
+message Sdk {
+    Header header = 1;
+    Body body = 2;
+    Footer footer = 3;
+}
