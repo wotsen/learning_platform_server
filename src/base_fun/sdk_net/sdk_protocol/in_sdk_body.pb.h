@@ -74,15 +74,16 @@ namespace insider {
 namespace sdk {
 
 enum OperationType : int {
-  GET = 0,
-  POST = 1,
-  PUT = 2,
-  DELETE = 3,
+  INVALID = 0,
+  GET = 1,
+  POST = 2,
+  PUT = 4,
+  DELETE = 8,
   OperationType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   OperationType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool OperationType_IsValid(int value);
-constexpr OperationType OperationType_MIN = GET;
+constexpr OperationType OperationType_MIN = INVALID;
 constexpr OperationType OperationType_MAX = DELETE;
 constexpr int OperationType_ARRAYSIZE = OperationType_MAX + 1;
 

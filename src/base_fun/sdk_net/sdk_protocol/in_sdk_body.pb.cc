@@ -95,9 +95,9 @@ const char descriptor_table_protodef_in_5fsdk_5fbody_2eproto[] PROTOBUF_SECTION_
   "(\003\"\231\001\n\004Body\0221\n\014user_session\030\001 \001(\0132\033.insi"
   "der.sdk.UserSessionMsg\022\013\n\003url\030\002 \001(\t\022*\n\006m"
   "ethod\030\003 \001(\0162\032.insider.sdk.OperationType\022"
-  "%\n\007content\030\005 \001(\0132\024.insider.sdk.Content*7"
-  "\n\rOperationType\022\007\n\003GET\020\000\022\010\n\004POST\020\001\022\007\n\003PU"
-  "T\020\002\022\n\n\006DELETE\020\003b\006proto3"
+  "%\n\007content\030\005 \001(\0132\024.insider.sdk.Content*D"
+  "\n\rOperationType\022\013\n\007INVALID\020\000\022\007\n\003GET\020\001\022\010\n"
+  "\004POST\020\002\022\007\n\003PUT\020\004\022\n\n\006DELETE\020\010b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_5fbody_2eproto_deps[1] = {
   &::descriptor_table_in_5fsdk_5fbody_5fuser_2eproto,
@@ -109,7 +109,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_in_5fsdk_5fbody_2eproto_once;
 static bool descriptor_table_in_5fsdk_5fbody_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_in_5fsdk_5fbody_2eproto = {
-  &descriptor_table_in_5fsdk_5fbody_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_2eproto, "in_sdk_body.proto", 303,
+  &descriptor_table_in_5fsdk_5fbody_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_2eproto, "in_sdk_body.proto", 316,
   &descriptor_table_in_5fsdk_5fbody_2eproto_once, descriptor_table_in_5fsdk_5fbody_2eproto_sccs, descriptor_table_in_5fsdk_5fbody_2eproto_deps, 2, 1,
   schemas, file_default_instances, TableStruct_in_5fsdk_5fbody_2eproto::offsets,
   file_level_metadata_in_5fsdk_5fbody_2eproto, 2, file_level_enum_descriptors_in_5fsdk_5fbody_2eproto, file_level_service_descriptors_in_5fsdk_5fbody_2eproto,
@@ -128,7 +128,8 @@ bool OperationType_IsValid(int value) {
     case 0:
     case 1:
     case 2:
-    case 3:
+    case 4:
+    case 8:
       return true;
     default:
       return false;
