@@ -9,9 +9,27 @@
  * 
  */
 #include <iostream>
+#include <regex>
 #include "sdk_tree.h"
 
-// TODO:url和接口对应，可全匹配，可正则匹配，可分级，可导入，可使用中间件
+static inline bool method_valid(const OperationType &method, const int &methods)
+{
+    return method & methods;
+}
+
+static inline bool is_support_method(const OperationType &method)
+{
+    switch (method)
+    {
+        case SDK_GET:
+        case SDK_PUT:
+        case SDK_POST:
+        case SDK_DELETE:
+            return true;
+        default:
+            return false;
+    }
+}
 
 // sdk tree根节点
 static std::vector<const struct sdk_tree_node *> __sdk_tree_root;
@@ -51,44 +69,41 @@ static std::vector<const struct sdk_tree_node *> base_sdk_tree = {
 	sdk_url(SDK_GET, "index", nullptr, nullptr),
 };
 
-MODULE_ADD_SDK_TREE(SDK_GET, "/", nullptr, base_sdk_tree);
+MODULE_ADD_SDK_TREE(SDK_GET|SDK_PUT|SDK_POST|SDK_DELETE, "/", nullptr, base_sdk_tree);
 
 // 递归查找路径
 sdk_app_node_fn _search_url_function(const OperationType &method, const std::string &url, std::vector<const sdk_tree_node *> tree)
 {
-	if (tree.empty())
-	{
-		return nullptr;
-	}
+	if (tree.empty()) { return nullptr; }
 
 	sdk_app_node_fn fn = nullptr;
 
 	for (auto item : __sdk_tree_root)
 	{
-		// 匹配到url,FIXME:使用正则匹配
-		if (url == item->url && method == item->method)
-		{
+        if (item->url.empty())
+        {
+            continue;
+        }
+
+        std::smatch sm;
+        // 路径当中忘了加^起始则添加
+        std::regex pat(item->url[0] == '^' ? item->url : ("^" + item->url));
+
+        // 路径未匹配或者method未匹配则跳过
+        if (!std::regex_search(url, sm, pat) || !method_valid(method, item->method))
+        {
+            continue;
+        }
+
+        // 后缀为空则完全匹配
+        if (sm.suffix().str().empty())
+        {
 			return item->fn;
-		}
+        }
 
-		// url更长
-		if (url.size() > item->url.size())
-		{
-			// 截取配置表中的url
-			std::string pre_url = url.substr(0, item->url.size());
-			// 截取url的下级路径
-			std::string next_url = url.substr(item->url.size());
-
-			// url前缀匹配
-			if (pre_url == item->url && method == item->method)
-			{
-				// 查找url下级
-				fn = _search_url_function(method, next_url, item->next);
-				if (fn) { return fn; }
-			}
-		}
-
-		// 没配到则查找下一条路径
+        // 有后缀则查找url下级
+        fn = _search_url_function(method, sm.suffix().str(), item->next);
+        if (fn) { return fn; }
 	}
 
 	return nullptr;
@@ -97,10 +112,7 @@ sdk_app_node_fn _search_url_function(const OperationType &method, const std::str
 // 查找url对应的处理接口
 sdk_app_node_fn find_url_function(const OperationType &method, const std::string &url)
 {
-	if (__sdk_tree_root.empty())
-	{
-		return nullptr;
-	}
+	if (__sdk_tree_root.empty()) { return nullptr; }
 
 	return _search_url_function(method, url, __sdk_tree_root);
 }
@@ -111,14 +123,22 @@ bool sdk_tree_do(struct sdk_net_interface &interface, Sdk &sdk_req, Sdk &sdk_res
 	Body *body = sdk_req.mutable_body();
 
 	OperationType method = body->method();
+    if (!is_support_method(method))
+    {
+        return false;
+    }
+
 	std::string url = body->url();
+
+    // 非法字符(除/a到zA到Z_-0到9之外的)
+    std::regex pat("[^/a-zA-Z_\\-0-9]");
+
+    if (std::regex_search(url, pat))
+    {
+        return false;
+    }
 
 	sdk_app_node_fn fn = find_url_function(method, url);
 
-	if (!fn)
-	{
-		return false;
-	}
-
-	return fn(interface, sdk_req, sdk_res);
+	return fn ? fn(interface, sdk_req, sdk_res) : false;
 }

@@ -26,18 +26,18 @@ using sdk_app_node_fn = bool (*)(struct sdk_net_interface &interface, Sdk &sdk_r
 // sdk树节点
 struct sdk_tree_node
 {
-	OperationType method;				///< 节点方法
+	int method;							///< 节点方法
 	std::string url;					///< 节点url
 	sdk_app_node_fn fn;					///< 节点处理接口
 	std::vector<const struct sdk_tree_node *> next;	///< 下级节点
 
-	sdk_tree_node(OperationType method, std::string url, sdk_app_node_fn fn, std::vector<const struct sdk_tree_node *> &next) :
+	sdk_tree_node(int method, std::string url, sdk_app_node_fn fn, std::vector<const struct sdk_tree_node *> &next) :
 		method(method), url(url), fn(fn), next(next) {}
 
-	sdk_tree_node(OperationType method, std::string url, sdk_app_node_fn fn, void *ptr) :
+	sdk_tree_node(int method, std::string url, sdk_app_node_fn fn, void *ptr) :
 		method(method), url(url), fn(fn) {}
 
-	sdk_tree_node(OperationType method, std::string url, sdk_app_node_fn fn) :
+	sdk_tree_node(int method, std::string url, sdk_app_node_fn fn) :
 		method(method), url(url), fn(fn) {}
 };
 
