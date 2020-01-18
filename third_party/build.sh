@@ -39,7 +39,7 @@ cd ..
 cd SQLiteCpp
 mkdir build -p
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$install_dir
+cmake ../ -DCMAKE_INSTALL_PREFIX=$install_dir
 make
 make install
 
