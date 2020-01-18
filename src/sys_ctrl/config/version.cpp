@@ -10,7 +10,9 @@
  */
 #include "version.h"
 
-#define VERSION "v1.0.0"
+#ifndef SOFT_VERSION
+    #define SOFT_VERSION "unknown version"
+#endif
 
 /**
  * @brief Get the service version object
@@ -19,7 +21,7 @@
  */
 const std::string & get_service_version(void)
 {
-    static std::string version(VERSION " " __DATE__);
+    static std::string version(SOFT_VERSION);
 
     return version;
 }

@@ -1,3 +1,6 @@
+# version
+RELEASE_VERSION = v1.0.0
+
 # make path
 export MAKE := "/usr/bin/make"
 
@@ -17,7 +20,7 @@ INC := -I$(ROOT_DIR)/../include \
 # github三方库使用静态链接
 LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lutil_time -lprotobuf -lutil_pthread -lSQLiteCpp -lsqlite3
 LIBS += $(LIBS) -lrt -lpthread -ldl
-DMARCROS := -DLANGUAGE_ZH #-DNDEBUG -DDEBUG 
+DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\" #-DNDEBUG -DDEBUG 
 # -ggdb
 CCFLAG := -O0 -g3 -Wall $(DMARCROS) $(INC) $(LIBS) -std=c++17
 OBJCCFLAG := $(CCFLAG) -c
