@@ -17,10 +17,18 @@ INC := -I$(ROOT_DIR)/../include \
 		-I$(ROOT_DIR)/local_fun \
 		-I$(ROOT_DIR)/third_fun \
 		-I$(ROOT_DIR)/tools
+
 # github三方库使用静态链接
 LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lutil_time -lprotobuf -lutil_pthread -lSQLiteCpp -lsqlite3
 LIBS += $(LIBS) -lrt -lpthread -ldl
+
 DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\" #-DNDEBUG -DDEBUG 
+
+# 非调试模式
+ifdef ndebug
+DMARCROS += -DNDEBUG
+endif
+
 # -ggdb
 CCFLAG := -O0 -g3 -Wall $(DMARCROS) $(INC) $(LIBS) -std=c++17
 OBJCCFLAG := $(CCFLAG) -c
@@ -43,4 +51,5 @@ clean-subdirs:
 #@echo -e "\t" CC $(OBJCCFLAG) $< -o $@
 %.o: %.c*
 	@echo -e "\t" CC $<
+	echo $(OBJCCFLAG)
 	@$(CC) $< -o $@ $(OBJCCFLAG)

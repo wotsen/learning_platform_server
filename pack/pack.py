@@ -15,6 +15,9 @@ _DEF_VERSION = "v0.0.0"
 # TODO:做成交互式
 # TODO:增加debug与release版本
 parser = OptionParser(usage="usage: %prog [options]")
+
+parser.add_option("-d", "--debug", dest="debug", default=True, help="debug模式,默认debug模式,如果是非debug版本：-dFalse")
+
 parser.add_option("-v", "--version", dest="release_version", type="string", default=_DEF_VERSION,
                   help="""
 soft release version. 
@@ -89,29 +92,36 @@ def check_build_version(old_version, new_version):
         exit(-1)
 
 
-def package_software(release_version):
+def check_debug_mode(debug):
+    print("检查调试模式")
+    if debug != "False" and debug != "True":
+        print("调试选项错误: ", debug)
+        exit(-1)
+
+
+def package_software(release_version, debug):
     pass
 
 
-def make_objs(release_version):
+def make_objs(release_version, debug):
     os.chdir("../src/")
     os.system("make RELEASE_VERSION=%s" % release_version)
 
 
-def clean_objs(release_version):
+def clean_objs(release_version, debug):
     os.chdir("../src/")
     os.system("make clean")
 
 
 # FIXME:代码冗余，做成装饰器
-def make_and_run(release_version):
+def make_and_run(release_version, debug):
     """make and run"""
     print(make_and_run.__doc__)
 
     cur_dir = os.getcwd()
 
     os.chdir("../src/")
-    os.system("make RELEASE_VERSION=%s" % release_version)
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if debug == "False" else ""))
 
     os.chdir(cur_dir)
 
@@ -120,7 +130,7 @@ def make_and_run(release_version):
     os.system("sudo ./AIService")
 
 
-def clean_make_and_run(release_version):
+def clean_make_and_run(release_version, debug):
     """make clean and make and run"""
     print(make_and_run.__doc__)
 
@@ -128,7 +138,7 @@ def clean_make_and_run(release_version):
 
     os.chdir("../src/")
     os.system("make clean")
-    os.system("make RELEASE_VERSION=%s" % release_version)
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if debug == "False" else ""))
 
     os.chdir(cur_dir)
 
@@ -138,6 +148,8 @@ def clean_make_and_run(release_version):
 
 
 def main():
+    check_debug_mode(options.debug)
+
     # 读取历史版本号
     version = read_last_release_version()
 
@@ -163,10 +175,14 @@ def main():
 
     for item in pack_procs:
         if item.option == options.build:
-            item.proc(version)
+            item.proc(version, options.debug)
+            return
+    
+    print("不支持构建选项: ", options.build)
 
 
 if __name__ == "__main__":
     print("version : ", options.release_version)
     print("build : ", options.build)
+    print("debug : ", options.debug)
     main()
