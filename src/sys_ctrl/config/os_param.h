@@ -10,6 +10,12 @@
  */
 #pragma once
 
+// cordump路径
+#define SYS_SOFT_CORDUMP_PATH "/home/wotsen/work"
+
+// pid路径
+#define PID_FILE "/var/run/ai_plat_service.pid"
+
 // 系统任务个数
 #define OS_SYS_TASK_NUM 1024
 

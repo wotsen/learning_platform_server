@@ -758,8 +758,6 @@ void *task_run(TasksManage *tasks)
 
     set_thread_name((const char *)_task->thread_name);
 
-    // log_d("tid=[%zu], name=[%s] run\n", tid, _task->thread_name);
-
     _task->func((void *)_task->thread_name);
 
     return (void *)0;

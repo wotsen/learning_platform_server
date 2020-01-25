@@ -13,10 +13,10 @@ from collections import namedtuple
 _DEF_VERSION = "v0.0.0"
 
 # TODO:做成交互式
-# TODO:增加debug与release版本
 parser = OptionParser(usage="usage: %prog [options]")
 
-parser.add_option("-d", "--debug", dest="debug", default=True, help="debug模式,默认debug模式,如果是非debug版本：-dFalse")
+parser.add_option("-d", "--debug", dest="debug", type="string", default="True", 
+                    help="debug模式,默认debug模式,如果是非debug版本：-dFalse")
 
 parser.add_option("-v", "--version", dest="release_version", type="string", default=_DEF_VERSION,
                   help="""
@@ -179,6 +179,7 @@ def main():
             return
     
     print("不支持构建选项: ", options.build)
+    print("使用 --help 查看帮助")
 
 
 if __name__ == "__main__":

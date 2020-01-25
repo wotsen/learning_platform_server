@@ -1,6 +1,9 @@
 # version
 RELEASE_VERSION = v1.0.0
 
+# 调试模式使能
+ndebug = false
+
 # make path
 export MAKE := "/usr/bin/make"
 
@@ -22,11 +25,13 @@ INC := -I$(ROOT_DIR)/../include \
 LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lutil_time -lprotobuf -lutil_pthread -lSQLiteCpp -lsqlite3
 LIBS += $(LIBS) -lrt -lpthread -ldl
 
-DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\" #-DNDEBUG -DDEBUG 
+DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\"
 
-# 非调试模式
-ifdef ndebug
+# 调试模式
+ifeq ($(ndebug), true)
 DMARCROS += -DNDEBUG
+else
+DMARCROS += -DDEBUG
 endif
 
 # -ggdb
@@ -51,5 +56,4 @@ clean-subdirs:
 #@echo -e "\t" CC $(OBJCCFLAG) $< -o $@
 %.o: %.c*
 	@echo -e "\t" CC $<
-	echo $(OBJCCFLAG)
 	@$(CC) $< -o $@ $(OBJCCFLAG)

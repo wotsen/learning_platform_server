@@ -5,6 +5,8 @@
  * @version 0.1
  * @date 2019-08-11
  * 
+ * @note 这些配置都是无法通过运行时修改的，只读
+ * 
  * @copyright Copyright (c) 2019
  * 
  */
