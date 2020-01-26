@@ -1,5 +1,5 @@
 /**
- * @file common.cpp
+ * @file sys_ctrl.cpp
  * @author 余王亮 (wotsen@outlook.com)
  * @brief 
  * @version 0.1
@@ -9,7 +9,7 @@
  * 
  */
 
-#define LOG_TAG "COMMON"
+#define LOG_TAG "SYS_CTRL"
 
 #include <iostream>
 #include "config/os_param.h"

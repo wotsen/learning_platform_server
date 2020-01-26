@@ -15,8 +15,8 @@ _DEF_VERSION = "v0.0.0"
 # TODO:做成交互式
 parser = OptionParser(usage="usage: %prog [options]")
 
-parser.add_option("-d", "--debug", dest="debug", type="string", default="True", 
-                    help="debug模式,默认debug模式,如果是非debug版本：-dFalse")
+parser.add_option("-d", "--debug", dest="debug", action="store_true", default=False,
+                    help="debug模式,默认非debug模式,如果是debug版本：-d or --debug")
 
 parser.add_option("-v", "--version", dest="release_version", type="string", default=_DEF_VERSION,
                   help="""
@@ -24,7 +24,6 @@ soft release version.
 将记录到release-version.json，默认值将使用最新值.
 example: --verion=v1.0.0 or -vv1.0.0""")
 
-# action=""store是可选的，表示将会存储到options里面
 parser.add_option("-b", "--build",
                   action="store", dest="build", type="int", default=4,
                   help="""
@@ -92,13 +91,6 @@ def check_build_version(old_version, new_version):
         exit(-1)
 
 
-def check_debug_mode(debug):
-    print("检查调试模式")
-    if debug != "False" and debug != "True":
-        print("调试选项错误: ", debug)
-        exit(-1)
-
-
 def package_software(release_version, debug):
     pass
 
@@ -121,7 +113,7 @@ def make_and_run(release_version, debug):
     cur_dir = os.getcwd()
 
     os.chdir("../src/")
-    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if debug == "False" else ""))
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if not debug else ""))
 
     os.chdir(cur_dir)
 
@@ -138,7 +130,7 @@ def clean_make_and_run(release_version, debug):
 
     os.chdir("../src/")
     os.system("make clean")
-    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if debug == "False" else ""))
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if not debug else ""))
 
     os.chdir(cur_dir)
 
@@ -148,8 +140,6 @@ def clean_make_and_run(release_version, debug):
 
 
 def main():
-    check_debug_mode(options.debug)
-
     # 读取历史版本号
     version = read_last_release_version()
 

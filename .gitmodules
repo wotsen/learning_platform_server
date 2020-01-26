@@ -22,3 +22,6 @@
 [submodule "third_party/SQLiteCpp"]
 	path = third_party/SQLiteCpp
 	url = https://github.com/SRombauts/SQLiteCpp
+[submodule "third_party/linux-systemcmd-proxy"]
+	path = third_party/linux-systemcmd-proxy
+	url = https://github.com/wotsen/linux-systemcmd-proxy
