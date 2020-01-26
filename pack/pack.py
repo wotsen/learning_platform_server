@@ -6,6 +6,7 @@ import os
 import json
 import time
 import re
+import _thread
 from optparse import OptionParser
 from collections import namedtuple
 
@@ -105,6 +106,11 @@ def clean_objs(release_version, debug):
     os.system("make clean")
 
 
+def run_systemcmd_proxyd():
+    """启动systemcmd代理"""
+    os.system("./systemcmd_proxyd")
+
+
 # FIXME:代码冗余，做成装饰器
 def make_and_run(release_version, debug):
     """make and run"""
@@ -118,7 +124,10 @@ def make_and_run(release_version, debug):
     os.chdir(cur_dir)
 
     os.system("mkdir ai_platform/ai_runtime/bin/ -p")
+    os.system("cp ../src/AIService ai_platform/ai_runtime/bin/")
+    os.system("cp ../bin/systemcmd_proxyd ai_platform/ai_runtime/bin/")
     os.chdir("ai_platform/ai_runtime/bin/")
+    _thread.start_new_thread(run_systemcmd_proxyd, ())
     os.system("sudo ./AIService")
 
 
@@ -135,19 +144,28 @@ def clean_make_and_run(release_version, debug):
     os.chdir(cur_dir)
 
     os.system("mkdir ai_platform/ai_runtime/bin/ -p")
+    
+    # 程序拷贝
+    os.system("cp ../src/AIService ai_platform/ai_runtime/bin/")
+    os.system("cp ../bin/systemcmd_proxyd ai_platform/ai_runtime/bin/")
+    
     os.chdir("ai_platform/ai_runtime/bin/")
+
+    # 启动systemcmd 代理服务器
+    _thread.start_new_thread(run_systemcmd_proxyd, ())
+
+    # 启动应用
     os.system("sudo ./AIService")
 
 
 def main():
     # 读取历史版本号
     version = read_last_release_version()
-
-    # 校验版本号
-    check_build_version(version, options.release_version)
     
     # 默认情况下使用版本号
     if options.release_version.lower() != _DEF_VERSION:
+        # 校验版本号
+        check_build_version(version, options.release_version)
         version = options.release_version.lower()
 
     # 记录版本号
