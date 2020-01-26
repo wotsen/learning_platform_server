@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package insider.sdk;
 
+// 详细业务返回码，所有业务返回码定义在此处
 enum ContentResultE {
     // 成功
     R_CODE_OK = 0;
@@ -21,30 +22,33 @@ enum ContentResultE {
     R_CODE_USER_PASS_ERROR = 7;
 }
 
+// 消息协议响应结果
 enum ResponseResult {
-    OK = 0;
-    ERROR = 1;
+    OK = 0;         // 正常响应
+    ERROR = 1;      // 异常响应
 }
 
 // 协议响应结果
 message SdkResult {
-    ResponseResult status_code = 1;  // 响应结果状态码，发送方并不需要
-    string code = 2;
+    ResponseResult status_code = 1; // 响应结果状态码，发送方并不需要
+    string code = 2;                // 响应短语
 }
 
 // 具体业务响应结果
 message ContentResult {
-    ContentResultE status_code = 1;
-    string code = 2;
+    ContentResultE status_code = 1; // 响应结果状态码
+    string code = 2;                // 响应短语
 }
 
 // 结果
 message Result {
+    // sdk响应结果
     SdkResult sdk_result = 1;
+    // 业务响应结果
     ContentResult content_result = 2;
 }
 
 message Footer {
-    int32 res = 1;
-    Result result = 2; // 返回结果，发送方不需要
+    int32 res = 1;      // 保留
+    Result result = 2;  // 返回结果，发送方不需要
 }

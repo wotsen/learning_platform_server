@@ -108,14 +108,15 @@ inline bool UserSessionMsg_UserMethod_Parse(
     UserSessionMsg_UserMethod_descriptor(), name, value);
 }
 enum UserPermissson : int {
-  U_PERMISSION_ADMIN = 0,
-  U_PERMISSION_ADVANCED = 1,
-  U_PERMOSSION_NORMAL = 2,
+  U_PERMISSION_INVALID = 0,
+  U_PERMISSION_ADMIN = 1,
+  U_PERMISSION_ADVANCED = 2,
+  U_PERMOSSION_NORMAL = 3,
   UserPermissson_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   UserPermissson_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool UserPermissson_IsValid(int value);
-constexpr UserPermissson UserPermissson_MIN = U_PERMISSION_ADMIN;
+constexpr UserPermissson UserPermissson_MIN = U_PERMISSION_INVALID;
 constexpr UserPermissson UserPermissson_MAX = U_PERMOSSION_NORMAL;
 constexpr int UserPermissson_ARRAYSIZE = UserPermissson_MAX + 1;
 

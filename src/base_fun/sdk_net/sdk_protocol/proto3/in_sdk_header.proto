@@ -2,59 +2,66 @@ syntax = "proto3";
 
 package insider.sdk;
 
+// 传输层协议
 enum TransProto {
-    ARP = 0;
-    TCP = 1;
-    UDP = 2;
+    TRANS_PROTO_INVALID = 0;        // 无效
+    TCP = 1;            // tcp
+    UDP = 2;            // udp
 }
 
-enum DataProto {
-    DATA_UPGRADE = 0;   // 升级数据
-    DATA_PARA_OPERATION = 1;  // 参数操作
-    DATA_ALARM = 2;     // 告警
-    DATA_HEART_BEAT = 3;    // 心跳
-    DATA_AI = 4;    // 深度学习任务
-    DATA_PICTURE = 5;   // 图像
-}
-
+// ip版本
 enum IpVersion {
-    IPV4 = 0;
-    IPV6 = 1;
+    IP_VERSION_INVALID = 0;        // 无效
+    IPV4 = 1;           // ipv4
+    IPV6 = 2;           // ipv6
 }
 
+// 主机地址
 message Host {
-    IpVersion ip_version = 1;
-    int32 port = 2;
-    string ip = 3;
+    IpVersion ip_version = 1;       // 协议版本
+    int32 port = 2;                 // 端口
+    string ip = 3;                  // ip地址
 }
 
+// 数据流向
 enum DataFlow {
     DATA_IN = 0;  // 输入数据
     DATA_OUT = 1;  // 输出数据
 }
 
+// 数据时间
 message DataTime {
-    int64 in_time = 1;
-    int64 out_time = 2;
+    int64 in_time = 1;              // 消息发送时间(对于数据输入，用于确定消息实际从发送端出来的时间)
+    int64 out_time = 2;             // 消息接收时间(对于数据输出，填写时间用于对端确定消息实际回复时间)
 }
 
+// 魔术数字
 enum SdkMagic {
     SDK_NON_MAGIC = 0;
     SDK_MAGIC  = 0x01ABCDEF;
 }
 
+// sdk版本
 enum SdkVersion {
     SDK_NON_VERSION = 0;
     SDK_CUR_VERSION = 20191110;
 }
 
 message Header {
+    // 魔术数字
     SdkMagic msg_magic = 1;
+    // 版本，必须校验SDK_CUR_VERSION
     SdkVersion version = 2;
+    // 包长，目前废弃
     int64 pack_id = 3;
+    // 数据时间
     DataTime time = 4;
+    // 熟路方向
     DataFlow data_dir = 5;
+    // 源地址
     Host host = 6;
-    TransProto trans_proto = 7;
-    DataProto data_proto = 8;
+    // 目的地址
+    Host dest = 7;
+    // 传输协议
+    TransProto trans_proto = 8;
 }

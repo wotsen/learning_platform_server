@@ -162,10 +162,11 @@ const char descriptor_table_protodef_in_5fsdk_5fbody_5fuser_2eproto[] PROTOBUF_S
   "serMethod\022\'\n\004user\030\002 \001(\0132\031.insider.sdk.Us"
   "erBaseInfo\022\r\n\005token\030\003 \001(\t\022\022\n\nalive_time\030"
   "\004 \001(\004\"C\n\nUserMethod\022\013\n\007U_LOGIN\020\000\022\014\n\010U_LO"
-  "GOUT\020\001\022\n\n\006U_VERI\020\002\022\016\n\nU_REGISTER\020\003*\\\n\016Us"
-  "erPermissson\022\026\n\022U_PERMISSION_ADMIN\020\000\022\031\n\025"
-  "U_PERMISSION_ADVANCED\020\001\022\027\n\023U_PERMOSSION_"
-  "NORMAL\020\002b\006proto3"
+  "GOUT\020\001\022\n\n\006U_VERI\020\002\022\016\n\nU_REGISTER\020\003*v\n\016Us"
+  "erPermissson\022\030\n\024U_PERMISSION_INVALID\020\000\022\026"
+  "\n\022U_PERMISSION_ADMIN\020\001\022\031\n\025U_PERMISSION_A"
+  "DVANCED\020\002\022\027\n\023U_PERMOSSION_NORMAL\020\003b\006prot"
+  "o3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_deps[1] = {
 };
@@ -178,7 +179,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_once;
 static bool descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_in_5fsdk_5fbody_5fuser_2eproto = {
-  &descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_5fuser_2eproto, "in_sdk_body_user.proto", 656,
+  &descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_5fuser_2eproto, "in_sdk_body_user.proto", 682,
   &descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_once, descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_sccs, descriptor_table_in_5fsdk_5fbody_5fuser_2eproto_deps, 4, 0,
   schemas, file_default_instances, TableStruct_in_5fsdk_5fbody_5fuser_2eproto::offsets,
   file_level_metadata_in_5fsdk_5fbody_5fuser_2eproto, 4, file_level_enum_descriptors_in_5fsdk_5fbody_5fuser_2eproto, file_level_service_descriptors_in_5fsdk_5fbody_5fuser_2eproto,
@@ -222,6 +223,7 @@ bool UserPermissson_IsValid(int value) {
     case 0:
     case 1:
     case 2:
+    case 3:
       return true;
     default:
       return false;

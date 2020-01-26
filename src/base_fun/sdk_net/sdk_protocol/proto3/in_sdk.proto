@@ -10,8 +10,10 @@ package insider.sdk;
 // double
 // float
 // int32
+// uint32
 // sint32: 编码为负数时，比int32高效
 // int 64
+// uint 64
 // sint64
 // fixed32:
 // fixed64:
@@ -22,7 +24,7 @@ package insider.sdk;
 // bytes:
 
 message Sdk {
-    Header header = 1;
-    Body body = 2;
-    Footer footer = 3;
+    Header header = 1;      ///< 协议头
+    Body body = 2;          ///< 协议内容
+    Footer footer = 3;      ///< 协议脚标，只有返回有用
 }

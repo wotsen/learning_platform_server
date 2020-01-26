@@ -34,6 +34,7 @@
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 #include "in_sdk_body_user.pb.h"
+#include "in_sdk_body_appmodule.pb.h"
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 #define PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto
@@ -139,6 +140,12 @@ class Content :
   }
   static const Content& default_instance();
 
+  enum ContentOneofCase {
+    kAppModuleList = 2,
+    kUserList = 3,
+    CONTENTONEOF_NOT_SET = 0,
+  };
+
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
   static inline const Content* internal_default_instance() {
     return reinterpret_cast<const Content*>(
@@ -210,6 +217,8 @@ class Content :
 
   enum : int {
     kMagicFieldNumber = 1,
+    kAppModuleListFieldNumber = 2,
+    kUserListFieldNumber = 3,
   };
   // int64 magic = 1;
   void clear_magic();
@@ -220,13 +229,57 @@ class Content :
   void _internal_set_magic(::PROTOBUF_NAMESPACE_ID::int64 value);
   public:
 
+  // .insider.sdk.AppModuleCoutInfoList app_module_list = 2;
+  bool has_app_module_list() const;
+  private:
+  bool _internal_has_app_module_list() const;
+  public:
+  void clear_app_module_list();
+  const ::insider::sdk::AppModuleCoutInfoList& app_module_list() const;
+  ::insider::sdk::AppModuleCoutInfoList* release_app_module_list();
+  ::insider::sdk::AppModuleCoutInfoList* mutable_app_module_list();
+  void set_allocated_app_module_list(::insider::sdk::AppModuleCoutInfoList* app_module_list);
+  private:
+  const ::insider::sdk::AppModuleCoutInfoList& _internal_app_module_list() const;
+  ::insider::sdk::AppModuleCoutInfoList* _internal_mutable_app_module_list();
+  public:
+
+  // .insider.sdk.UserList user_list = 3;
+  bool has_user_list() const;
+  private:
+  bool _internal_has_user_list() const;
+  public:
+  void clear_user_list();
+  const ::insider::sdk::UserList& user_list() const;
+  ::insider::sdk::UserList* release_user_list();
+  ::insider::sdk::UserList* mutable_user_list();
+  void set_allocated_user_list(::insider::sdk::UserList* user_list);
+  private:
+  const ::insider::sdk::UserList& _internal_user_list() const;
+  ::insider::sdk::UserList* _internal_mutable_user_list();
+  public:
+
+  void clear_ContentOneof();
+  ContentOneofCase ContentOneof_case() const;
   // @@protoc_insertion_point(class_scope:insider.sdk.Content)
  private:
   class _Internal;
+  void set_has_app_module_list();
+  void set_has_user_list();
+
+  inline bool has_ContentOneof() const;
+  inline void clear_has_ContentOneof();
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::int64 magic_;
+  union ContentOneofUnion {
+    ContentOneofUnion() {}
+    ::insider::sdk::AppModuleCoutInfoList* app_module_list_;
+    ::insider::sdk::UserList* user_list_;
+  } ContentOneof_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
+
   friend struct ::TableStruct_in_5fsdk_5fbody_2eproto;
 };
 // -------------------------------------------------------------------
@@ -440,6 +493,103 @@ inline void Content::set_magic(::PROTOBUF_NAMESPACE_ID::int64 value) {
   // @@protoc_insertion_point(field_set:insider.sdk.Content.magic)
 }
 
+// .insider.sdk.AppModuleCoutInfoList app_module_list = 2;
+inline bool Content::_internal_has_app_module_list() const {
+  return ContentOneof_case() == kAppModuleList;
+}
+inline bool Content::has_app_module_list() const {
+  return _internal_has_app_module_list();
+}
+inline void Content::set_has_app_module_list() {
+  _oneof_case_[0] = kAppModuleList;
+}
+inline ::insider::sdk::AppModuleCoutInfoList* Content::release_app_module_list() {
+  // @@protoc_insertion_point(field_release:insider.sdk.Content.app_module_list)
+  if (has_app_module_list()) {
+    clear_has_ContentOneof();
+      ::insider::sdk::AppModuleCoutInfoList* temp = ContentOneof_.app_module_list_;
+    ContentOneof_.app_module_list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::insider::sdk::AppModuleCoutInfoList& Content::_internal_app_module_list() const {
+  return _internal_has_app_module_list()
+      ? *ContentOneof_.app_module_list_
+      : *reinterpret_cast< ::insider::sdk::AppModuleCoutInfoList*>(&::insider::sdk::_AppModuleCoutInfoList_default_instance_);
+}
+inline const ::insider::sdk::AppModuleCoutInfoList& Content::app_module_list() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.Content.app_module_list)
+  return _internal_app_module_list();
+}
+inline ::insider::sdk::AppModuleCoutInfoList* Content::_internal_mutable_app_module_list() {
+  if (!_internal_has_app_module_list()) {
+    clear_ContentOneof();
+    set_has_app_module_list();
+    ContentOneof_.app_module_list_ = CreateMaybeMessage< ::insider::sdk::AppModuleCoutInfoList >(
+        GetArenaNoVirtual());
+  }
+  return ContentOneof_.app_module_list_;
+}
+inline ::insider::sdk::AppModuleCoutInfoList* Content::mutable_app_module_list() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.Content.app_module_list)
+  return _internal_mutable_app_module_list();
+}
+
+// .insider.sdk.UserList user_list = 3;
+inline bool Content::_internal_has_user_list() const {
+  return ContentOneof_case() == kUserList;
+}
+inline bool Content::has_user_list() const {
+  return _internal_has_user_list();
+}
+inline void Content::set_has_user_list() {
+  _oneof_case_[0] = kUserList;
+}
+inline ::insider::sdk::UserList* Content::release_user_list() {
+  // @@protoc_insertion_point(field_release:insider.sdk.Content.user_list)
+  if (has_user_list()) {
+    clear_has_ContentOneof();
+      ::insider::sdk::UserList* temp = ContentOneof_.user_list_;
+    ContentOneof_.user_list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::insider::sdk::UserList& Content::_internal_user_list() const {
+  return _internal_has_user_list()
+      ? *ContentOneof_.user_list_
+      : *reinterpret_cast< ::insider::sdk::UserList*>(&::insider::sdk::_UserList_default_instance_);
+}
+inline const ::insider::sdk::UserList& Content::user_list() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.Content.user_list)
+  return _internal_user_list();
+}
+inline ::insider::sdk::UserList* Content::_internal_mutable_user_list() {
+  if (!_internal_has_user_list()) {
+    clear_ContentOneof();
+    set_has_user_list();
+    ContentOneof_.user_list_ = CreateMaybeMessage< ::insider::sdk::UserList >(
+        GetArenaNoVirtual());
+  }
+  return ContentOneof_.user_list_;
+}
+inline ::insider::sdk::UserList* Content::mutable_user_list() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.Content.user_list)
+  return _internal_mutable_user_list();
+}
+
+inline bool Content::has_ContentOneof() const {
+  return ContentOneof_case() != CONTENTONEOF_NOT_SET;
+}
+inline void Content::clear_has_ContentOneof() {
+  _oneof_case_[0] = CONTENTONEOF_NOT_SET;
+}
+inline Content::ContentOneofCase Content::ContentOneof_case() const {
+  return Content::ContentOneofCase(_oneof_case_[0]);
+}
 // -------------------------------------------------------------------
 
 // Body

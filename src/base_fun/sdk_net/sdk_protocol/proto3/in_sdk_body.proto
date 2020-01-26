@@ -1,25 +1,39 @@
 syntax = "proto3";
 
 import "in_sdk_body_user.proto";
+import "in_sdk_body_appmodule.proto";
 
 package insider.sdk;
 
 // 请求动作，参考http实现
 enum OperationType {
-    INVALID = 0;
-    GET = 1;
-    POST = 2;
-    PUT = 4;
-    DELETE = 8;
+    INVALID = 0;            // 无效
+    GET = 1;                // get用于获取资源
+    POST = 2;               // 用于上传资源，主要是存储，比如升级，上传文件等
+    PUT = 4;                // 用于资源状态设置
+    DELETE = 8;             // 用于删除资源
 }
 
 // 数据内容
 message Content {
+    // 占位
     int64 magic = 1;
-    // 所有的业务数据协议放在此处，都是可选字段
+
+    // 所有的业务数据协议放在此处,每条消息最多只有一个字段被赋值
+	oneof ContentOneof {
+        /********************* 管理系统协议内容 ***************************/
+
+        // 模块列表，支持get/put
+        AppModuleCoutInfoList app_module_list = 2;
+        // 用户列表，支持get/put/delete
+        UserList user_list = 3;
+        
+        /*********************** 开放协议内容 *****************************/
+	}
 }
 
-// 数组使用repeated
+// 数组使用repeated, 0多个
+// union使用oneof
 
 message Body {
     UserSessionMsg user_session = 1;
