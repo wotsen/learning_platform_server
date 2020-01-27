@@ -20,13 +20,6 @@ typedef struct
 	uv_buf_t buf;
 } write_req_t;
 
-struct SdkMsgProtocol
-{
-	size_t data_len;
-	uint16_t crc16;
-	char data[0];
-};
-
 // サーバからのレスポンスを表示
 void echo_read(uv_stream_t *server, ssize_t nread, const uv_buf_t *buf)
 {
@@ -52,8 +45,6 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
 // サーバへデータ送信後, サーバからのレスポンスを読み込む
 void on_write_end(uv_write_t *req, int status)
 {
-	delete [] (char *)req->data;
-
 	if (status == -1)
 	{
 		fprintf(stderr, "error on_write_end");
@@ -74,37 +65,22 @@ void on_connect(uv_connect_t *req, int status)
 
 	std::cout << "connect" << std::endl;
 
-	SdkMsgProtocol *pack = NULL;
 	Sdk msg;
+	std::string pack;
 
 	test_sdk_pack(msg);
 
-	char *data = new char[msg.ByteSizeLong() + sizeof(SdkMsgProtocol)];
+	msg.SerializeToString(&pack);
 
-	pack = (SdkMsgProtocol *)data;
-	pack->data_len = msg.ByteSizeLong();
+	uv_buf_t buf = uv_buf_init((char *)pack.data(), pack.size());
 
-	msg.SerializeToArray(pack->data, pack->data_len);
-	pack->crc16 = calculate_crc16(0, (uint8_t *)pack->data, pack->data_len);
-
-	uv_buf_t buf = uv_buf_init((char *)pack, pack->data_len + sizeof(SdkMsgProtocol));
-
-	std::cout << "data len = " << pack->data_len << '\n';
-
-	// const char *message = "hello libuv";
-	// uv_buf_t buf;
-	// buf.len = strlen(message);
-	// printf("send buf addr=[%p]\n", message);
-	// printf("send buf addr=[%p]\n", buf.base);
-	// buf.base = (char *)message;
+	std::cout << "data len = " << pack.size() << '\n';
 
 	// ハンドルを取得
 	uv_stream_t *tcp = req->handle;
 
 	// 書き込み用構造体
 	uv_write_t write_req;
-
-	write_req.data = data;
 
 	int buf_count = 1;
 

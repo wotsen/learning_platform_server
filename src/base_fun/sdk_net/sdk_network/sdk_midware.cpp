@@ -62,7 +62,7 @@ public:
 	 * @return true 成功
 	 * @return false 失败
 	 */
-	bool proc_midwares(struct sdk_net_interface &interface, insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res) const
+	bool proc_midwares(struct sdk_net_interface &interface, const insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res) const
 	{
 		for (auto &item : midwares)
 		{
@@ -133,7 +133,7 @@ void _register_sdk_midware(const char *name, sdk_midware midware_fn, bool enable
  * @return true 成功
  * @return false 失败
  */
-bool sdk_midware_do(struct sdk_net_interface &interface, insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res)
+bool sdk_midware_do(struct sdk_net_interface &interface, const insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res)
 {
 	return midware_mannager.proc_midwares(interface, sdk_req, sdk_res);
 }

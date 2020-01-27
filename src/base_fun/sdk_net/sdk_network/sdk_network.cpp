@@ -52,7 +52,7 @@ static void on_tcp_shutdown(uv_shutdown_t *req, int status);
 static void on_close(uv_handle_t *peer);
 
 // 发送tcp消息
-static bool uv_stream_write(uv_stream_t *handle, const uv_buf_t *buf);
+static bool uv_stream_write(uv_stream_t *handle, const std::string &data);
 
 /**
  * @brief 创建tcp服务器
@@ -135,16 +135,15 @@ static void on_stream_write(uv_write_t *req, int status)
  * @brief 发送tcp消息
  * 
  * @param handle 回调接口间数据句柄
- * @param buf 数据部分
+ * @param data 数据部分
  * @return true 成功
  * @return false 失败
  */
-static bool uv_stream_write(uv_stream_t *handle, const uv_buf_t *buf)
+static bool uv_stream_write(uv_stream_t *handle, const std::string &data)
 {
-	write_req_t *wr = nullptr;
+	write_req_t *wr = new write_req_t;
 
-	wr = new write_req_t;
-	wr->buf = uv_buf_init(buf->base, buf->len);
+	wr->buf = uv_buf_init(const_cast<char *>(data.data()), data.size());
 
 	if (0 != uv_write((uv_write_t *)wr, handle, &wr->buf, 1, on_stream_write))
 	{
@@ -191,7 +190,7 @@ static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *
 		data = new uv_buf_t(std::move(uv_buf_init(buf->base, buf->len)));
 
 		package->handle = client;
-		package->recv_len = nread;
+		// package->recv_len = nread;
 		package->handle->data = (void *)data;
 		package->write = uv_stream_write;
 		push_sdk_package(package);

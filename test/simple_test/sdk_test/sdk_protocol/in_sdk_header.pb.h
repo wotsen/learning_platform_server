@@ -77,14 +77,14 @@ namespace insider {
 namespace sdk {
 
 enum TransProto : int {
-  ARP = 0,
+  TRANS_PROTO_INVALID = 0,
   TCP = 1,
   UDP = 2,
   TransProto_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   TransProto_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool TransProto_IsValid(int value);
-constexpr TransProto TransProto_MIN = ARP;
+constexpr TransProto TransProto_MIN = TRANS_PROTO_INVALID;
 constexpr TransProto TransProto_MAX = UDP;
 constexpr int TransProto_ARRAYSIZE = TransProto_MAX + 1;
 
@@ -102,43 +102,15 @@ inline bool TransProto_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<TransProto>(
     TransProto_descriptor(), name, value);
 }
-enum DataProto : int {
-  DATA_UPGRADE = 0,
-  DATA_PARA_OPERATION = 1,
-  DATA_ALARM = 2,
-  DATA_HEART_BEAT = 3,
-  DATA_AI = 4,
-  DATA_PICTURE = 5,
-  DataProto_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
-  DataProto_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
-};
-bool DataProto_IsValid(int value);
-constexpr DataProto DataProto_MIN = DATA_UPGRADE;
-constexpr DataProto DataProto_MAX = DATA_PICTURE;
-constexpr int DataProto_ARRAYSIZE = DataProto_MAX + 1;
-
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DataProto_descriptor();
-template<typename T>
-inline const std::string& DataProto_Name(T enum_t_value) {
-  static_assert(::std::is_same<T, DataProto>::value ||
-    ::std::is_integral<T>::value,
-    "Incorrect type passed to function DataProto_Name.");
-  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-    DataProto_descriptor(), enum_t_value);
-}
-inline bool DataProto_Parse(
-    const std::string& name, DataProto* value) {
-  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DataProto>(
-    DataProto_descriptor(), name, value);
-}
 enum IpVersion : int {
-  IPV4 = 0,
-  IPV6 = 1,
+  IP_VERSION_INVALID = 0,
+  IPV4 = 1,
+  IPV6 = 2,
   IpVersion_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   IpVersion_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool IpVersion_IsValid(int value);
-constexpr IpVersion IpVersion_MIN = IPV4;
+constexpr IpVersion IpVersion_MIN = IP_VERSION_INVALID;
 constexpr IpVersion IpVersion_MAX = IPV6;
 constexpr int IpVersion_ARRAYSIZE = IpVersion_MAX + 1;
 
@@ -637,12 +609,12 @@ class Header :
   enum : int {
     kTimeFieldNumber = 4,
     kHostFieldNumber = 6,
+    kDestFieldNumber = 7,
     kMsgMagicFieldNumber = 1,
     kVersionFieldNumber = 2,
     kPackIdFieldNumber = 3,
     kDataDirFieldNumber = 5,
-    kTransProtoFieldNumber = 7,
-    kDataProtoFieldNumber = 8,
+    kTransProtoFieldNumber = 8,
   };
   // .insider.sdk.DataTime time = 4;
   bool has_time() const;
@@ -672,6 +644,21 @@ class Header :
   private:
   const ::insider::sdk::Host& _internal_host() const;
   ::insider::sdk::Host* _internal_mutable_host();
+  public:
+
+  // .insider.sdk.Host dest = 7;
+  bool has_dest() const;
+  private:
+  bool _internal_has_dest() const;
+  public:
+  void clear_dest();
+  const ::insider::sdk::Host& dest() const;
+  ::insider::sdk::Host* release_dest();
+  ::insider::sdk::Host* mutable_dest();
+  void set_allocated_dest(::insider::sdk::Host* dest);
+  private:
+  const ::insider::sdk::Host& _internal_dest() const;
+  ::insider::sdk::Host* _internal_mutable_dest();
   public:
 
   // .insider.sdk.SdkMagic msg_magic = 1;
@@ -710,22 +697,13 @@ class Header :
   void _internal_set_data_dir(::insider::sdk::DataFlow value);
   public:
 
-  // .insider.sdk.TransProto trans_proto = 7;
+  // .insider.sdk.TransProto trans_proto = 8;
   void clear_trans_proto();
   ::insider::sdk::TransProto trans_proto() const;
   void set_trans_proto(::insider::sdk::TransProto value);
   private:
   ::insider::sdk::TransProto _internal_trans_proto() const;
   void _internal_set_trans_proto(::insider::sdk::TransProto value);
-  public:
-
-  // .insider.sdk.DataProto data_proto = 8;
-  void clear_data_proto();
-  ::insider::sdk::DataProto data_proto() const;
-  void set_data_proto(::insider::sdk::DataProto value);
-  private:
-  ::insider::sdk::DataProto _internal_data_proto() const;
-  void _internal_set_data_proto(::insider::sdk::DataProto value);
   public:
 
   // @@protoc_insertion_point(class_scope:insider.sdk.Header)
@@ -735,12 +713,12 @@ class Header :
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::insider::sdk::DataTime* time_;
   ::insider::sdk::Host* host_;
+  ::insider::sdk::Host* dest_;
   int msg_magic_;
   int version_;
   ::PROTOBUF_NAMESPACE_ID::int64 pack_id_;
   int data_dir_;
   int trans_proto_;
-  int data_proto_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_in_5fsdk_5fheader_2eproto;
 };
@@ -1103,7 +1081,67 @@ inline void Header::set_allocated_host(::insider::sdk::Host* host) {
   // @@protoc_insertion_point(field_set_allocated:insider.sdk.Header.host)
 }
 
-// .insider.sdk.TransProto trans_proto = 7;
+// .insider.sdk.Host dest = 7;
+inline bool Header::_internal_has_dest() const {
+  return this != internal_default_instance() && dest_ != nullptr;
+}
+inline bool Header::has_dest() const {
+  return _internal_has_dest();
+}
+inline void Header::clear_dest() {
+  if (GetArenaNoVirtual() == nullptr && dest_ != nullptr) {
+    delete dest_;
+  }
+  dest_ = nullptr;
+}
+inline const ::insider::sdk::Host& Header::_internal_dest() const {
+  const ::insider::sdk::Host* p = dest_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::insider::sdk::Host*>(
+      &::insider::sdk::_Host_default_instance_);
+}
+inline const ::insider::sdk::Host& Header::dest() const {
+  // @@protoc_insertion_point(field_get:insider.sdk.Header.dest)
+  return _internal_dest();
+}
+inline ::insider::sdk::Host* Header::release_dest() {
+  // @@protoc_insertion_point(field_release:insider.sdk.Header.dest)
+  
+  ::insider::sdk::Host* temp = dest_;
+  dest_ = nullptr;
+  return temp;
+}
+inline ::insider::sdk::Host* Header::_internal_mutable_dest() {
+  
+  if (dest_ == nullptr) {
+    auto* p = CreateMaybeMessage<::insider::sdk::Host>(GetArenaNoVirtual());
+    dest_ = p;
+  }
+  return dest_;
+}
+inline ::insider::sdk::Host* Header::mutable_dest() {
+  // @@protoc_insertion_point(field_mutable:insider.sdk.Header.dest)
+  return _internal_mutable_dest();
+}
+inline void Header::set_allocated_dest(::insider::sdk::Host* dest) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete dest_;
+  }
+  if (dest) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      dest = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, dest, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  dest_ = dest;
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.Header.dest)
+}
+
+// .insider.sdk.TransProto trans_proto = 8;
 inline void Header::clear_trans_proto() {
   trans_proto_ = 0;
 }
@@ -1121,26 +1159,6 @@ inline void Header::_internal_set_trans_proto(::insider::sdk::TransProto value) 
 inline void Header::set_trans_proto(::insider::sdk::TransProto value) {
   _internal_set_trans_proto(value);
   // @@protoc_insertion_point(field_set:insider.sdk.Header.trans_proto)
-}
-
-// .insider.sdk.DataProto data_proto = 8;
-inline void Header::clear_data_proto() {
-  data_proto_ = 0;
-}
-inline ::insider::sdk::DataProto Header::_internal_data_proto() const {
-  return static_cast< ::insider::sdk::DataProto >(data_proto_);
-}
-inline ::insider::sdk::DataProto Header::data_proto() const {
-  // @@protoc_insertion_point(field_get:insider.sdk.Header.data_proto)
-  return _internal_data_proto();
-}
-inline void Header::_internal_set_data_proto(::insider::sdk::DataProto value) {
-  
-  data_proto_ = value;
-}
-inline void Header::set_data_proto(::insider::sdk::DataProto value) {
-  _internal_set_data_proto(value);
-  // @@protoc_insertion_point(field_set:insider.sdk.Header.data_proto)
 }
 
 #ifdef __GNUC__
@@ -1162,11 +1180,6 @@ template <> struct is_proto_enum< ::insider::sdk::TransProto> : ::std::true_type
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::TransProto>() {
   return ::insider::sdk::TransProto_descriptor();
-}
-template <> struct is_proto_enum< ::insider::sdk::DataProto> : ::std::true_type {};
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::insider::sdk::DataProto>() {
-  return ::insider::sdk::DataProto_descriptor();
 }
 template <> struct is_proto_enum< ::insider::sdk::IpVersion> : ::std::true_type {};
 template <>

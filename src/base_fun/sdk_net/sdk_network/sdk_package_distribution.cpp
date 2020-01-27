@@ -111,57 +111,27 @@ static void *task_sdk_stream_do(void *name) noexcept
     log_i("sdk stream 数据处理初始化完成...\n");
     pthread_t tid = pthread_self();
 
-    // 响应消息缓存
-	char *res_buf = new char[MAX_SDK_MSG_LEN];
-
-	// 收到的消息
-	sdk_package<uv_stream_t> *package = nullptr;
-
-	// 响应消息
-	uv_buf_t res;
-
-    // 消息缓存
-    struct sdk_data_buf req_data = {0, NULL};
-    struct sdk_data_buf res_data = {0, NULL};
-	struct sdk_net_interface interface;
-
-	res.len = 0;
-    // 响应消息基地址
-	res.base = res_buf;
-
-    // 响应数据
-    res_data.data = res_buf;
-
 	for (;;)
 	{
 		task_alive(tid); // 自身任务心跳
 
 		if (!stream_list.empty())
 		{
-			res.len = 0;
-			memset(res_buf, 0, MAX_SDK_MSG_LEN);
-
 			// 获取队列首部消息
-			package = stream_list.front();
+			sdk_package<uv_stream_t> *package = stream_list.front();
+
+			std::string req_data(((uv_buf_t *)package->handle->data)->base);
+			std::string res_data;
+			struct sdk_net_interface interface;
 
 			// 获取uv 网络接口信息
 			_get_uv_tcp_interface(package->handle, interface);
 
-            // 请求消息
-            req_data.len = package->recv_len;
-            req_data.data = package->handle->data;
-
-            // 响应消息内存长度
-            res_data.len = MAX_SDK_MSG_LEN;
-
             // 协议处理
 			sdk_protocol_do(interface, req_data, res_data);
 
-            // 响应消息实际长度
-			res.len = res_data.len;
-
             // 发送响应消息
-			package->write(package->handle, &res);
+			package->write(package->handle, res_data);
 
 			// 消息出队
 			stream_list.pop_back();

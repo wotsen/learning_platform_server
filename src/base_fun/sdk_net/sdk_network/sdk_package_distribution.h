@@ -32,8 +32,7 @@ template <class T>
 struct sdk_package
 {
 	T *handle;			///< uv handle
-	size_t recv_len;	///< 实际接受长度
-	bool (*write)(T *handle, const uv_buf_t *buf);	///< 响应回调接口
+	bool (*write)(T *handle, const std::string &data);	///< 响应回调接口
 };
 
 /**

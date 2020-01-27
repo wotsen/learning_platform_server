@@ -7,77 +7,78 @@ using namespace insider::sdk;
 
 void test_sdk_pack(Sdk &msg)
 {
-	// Sdk msg;
+    Header *header = msg.mutable_header();
+    Body *body = msg.mutable_body();
+    Footer *footer = msg.mutable_footer();
 
-	Header *header = msg.mutable_header();
-
-	header->set_msg_magic(SdkMagic::SDK_MAGIC);
+    /**************************************************************/
+    header->set_msg_magic(SdkMagic::SDK_MAGIC);
 	header->set_version(SdkVersion::SDK_CUR_VERSION);
-	header->set_pack_id(3);
+	header->set_pack_id(1);
 	header->mutable_time()->set_in_time(2018);
 	header->mutable_time()->set_out_time(2019);
 	header->set_data_dir(DataFlow::DATA_IN);
+    header->mutable_host()->set_ip_version(IpVersion::IPV4);
 	header->mutable_host()->set_port(9001);
-	header->mutable_host()->set_ipv4("127.0.0.1");
+	header->mutable_host()->set_ip("127.0.0.1");
+    header->mutable_dest()->set_ip_version(IpVersion::IPV4);
+	header->mutable_dest()->set_port(9001);
+	header->mutable_dest()->set_ip("127.0.0.1");
 	header->set_trans_proto(TransProto::TCP);
-	header->set_data_proto(DataProto::DATA_AI);
 
-	Body *body = msg.mutable_body();
-
-	body->mutable_user()->set_user_type(UserInfo::UserType::UserInfo_UserType_U_LOGIN);
-	body->mutable_user()->set_token("asdf");
-	body->mutable_user()->set_alive_time(3);
-
-	User *user = body->mutable_user()->mutable_user();
-
-	user->set_user_name("admin");
-	user->set_user_pass("admin");
+    /***********************************************************/
+    body->mutable_user_session()->set_user_type(UserSessionMsg_UserMethod_U_LOGIN);
+    body->mutable_user_session()->mutable_user()->set_user_name("admin");
+    body->mutable_user_session()->mutable_user()->set_user_pass("admin");
+    body->mutable_user_session()->mutable_user()->set_permission(U_PERMISSION_ADMIN);
+    body->mutable_user_session()->mutable_user()->set_email("astralrovers@outlook.com");
+    body->mutable_user_session()->mutable_user()->set_phone("12345678901");
+	body->mutable_user_session()->set_token("asdf");
+	body->mutable_user_session()->set_alive_time(3);
 
 	body->set_url("xxx.com");
 	body->set_method(OperationType::GET);
-	// body->add_response_result(ResponseResult::OK);
-	// body->add_response_result(ResponseResult::ERROR);
 
-	Footer *footer = msg.mutable_footer();
+    Content *content = body->mutable_content();
 
-	footer->set_res(0x123);
+    // 模块列表
+    AppModuleCoutInfoList *lists = content->mutable_app_module_list();
 
-	// std::cout << msg.IsInitialized() << std::endl;
+    // 添加一个模块
+    AppModuleCoutInfo *module = lists->add_app_modules();
+    AppModuleBaseInfo *info = module->mutable_base_info();
 
-	// try {
-	// 	std::cout << msg.DebugString() << std::endl;
-	// } catch(std::system_error &err) {
-	// 	std::cout << err.what() << std::endl;
-	// }
+    module->set_id(0);
+    // 使用时不允许设置，只能查询
+    module->set_run_state(E_APP_MODULE_RUN_ST_OK);
 
-	// fstream output("saa.txt", ios::out | ios::trunc | ios::binary);
-	// if (!msg.SerializeToOstream(&output))
-	// {
-	// 	cerr << "Failed to write address book." << endl;
-	// 	return -1;
-	// }
-	// cout << msg.SerializeAsString().size() << endl;
+    info->set_name("test module1");
+    info->set_enable(true);
 
-	// Sdk msg2;
+    info->set_state(E_APP_MODULE_IDLE);
+    info->set_permission(E_APP_MODULE_CFG_PERMISSION_ENABLE);
 
-	// msg2.ParseFromArray(msg.SerializeToArray(), msg.ByteSize());
-	// cout << msg2.header().msg_magic() << endl;
+    // 添加一个模块
+    module = lists->add_app_modules();
+    info = module->mutable_base_info();
 
-	// cout << msg.ByteSize() << endl;
-	// char *data = new char[msg.ByteSize()];
+    info->set_name("test module2");
+    info->set_enable(true);
 
-	// msg.SerializeToArray(data, msg.ByteSize());
+    info->set_state(E_APP_MODULE_INIT);
+    info->set_permission(E_APP_MODULE_CFG_PERMISSION_ENABLE);
 
-	// Sdk msg3;
+    /**********************************************************/
+    footer->set_res(123);
+    Result *result = footer->mutable_result();
+    SdkResult *sdk_result = result->mutable_sdk_result();
+    ContentResult *content_result = result->mutable_content_result();
 
-	// msg3.ParseFromArray(data, msg.ByteSize());
-	// cout << msg3.header().msg_magic() << endl;
-	// cout << msg3.body().response_result_size() << endl;
-	// cout << msg3.body().response_result(1) << endl;
+    sdk_result->set_status_code(OK);
+    sdk_result->set_code("........sdk ok");
 
-	// google::protobuf::ShutdownProtobufLibrary();
+    content_result->set_status_code(R_CODE_OK);
+    content_result->set_code("........sdk ok");
 
-	// delete [] data;
-
-	// return std::move(msg);
+	return ;
 }

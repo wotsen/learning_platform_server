@@ -41,11 +41,14 @@ static bool _module_state = false;
 // 用户数据库
 static Database *user_db = nullptr;
 
+// 醉成存活时间，7天
+const static time_t max_alive_time = OS_HOUR(24 * 7) / OS_SEC(1);
+
 // 用户管理
 static std::unique_ptr<UserManager> user_manager;
 
 // 用户中间件处理接口
-bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res);
+bool _user_manange_midware_do(const Sdk &sdk_req, Sdk &sdk_res);
 
 /**
  * @brief 用户会话
@@ -62,7 +65,7 @@ public:
 };
 
 /**
- * @brief 用户管理
+ * @brief 用户管理，WARNING:这里的会话只用于用户登录，无保活功能,FIXME:这会造成如果多个用户掉线时造成资源浪费
  * 
  */
 class UserManager : public SessionManager<UserSession> {
@@ -79,7 +82,7 @@ public:
 	}
 
 	// TODO:修改密码
-	bool change_password(UserSessionMsg &user_info)
+	bool change_password(const UserSessionMsg &user_info)
 	{
 		return true;
 	}
@@ -119,7 +122,12 @@ public:
 
 		// 移除过期用户
 		sessions_.erase(std::remove_if(sessions_.begin(), sessions_.end(), [](auto &_session) -> bool {
-							   return 0 == _session->now_;
+							   if (0 == _session->now_) {
+								   log_d("user %s token over time\n", item->name_.c_str());
+								   return true;
+							   }
+
+							   return false;
                         }),
                         sessions_.end());
 		
@@ -134,11 +142,24 @@ public:
 	 * @return true 搜索到
 	 * @return false 未搜索到
 	 */
-	bool search_user_session(const std::string &token, UserSession **session) const
+	bool search_user_session_by_token(const std::string &token, UserSession **session) const
 	{
 		for (auto &item : sessions_)
 		{
 			if (token == item->token_)
+			{
+				*session = &(*item);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool search_user_session_by_name(const std::string &name, UserSession **session) const
+	{
+		for (auto &item : sessions_)
+		{
+			if (name == item->name_)
 			{
 				*session = &(*item);
 				return true;
@@ -160,8 +181,9 @@ public:
 		std::shared_ptr<UserSession> new_session(new UserSession);
 
 		pthread_mutex_lock(&mutex_);
-		if (sessions_.size() >= max_session_ || search_user_session(session.token_, &_session))
+		if (sessions_.size() >= max_session_ || search_user_session_by_token(session.token_, &_session))
 		{
+			log_d("user session overs max\n");
 			pthread_mutex_unlock(&mutex_);
 			return false;
 		}
@@ -186,7 +208,8 @@ public:
 	{
 		pthread_mutex_lock(&mutex_);
 		sessions_.erase(std::remove_if(sessions_.begin(), sessions_.end(), [&token](auto &_session) -> bool {
-                               return _session->token_ == token;
+								log_d("delete user %s\n", _session->name_.c_str());
+                            	return _session->token_ == token;
                         }),
                         sessions_.end());
 		pthread_mutex_unlock(&mutex_);
@@ -195,11 +218,18 @@ public:
 	/**
 	 * @brief 用户登陆
 	 * 
-	 * @param user_info 用户信息,FIXME:数据库操作未作异常处理
+	 * @param user_info 用户信息,FIXME:数据库操作未作异常处理，FIXME:用户掉线后再次发出登录操作
+	 * @param token 
 	 * @return enum UserInfo_Result 
 	 */
-	enum ContentResultE login(UserSessionMsg &user_info)
+	enum ContentResultE login(const UserSessionMsg &user_info, std::string &token)
 	{
+		if (max_alive_time < user_info.alive_time())
+		{
+			log_d("not support %s alive time\n", user_info.alive_time());
+			return ContentResultE::R_CODE_ERROR;
+		}
+
 		Statement query_user(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
 
 		query_user.bind(1, user_info.user().user_name());
@@ -213,11 +243,12 @@ public:
 			return ContentResultE::R_CODE_USER_NOT_EXIST;
 		}
 
-		// 密码错误
+		// TODO : 这里的密码加密后存储
 		Statement query_user_pass(*user_db, "SELECT * FROM " USER_TABLE " where name = ? and password = ?");
 		query_user_pass.bind(1, user_info.user().user_name());
 		query_user_pass.bind(2, user_info.user().user_pass());
 
+		// 密码查询
 		query_user_pass.executeStep();
 
 		if (!query_user_pass.hasRow())
@@ -226,13 +257,30 @@ public:
 			return ContentResultE::R_CODE_USER_PASS_ERROR;
 		}
 
-		UserSession session;
-		sole::uuid uid = sole::uuid4();
+		UserSession *_session;
 
-		session.now_ = user_info.alive_time();
-		session.alive_time_ = user_info.alive_time();
-		session.token_ = uid.str();
-		user_info.set_token(uid.str());
+		if (search_user_session_by_name(user_info.user().user_name(), &_session))
+		{
+			_session->alive_time_ = user_info.alive_time();
+			_session.now_ = user_info.alive_time();
+			token = _session->token_;
+
+			log_d("user %s login ready\n", user_info.user().user_name().c_str());
+		}
+		else
+		{
+			UserSession new_session;
+			sole::uuid uid = sole::uuid4();
+
+			new_session.name_ = user_info.user().user_name();
+			new_session.now_ = user_info.alive_time();
+			new_session.alive_time_ = user_info.alive_time();
+			new_session.token_ = uid.str();
+
+			token = uid.str();
+		}
+
+		log_d("user %s token %s\n", new_session.name_.c_str(), token.c_str());
 
 		return add_session(session) ? ContentResultE::R_CODE_OK : ContentResultE::R_CODE_ERROR;
 	}
@@ -243,7 +291,7 @@ public:
 	 * @param user_info 用户信息
 	 * @return enum UserInfo_Result 
 	 */
-	enum ContentResultE logout(UserSessionMsg &user_info)
+	enum ContentResultE logout(const UserSessionMsg &user_info)
 	{
 		delete_session(user_info.token());
 		return ContentResultE::R_CODE_OK;
@@ -255,12 +303,12 @@ public:
 	 * @param user_info 用户信息
 	 * @return enum UserInfo_Result 
 	 */
-	enum ContentResultE verify(UserSessionMsg &user_info)
+	enum ContentResultE verify(const UserSessionMsg &user_info)
 	{
 		UserSession *_session;
 
 		pthread_mutex_lock(&mutex_);
-		if (search_user_session(user_info.token(), &_session))
+		if (search_user_session_by_token(user_info.token(), &_session))
 		{
 			// 刷新会话时间
 			_session->now_ = _session->alive_time_;
@@ -277,10 +325,17 @@ public:
 	 * @brief 用户注册 FIXME:数据库操作未作异常处理
 	 * 
 	 * @param user_info 用户信息
-	 * @return enum UserInfo_Result 
+	 * @param token 
+	 * @return enum ContentResultE 
 	 */
-	enum ContentResultE user_register(UserSessionMsg &user_info)
+	enum ContentResultE user_register(const UserSessionMsg &user_info, std::string &token)
 	{
+		if (max_alive_time < user_info.alive_time())
+		{
+			log_d("not support %s alive time\n", user_info.alive_time());
+			return ContentResultE::R_CODE_ERROR;
+		}
+		
 		Statement query(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
 
 		query.bind(1, user_info.user().user_name());
@@ -308,10 +363,14 @@ public:
 		UserSession session;
 		sole::uuid uid = sole::uuid4();
 
+		session.name_ = user_info.user().user_name();
 		session.now_ = user_info.alive_time();
 		session.alive_time_ = user_info.alive_time();
 		session.token_ = uid.str();
-		user_info.set_token(uid.str());
+
+		token = uid.str();
+
+		log_d("user %s token %s\n", session.name_.c_str(), token.c_str());
 
 		return add_session(session) ? ContentResultE::R_CODE_OK : ContentResultE::R_CODE_ERROR;
 	}
@@ -334,17 +393,18 @@ public:
  * @return true 成功
  * @return false 失败
  */
-bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
+bool _user_manange_midware_do(const Sdk &sdk_req, Sdk &sdk_res)
 {
-	UserSessionMsg user_info = sdk_req.mutable_body()->user_session();
+	const UserSessionMsg &user_info = sdk_req.body().user_session();
 	enum ContentResultE user_ret = ContentResultE::R_CODE_OK;
+	std::string token;
 
 	log_i("%s %s\n", user_info.user().user_name().c_str(), user_info.user().user_pass().c_str());
 
 	switch (user_info.user_type())
 	{
 		case UserSessionMsg_UserMethod::UserSessionMsg_UserMethod_U_LOGIN:
-			user_ret = user_manager->login(user_info);
+			user_ret = user_manager->login(user_info, token);
 			break;
 		case UserSessionMsg_UserMethod::UserSessionMsg_UserMethod_U_LOGOUT:
 			user_ret = user_manager->logout(user_info);
@@ -353,21 +413,19 @@ bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
 			user_ret = user_manager->verify(user_info);
 			break;
 		case UserSessionMsg_UserMethod::UserSessionMsg_UserMethod_U_REGISTER:
-			user_ret = user_manager->user_register(user_info);
+			user_ret = user_manager->user_register(user_info, token);
 			break;
 		default:
 			user_ret = ContentResultE::R_CODE_ERROR;
 			break;
 	}
 
-	// sdk_res.mutable_body()->mutable_user_session()->set_result(user_ret);
-
 	sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(user_ret);
 
 	switch (user_ret)
 	{
 		case ContentResultE::R_CODE_OK:
-			sdk_res.mutable_body()->mutable_user_session()->set_token(user_info.token());
+			sdk_res.mutable_body()->mutable_user_session()->set_token(token);
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::OK);
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("ok");
 			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("ok");
@@ -410,6 +468,7 @@ bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
 			return false;
 
 		default:
+			log_d("unknown error\n");
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
 			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(ContentResultE::R_CODE_ERROR);
@@ -428,7 +487,7 @@ bool _user_manange_midware_do(Sdk &sdk_req, Sdk &sdk_res)
  * @return true 成功
  * @return false 失败
  */
-bool user_manange_midware_do(struct sdk_net_interface &interface, Sdk &sdk_req, Sdk &sdk_res)
+bool user_manange_midware_do(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res)
 {
     if (!_module_state)
     {

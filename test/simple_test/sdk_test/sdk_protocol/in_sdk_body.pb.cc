@@ -14,13 +14,17 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
-extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Content_in_5fsdk_5fbody_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_5fappmodule_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_AppModuleCoutInfoList_in_5fsdk_5fbody_5fappmodule_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Content_in_5fsdk_5fbody_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_5fuser_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_UserList_in_5fsdk_5fbody_5fuser_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_in_5fsdk_5fbody_5fuser_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_UserSessionMsg_in_5fsdk_5fbody_5fuser_2eproto;
 namespace insider {
 namespace sdk {
 class ContentDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Content> _instance;
+  const ::insider::sdk::AppModuleCoutInfoList* app_module_list_;
+  const ::insider::sdk::UserList* user_list_;
 } _Content_default_instance_;
 class BodyDefaultTypeInternal {
  public:
@@ -55,8 +59,10 @@ static void InitDefaultsscc_info_Content_in_5fsdk_5fbody_2eproto() {
   ::insider::sdk::Content::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Content_in_5fsdk_5fbody_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Content_in_5fsdk_5fbody_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Content_in_5fsdk_5fbody_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_Content_in_5fsdk_5fbody_2eproto}, {
+      &scc_info_AppModuleCoutInfoList_in_5fsdk_5fbody_5fappmodule_2eproto.base,
+      &scc_info_UserList_in_5fsdk_5fbody_5fuser_2eproto.base,}};
 
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_in_5fsdk_5fbody_2eproto[2];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_in_5fsdk_5fbody_2eproto[1];
@@ -66,9 +72,12 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_in_5fsdk_5fbody_2eproto::offse
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Content, _internal_metadata_),
   ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
+  PROTOBUF_FIELD_OFFSET(::insider::sdk::Content, _oneof_case_[0]),
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Content, magic_),
+  offsetof(::insider::sdk::ContentDefaultTypeInternal, app_module_list_),
+  offsetof(::insider::sdk::ContentDefaultTypeInternal, user_list_),
+  PROTOBUF_FIELD_OFFSET(::insider::sdk::Content, ContentOneof_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::insider::sdk::Body, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -81,7 +90,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_in_5fsdk_5fbody_2eproto::offse
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::insider::sdk::Content)},
-  { 6, -1, sizeof(::insider::sdk::Body)},
+  { 9, -1, sizeof(::insider::sdk::Body)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -91,15 +100,20 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_in_5fsdk_5fbody_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\021in_sdk_body.proto\022\013insider.sdk\032\026in_sdk"
-  "_body_user.proto\"\030\n\007Content\022\r\n\005magic\030\001 \001"
-  "(\003\"\231\001\n\004Body\0221\n\014user_session\030\001 \001(\0132\033.insi"
-  "der.sdk.UserSessionMsg\022\013\n\003url\030\002 \001(\t\022*\n\006m"
-  "ethod\030\003 \001(\0162\032.insider.sdk.OperationType\022"
-  "%\n\007content\030\005 \001(\0132\024.insider.sdk.Content*7"
-  "\n\rOperationType\022\007\n\003GET\020\000\022\010\n\004POST\020\001\022\007\n\003PU"
-  "T\020\002\022\n\n\006DELETE\020\003b\006proto3"
+  "_body_user.proto\032\033in_sdk_body_appmodule."
+  "proto\"\223\001\n\007Content\022\r\n\005magic\030\001 \001(\003\022=\n\017app_"
+  "module_list\030\002 \001(\0132\".insider.sdk.AppModul"
+  "eCoutInfoListH\000\022*\n\tuser_list\030\003 \001(\0132\025.ins"
+  "ider.sdk.UserListH\000B\016\n\014ContentOneof\"\231\001\n\004"
+  "Body\0221\n\014user_session\030\001 \001(\0132\033.insider.sdk"
+  ".UserSessionMsg\022\013\n\003url\030\002 \001(\t\022*\n\006method\030\003"
+  " \001(\0162\032.insider.sdk.OperationType\022%\n\007cont"
+  "ent\030\005 \001(\0132\024.insider.sdk.Content*D\n\rOpera"
+  "tionType\022\013\n\007INVALID\020\000\022\007\n\003GET\020\001\022\010\n\004POST\020\002"
+  "\022\007\n\003PUT\020\004\022\n\n\006DELETE\020\010b\006proto3"
   ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_5fbody_2eproto_deps[1] = {
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_5fbody_2eproto_deps[2] = {
+  &::descriptor_table_in_5fsdk_5fbody_5fappmodule_2eproto,
   &::descriptor_table_in_5fsdk_5fbody_5fuser_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_5fsdk_5fbody_2eproto_sccs[2] = {
@@ -109,8 +123,8 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_in_5fsdk_5fbody_2eproto_once;
 static bool descriptor_table_in_5fsdk_5fbody_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_in_5fsdk_5fbody_2eproto = {
-  &descriptor_table_in_5fsdk_5fbody_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_2eproto, "in_sdk_body.proto", 303,
-  &descriptor_table_in_5fsdk_5fbody_2eproto_once, descriptor_table_in_5fsdk_5fbody_2eproto_sccs, descriptor_table_in_5fsdk_5fbody_2eproto_deps, 2, 1,
+  &descriptor_table_in_5fsdk_5fbody_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5fbody_2eproto, "in_sdk_body.proto", 469,
+  &descriptor_table_in_5fsdk_5fbody_2eproto_once, descriptor_table_in_5fsdk_5fbody_2eproto_sccs, descriptor_table_in_5fsdk_5fbody_2eproto_deps, 2, 2,
   schemas, file_default_instances, TableStruct_in_5fsdk_5fbody_2eproto::offsets,
   file_level_metadata_in_5fsdk_5fbody_2eproto, 2, file_level_enum_descriptors_in_5fsdk_5fbody_2eproto, file_level_service_descriptors_in_5fsdk_5fbody_2eproto,
 };
@@ -128,7 +142,8 @@ bool OperationType_IsValid(int value) {
     case 0:
     case 1:
     case 2:
-    case 3:
+    case 4:
+    case 8:
       return true;
     default:
       return false;
@@ -139,11 +154,65 @@ bool OperationType_IsValid(int value) {
 // ===================================================================
 
 void Content::InitAsDefaultInstance() {
+  ::insider::sdk::_Content_default_instance_.app_module_list_ = const_cast< ::insider::sdk::AppModuleCoutInfoList*>(
+      ::insider::sdk::AppModuleCoutInfoList::internal_default_instance());
+  ::insider::sdk::_Content_default_instance_.user_list_ = const_cast< ::insider::sdk::UserList*>(
+      ::insider::sdk::UserList::internal_default_instance());
 }
 class Content::_Internal {
  public:
+  static const ::insider::sdk::AppModuleCoutInfoList& app_module_list(const Content* msg);
+  static const ::insider::sdk::UserList& user_list(const Content* msg);
 };
 
+const ::insider::sdk::AppModuleCoutInfoList&
+Content::_Internal::app_module_list(const Content* msg) {
+  return *msg->ContentOneof_.app_module_list_;
+}
+const ::insider::sdk::UserList&
+Content::_Internal::user_list(const Content* msg) {
+  return *msg->ContentOneof_.user_list_;
+}
+void Content::set_allocated_app_module_list(::insider::sdk::AppModuleCoutInfoList* app_module_list) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  clear_ContentOneof();
+  if (app_module_list) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      app_module_list = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, app_module_list, submessage_arena);
+    }
+    set_has_app_module_list();
+    ContentOneof_.app_module_list_ = app_module_list;
+  }
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.Content.app_module_list)
+}
+void Content::clear_app_module_list() {
+  if (_internal_has_app_module_list()) {
+    delete ContentOneof_.app_module_list_;
+    clear_has_ContentOneof();
+  }
+}
+void Content::set_allocated_user_list(::insider::sdk::UserList* user_list) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  clear_ContentOneof();
+  if (user_list) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      user_list = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, user_list, submessage_arena);
+    }
+    set_has_user_list();
+    ContentOneof_.user_list_ = user_list;
+  }
+  // @@protoc_insertion_point(field_set_allocated:insider.sdk.Content.user_list)
+}
+void Content::clear_user_list() {
+  if (_internal_has_user_list()) {
+    delete ContentOneof_.user_list_;
+    clear_has_ContentOneof();
+  }
+}
 Content::Content()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
@@ -154,11 +223,27 @@ Content::Content(const Content& from)
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   magic_ = from.magic_;
+  clear_has_ContentOneof();
+  switch (from.ContentOneof_case()) {
+    case kAppModuleList: {
+      _internal_mutable_app_module_list()->::insider::sdk::AppModuleCoutInfoList::MergeFrom(from._internal_app_module_list());
+      break;
+    }
+    case kUserList: {
+      _internal_mutable_user_list()->::insider::sdk::UserList::MergeFrom(from._internal_user_list());
+      break;
+    }
+    case CONTENTONEOF_NOT_SET: {
+      break;
+    }
+  }
   // @@protoc_insertion_point(copy_constructor:insider.sdk.Content)
 }
 
 void Content::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Content_in_5fsdk_5fbody_2eproto.base);
   magic_ = PROTOBUF_LONGLONG(0);
+  clear_has_ContentOneof();
 }
 
 Content::~Content() {
@@ -167,6 +252,9 @@ Content::~Content() {
 }
 
 void Content::SharedDtor() {
+  if (has_ContentOneof()) {
+    clear_ContentOneof();
+  }
 }
 
 void Content::SetCachedSize(int size) const {
@@ -178,6 +266,25 @@ const Content& Content::default_instance() {
 }
 
 
+void Content::clear_ContentOneof() {
+// @@protoc_insertion_point(one_of_clear_start:insider.sdk.Content)
+  switch (ContentOneof_case()) {
+    case kAppModuleList: {
+      delete ContentOneof_.app_module_list_;
+      break;
+    }
+    case kUserList: {
+      delete ContentOneof_.user_list_;
+      break;
+    }
+    case CONTENTONEOF_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = CONTENTONEOF_NOT_SET;
+}
+
+
 void Content::Clear() {
 // @@protoc_insertion_point(message_clear_start:insider.sdk.Content)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -185,6 +292,7 @@ void Content::Clear() {
   (void) cached_has_bits;
 
   magic_ = PROTOBUF_LONGLONG(0);
+  clear_ContentOneof();
   _internal_metadata_.Clear();
 }
 
@@ -199,6 +307,20 @@ const char* Content::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
           magic_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .insider.sdk.AppModuleCoutInfoList app_module_list = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_app_module_list(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .insider.sdk.UserList user_list = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          ptr = ctx->ParseMessage(_internal_mutable_user_list(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -234,6 +356,22 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(1, this->_internal_magic(), target);
   }
 
+  // .insider.sdk.AppModuleCoutInfoList app_module_list = 2;
+  if (_internal_has_app_module_list()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        2, _Internal::app_module_list(this), target, stream);
+  }
+
+  // .insider.sdk.UserList user_list = 3;
+  if (_internal_has_user_list()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        3, _Internal::user_list(this), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
@@ -257,6 +395,25 @@ size_t Content::ByteSizeLong() const {
         this->_internal_magic());
   }
 
+  switch (ContentOneof_case()) {
+    // .insider.sdk.AppModuleCoutInfoList app_module_list = 2;
+    case kAppModuleList: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *ContentOneof_.app_module_list_);
+      break;
+    }
+    // .insider.sdk.UserList user_list = 3;
+    case kUserList: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *ContentOneof_.user_list_);
+      break;
+    }
+    case CONTENTONEOF_NOT_SET: {
+      break;
+    }
+  }
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
         _internal_metadata_, total_size, &_cached_size_);
@@ -291,6 +448,19 @@ void Content::MergeFrom(const Content& from) {
   if (from.magic() != 0) {
     _internal_set_magic(from._internal_magic());
   }
+  switch (from.ContentOneof_case()) {
+    case kAppModuleList: {
+      _internal_mutable_app_module_list()->::insider::sdk::AppModuleCoutInfoList::MergeFrom(from._internal_app_module_list());
+      break;
+    }
+    case kUserList: {
+      _internal_mutable_user_list()->::insider::sdk::UserList::MergeFrom(from._internal_user_list());
+      break;
+    }
+    case CONTENTONEOF_NOT_SET: {
+      break;
+    }
+  }
 }
 
 void Content::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -315,6 +485,8 @@ void Content::InternalSwap(Content* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(magic_, other->magic_);
+  swap(ContentOneof_, other->ContentOneof_);
+  swap(_oneof_case_[0], other->_oneof_case_[0]);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Content::GetMetadata() const {
