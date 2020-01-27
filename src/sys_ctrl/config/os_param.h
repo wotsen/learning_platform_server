@@ -11,7 +11,7 @@
 #pragma once
 
 // cordump路径
-#define SYS_SOFT_CORDUMP_PATH "/home/wotsen/work"
+#define SYS_SOFT_CORDUMP_PATH "../err/"
 
 // pid路径
 #define PID_FILE "/var/run/ai_plat_service.pid"

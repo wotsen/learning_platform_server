@@ -27,7 +27,7 @@ static bool sdk_body_do(struct sdk_net_interface &interface, const Sdk &sdk_req,
 // header数据处理
 static bool check_sdk_header(struct sdk_net_interface &interface, const Sdk &sdk_req);
 // sdk消息处理
-static bool sdk_msg_do(struct sdk_net_interface &interface, const std::string &req, std::string &res);
+static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &req, std::string &res);
 
 /**
  * @brief body内容处理
@@ -147,10 +147,8 @@ static bool sdk_pack_res_msg(struct sdk_net_interface interface, const Sdk &sdk_
  * @param interface 网络接口
  * @param req 请求
  * @param res 响应
- * @return true 
- * @return false 
  */
-static bool sdk_msg_do(struct sdk_net_interface &interface, const std::string &req, std::string &res)
+static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &req, std::string &res)
 {
 	Sdk sdk_req;
 	Sdk sdk_res;
@@ -159,45 +157,39 @@ static bool sdk_msg_do(struct sdk_net_interface &interface, const std::string &r
 	if (!sdk_req.ParseFromString(req))
 	{
 		log_e("parser sdk msg failed\n");
-		return false;
+		return ;
 	}
 
 	// sdk头检查
 	if (!check_sdk_header(interface, sdk_req))
 	{
 		log_e("sdk header verify error\n");
-		goto sdk_err;
+		return;
 	}
 
 	// 中间件
 	if (!sdk_midware_do(interface, sdk_req, sdk_res))
 	{
 		log_e("sdk midware proc failed\n");
-		goto sdk_err;
 	}
-
-	// sdk内容部分
-	if (!sdk_body_do(interface, sdk_req, sdk_res))
+	else
 	{
-		log_e("sdk body verify error\n");
-		goto sdk_err;
+		// sdk内容部分
+		if (!sdk_body_do(interface, sdk_req, sdk_res))
+		{
+			log_e("sdk body verify error\n");
+		}
 	}
 
 	// 组包
 	if (!sdk_pack_res_msg(interface, sdk_res, res))
 	{
 		log_e("pack response msg failed\n");
-		goto sdk_err;
 	}
 
 	google::protobuf::ShutdownProtobufLibrary();
 
-	return true;
-
-sdk_err:
-	google::protobuf::ShutdownProtobufLibrary();
-
-	return false;
+	return ;
 }
 
 /**
@@ -207,16 +199,16 @@ sdk_err:
  * @param interface 网络接口
  * @param req 请求
  * @param res 响应
- * @return true 
- * @return false 
  */
-bool sdk_protocol_do(struct sdk_net_interface &interface, const std::string &req, std::string &res)
+void sdk_protocol_do(struct sdk_net_interface &interface, const std::string &req, std::string &res)
 {
 	if (req.empty())
 	{
 		log_e("requset msg is empty\n");
-		return false;
+		return ;
 	}
 
-	return sdk_msg_do(interface, req, res);
+	sdk_msg_do(interface, req, res);
+
+	return ;
 }

@@ -15,4 +15,4 @@
 #include "sdk_package_distribution.h"
 
 // sdk协议处理
-bool sdk_protocol_do(struct sdk_net_interface &interface, const std::string &req, std::string &res);
+void sdk_protocol_do(struct sdk_net_interface &interface, const std::string &req, std::string &res);

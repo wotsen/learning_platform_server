@@ -34,7 +34,7 @@ void test_sdk_pack(Sdk &msg)
     body->mutable_user_session()->mutable_user()->set_email("astralrovers@outlook.com");
     body->mutable_user_session()->mutable_user()->set_phone("12345678901");
 	body->mutable_user_session()->set_token("asdf");
-	body->mutable_user_session()->set_alive_time(3);
+	body->mutable_user_session()->set_alive_time(80);
 
 	body->set_url("xxx.com");
 	body->set_method(OperationType::GET);

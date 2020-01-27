@@ -133,6 +133,19 @@ def linux_systemcmd_proxy_build(source_dir, debug, install_path):
     os.chdir(cur_dir)
 
 
+def fmt_build(source_dir, debug, install_path):
+    cur_dir = os.getcwd()
+
+    os.chdir(source_dir)
+    os.system("mkdir build -p")
+    os.chdir('build')
+    os.system("cmake ../ -DCMAKE_INSTALL_PREFIX=%s" % install_path)
+    os.system("make")
+    os.system("make install")
+
+    os.chdir(cur_dir)
+
+
 # 模块信息
 third_party_modules = [
     ThirdPartyModule(SQLiteCpp_build, "SQLiteCpp", "c++封装的sqlite3"),
@@ -144,6 +157,7 @@ third_party_modules = [
     ThirdPartyModule(sole_build, "sole", "简单uuid库"),
     ThirdPartyModule(util_pthread_build, "util_pthread", "pthread线程简单接口封装"),
     ThirdPartyModule(linux_systemcmd_proxy_build, "linux-systemcmd-proxy", "linux下system接口的代理库"),
+    ThirdPartyModule(fmt_build, "fmt", "c++更好的格式话输出，类似python format"),
 ]
 
 # 模块索引列表

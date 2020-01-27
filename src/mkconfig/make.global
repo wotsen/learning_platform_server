@@ -22,7 +22,15 @@ INC := -I$(ROOT_DIR)/../include \
 		-I$(ROOT_DIR)/tools
 
 # github三方库使用静态链接
-LIBS := -L$(ROOT_DIR)/../lib -leasylogger -luv -lutil_time -lprotobuf -lutil_pthread -lSQLiteCpp -lsqlite3
+LIBS := -L$(ROOT_DIR)/../lib \
+		-leasylogger \
+		-luv \
+		-lutil_time \
+		-lprotobuf \
+		-lutil_pthread \
+		-lSQLiteCpp \
+		-lsqlite3 \
+		-lfmt
 LIBS += $(LIBS) -lrt -lpthread -ldl
 
 DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\"

@@ -145,6 +145,8 @@ static bool uv_stream_write(uv_stream_t *handle, const std::string &data)
 
 	wr->buf = uv_buf_init(const_cast<char *>(data.data()), data.size());
 
+	log_d("send sdk data\n");
+
 	if (0 != uv_write((uv_write_t *)wr, handle, &wr->buf, 1, on_stream_write))
 	{
 		log_e("uv_write failed\n");

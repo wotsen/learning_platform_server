@@ -19,6 +19,7 @@
 #include <SQLiteCpp/sqlite3.h> // for SQLITE_ERROR, SQLITE_RANGE and SQLITE_DONE
 #include <easylogger/easylogger_setup.h>
 #include <sole/sole.hpp>
+#include <fmt/format.h>
 #include "util_time/util_time.h"
 #include "task_manage/task_manage.h"
 #include "sys_capability.h"
@@ -123,7 +124,7 @@ public:
 		// 移除过期用户
 		sessions_.erase(std::remove_if(sessions_.begin(), sessions_.end(), [](auto &_session) -> bool {
 							   if (0 == _session->now_) {
-								   log_d("user %s token over time\n", item->name_.c_str());
+								   log_d("user %s token over time\n", _session->name_.c_str());
 								   return true;
 							   }
 
@@ -226,8 +227,8 @@ public:
 	{
 		if (max_alive_time < user_info.alive_time())
 		{
-			log_d("not support %s alive time\n", user_info.alive_time());
-			return ContentResultE::R_CODE_ERROR;
+			log_d("not support %zu alive time\n", user_info.alive_time());
+			return ContentResultE::R_CODE_USER_ALIVE_TIME_TOOLONG;
 		}
 
 		Statement query_user(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
@@ -262,27 +263,29 @@ public:
 		if (search_user_session_by_name(user_info.user().user_name(), &_session))
 		{
 			_session->alive_time_ = user_info.alive_time();
-			_session.now_ = user_info.alive_time();
+			_session->now_ = user_info.alive_time();
 			token = _session->token_;
 
 			log_d("user %s login ready\n", user_info.user().user_name().c_str());
-		}
-		else
-		{
-			UserSession new_session;
-			sole::uuid uid = sole::uuid4();
 
-			new_session.name_ = user_info.user().user_name();
-			new_session.now_ = user_info.alive_time();
-			new_session.alive_time_ = user_info.alive_time();
-			new_session.token_ = uid.str();
+			log_d("user %s token %s\n", _session->name_.c_str(), token.c_str());
 
-			token = uid.str();
+			return ContentResultE::R_CODE_OK;
 		}
+
+		UserSession new_session;
+		sole::uuid uid = sole::uuid4();
+
+		new_session.name_ = user_info.user().user_name();
+		new_session.now_ = user_info.alive_time();
+		new_session.alive_time_ = user_info.alive_time();
+		new_session.token_ = uid.str();
+
+		token = uid.str();
 
 		log_d("user %s token %s\n", new_session.name_.c_str(), token.c_str());
 
-		return add_session(session) ? ContentResultE::R_CODE_OK : ContentResultE::R_CODE_ERROR;
+		return add_session(new_session) ? ContentResultE::R_CODE_OK : ContentResultE::R_CODE_ERROR;
 	}
 
 	/**
@@ -332,10 +335,10 @@ public:
 	{
 		if (max_alive_time < user_info.alive_time())
 		{
-			log_d("not support %s alive time\n", user_info.alive_time());
-			return ContentResultE::R_CODE_ERROR;
+			log_d("not support %zu alive time\n", user_info.alive_time());
+			return ContentResultE::R_CODE_USER_ALIVE_TIME_TOOLONG;
 		}
-		
+
 		Statement query(*user_db, "SELECT * FROM " USER_TABLE " where name = ?");
 
 		query.bind(1, user_info.user().user_name());
@@ -465,6 +468,13 @@ bool _user_manange_midware_do(const Sdk &sdk_req, Sdk &sdk_res)
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
 			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
 			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user password error");
+			return false;
+
+		case ContentResultE::R_CODE_USER_ALIVE_TIME_TOOLONG:
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
+			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error");
+			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code(
+						fmt::format("alive tiem too long, max is {}", max_alive_time));
 			return false;
 
 		default:
