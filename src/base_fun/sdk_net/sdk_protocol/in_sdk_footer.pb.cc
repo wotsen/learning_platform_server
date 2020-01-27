@@ -153,14 +153,15 @@ const char descriptor_table_protodef_in_5fsdk_5ffooter_2eproto[] PROTOBUF_SECTIO
   "lt\022*\n\nsdk_result\030\001 \001(\0132\026.insider.sdk.Sdk"
   "Result\0222\n\016content_result\030\002 \001(\0132\032.insider"
   ".sdk.ContentResult\":\n\006Footer\022\013\n\003res\030\001 \001("
-  "\005\022#\n\006result\030\002 \001(\0132\023.insider.sdk.Result*\334"
-  "\001\n\016ContentResultE\022\r\n\tR_CODE_OK\020\000\022\020\n\014R_CO"
+  "\005\022#\n\006result\030\002 \001(\0132\023.insider.sdk.Result*\200"
+  "\002\n\016ContentResultE\022\r\n\tR_CODE_OK\020\000\022\020\n\014R_CO"
   "DE_ERROR\020\001\022\025\n\021R_CODE_USER_EXIST\020\002\022\035\n\031R_C"
   "ODE_USER_TOKEN_TIMEOUT\020\003\022\031\n\025R_CODE_USER_"
   "NOT_EXIST\020\004\022\035\n\031R_CODE_USER_IN_BLACK_LIST"
   "\020\005\022\035\n\031R_CODE_USER_NO_PERMISSION\020\006\022\032\n\026R_C"
-  "ODE_USER_PASS_ERROR\020\007*#\n\016ResponseResult\022"
-  "\006\n\002OK\020\000\022\t\n\005ERROR\020\001b\006proto3"
+  "ODE_USER_PASS_ERROR\020\007\022\"\n\036R_CODE_USER_ALI"
+  "VE_TIME_TOOLONG\020\010*#\n\016ResponseResult\022\006\n\002O"
+  "K\020\000\022\t\n\005ERROR\020\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_in_5fsdk_5ffooter_2eproto_deps[1] = {
 };
@@ -173,7 +174,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_in_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_in_5fsdk_5ffooter_2eproto_once;
 static bool descriptor_table_in_5fsdk_5ffooter_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_in_5fsdk_5ffooter_2eproto = {
-  &descriptor_table_in_5fsdk_5ffooter_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5ffooter_2eproto, "in_sdk_footer.proto", 626,
+  &descriptor_table_in_5fsdk_5ffooter_2eproto_initialized, descriptor_table_protodef_in_5fsdk_5ffooter_2eproto, "in_sdk_footer.proto", 662,
   &descriptor_table_in_5fsdk_5ffooter_2eproto_once, descriptor_table_in_5fsdk_5ffooter_2eproto_sccs, descriptor_table_in_5fsdk_5ffooter_2eproto_deps, 4, 0,
   schemas, file_default_instances, TableStruct_in_5fsdk_5ffooter_2eproto::offsets,
   file_level_metadata_in_5fsdk_5ffooter_2eproto, 4, file_level_enum_descriptors_in_5fsdk_5ffooter_2eproto, file_level_service_descriptors_in_5fsdk_5ffooter_2eproto,
@@ -197,6 +198,7 @@ bool ContentResultE_IsValid(int value) {
     case 5:
     case 6:
     case 7:
+    case 8:
       return true;
     default:
       return false;

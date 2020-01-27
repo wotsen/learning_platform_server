@@ -20,6 +20,8 @@ enum ContentResultE {
     R_CODE_USER_NO_PERMISSION = 6;
     // 用户密码错误
     R_CODE_USER_PASS_ERROR = 7;
+    // 用户生存时间过长，不支持
+    R_CODE_USER_ALIVE_TIME_TOOLONG = 8;
 }
 
 // 消息协议响应结果

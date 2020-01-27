@@ -52,11 +52,11 @@ message Header {
     SdkMagic msg_magic = 1;
     // 版本，必须校验SDK_CUR_VERSION
     SdkVersion version = 2;
-    // 包长，目前废弃
+    // 包序号
     int64 pack_id = 3;
     // 数据时间
     DataTime time = 4;
-    // 熟路方向
+    // 数据方向
     DataFlow data_dir = 5;
     // 源地址
     Host host = 6;
