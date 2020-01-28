@@ -309,7 +309,7 @@ def build_proc(build_option, version, debug):
     build_proc = (
         BuildProc(1, make_objs),
         BuildProc(2, clean_objs),
-        BuildProc(2, clean_make_objs),
+        BuildProc(3, clean_make_objs),
         BuildProc(4, make_and_run),
         BuildProc(5, clean_make_and_run),
     )
