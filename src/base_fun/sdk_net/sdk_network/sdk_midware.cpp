@@ -71,6 +71,10 @@ public:
 				if (!item->_midware(interface, sdk_req, sdk_res))
 				{
 					log_d("proc midware %s failed\n", item->name.c_str());
+					
+					sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
+					sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error module : " + item->name);
+
 					// 一个中间件处理失败不再向后传递
 					return false;
 				}

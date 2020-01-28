@@ -291,13 +291,16 @@ void sdk_uv_net_init(void)
 		log_e("not support ip version : %s\n", ip_version.c_str());
 
 		return ;
-	} 
+	}
 
 	// FIXME:目前只实现ipv4
+	// 无须创建线程，由libuv管理
 	uv_sdk_net_server->create_tcp_server(ip, port);
 
 	// 初始化sdk消息分发任务
 	task_sdk_package_distribution_init();
 
 	log_i("sdk-uv网络任务初始化完成...\n");
+
+	return;
 }

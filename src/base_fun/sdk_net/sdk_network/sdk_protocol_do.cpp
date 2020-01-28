@@ -71,12 +71,15 @@ bool check_sdk_header(struct sdk_net_interface &interface, const Sdk &req_sdk)
 {
 	const Header &header = req_sdk.header();
 
+	// 其实位置检查
+	// FIXME:可以不用
 	if (SdkMagic::SDK_MAGIC != header.msg_magic())
 	{
 		log_e("msg magic is %x\n", header.msg_magic());
 		return false;
 	}
 
+	// 版本检查，不同版本不兼容，后续可去除
 	if (SdkVersion::SDK_CUR_VERSION != header.version())
 	{
 		log_e("msg version is %x\n", header.version());
@@ -105,6 +108,7 @@ bool check_sdk_header(struct sdk_net_interface &interface, const Sdk &req_sdk)
 		return false;
 	}
 
+	// 地址检查
 	if (interface.src_ip != header.host().ip()
 		|| (int)interface.src_port != header.host().port())
 	{
@@ -150,14 +154,14 @@ static bool sdk_pack_res_msg(struct sdk_net_interface interface, const Sdk &sdk_
  */
 static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &req, std::string &res)
 {
-	Sdk sdk_req;
-	Sdk sdk_res;
+	Sdk sdk_req;	// sdk请求消息
+	Sdk sdk_res;	// sdk应答消息
 
 	// 解析sdk原始数据
 	if (!sdk_req.ParseFromString(req))
 	{
 		log_e("parser sdk msg failed\n");
-		return ;
+		return;
 	}
 
 	// sdk头检查
@@ -167,19 +171,26 @@ static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &r
 		return;
 	}
 
-	// 中间件
+	// 中间件处理，中间件处理失败时直接响应
 	if (!sdk_midware_do(interface, sdk_req, sdk_res))
 	{
 		log_e("sdk midware proc failed\n");
+		goto over;
+	}
+
+	// sdk内容部分
+	if (!sdk_body_do(interface, sdk_req, sdk_res))
+	{
+		log_e("sdk body verify error\n");
 	}
 	else
 	{
-		// sdk内容部分
-		if (!sdk_body_do(interface, sdk_req, sdk_res))
-		{
-			log_e("sdk body verify error\n");
-		}
+		// sdk消息正确响应
+		sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::OK);
+		sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("ok");
 	}
+
+over:
 
 	// 组包
 	if (!sdk_pack_res_msg(interface, sdk_res, res))
@@ -208,6 +219,7 @@ void sdk_protocol_do(struct sdk_net_interface &interface, const std::string &req
 		return ;
 	}
 
+	// 实际消息处理
 	sdk_msg_do(interface, req, res);
 
 	return ;

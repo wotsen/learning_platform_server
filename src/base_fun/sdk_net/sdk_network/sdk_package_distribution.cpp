@@ -98,6 +98,8 @@ static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface 
 	interface.src_port = ntohs(addr.sin_port);
 
 	log_i("client ip = %s, port = %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+
+	return;
 }
 
 /**
@@ -113,7 +115,7 @@ static void *task_sdk_stream_do(void *name) noexcept
 
 	for (;;)
 	{
-		task_alive(tid); // 自身任务心跳
+		task_alive(tid);
 
 		if (!stream_list.empty())
 		{
@@ -131,6 +133,7 @@ static void *task_sdk_stream_do(void *name) noexcept
 			sdk_protocol_do(interface, req_data, res_data);
 
             // 发送响应消息
+			// FIXME:需要确认libuv发送数据是否同步发送，如是异步发送,res_data只是栈空间变量，会被销毁
 			package->write(package->handle, res_data);
 
 			// 消息出队
