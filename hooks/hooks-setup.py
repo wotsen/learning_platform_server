@@ -14,6 +14,7 @@ def git_hooks():
     """
     git的钩子脚本
     """
+    os.system("chmod +x ./ -R")
     os.system("cp pre-commit.py ../.git/hooks/pre-commit")
     os.system("cp commit-msg.py ../.git/hooks/commit-msg")
 
