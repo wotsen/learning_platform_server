@@ -188,10 +188,7 @@ static bool _user_manange_midware_do(const Sdk &sdk_req, Sdk &sdk_res)
  */
 bool user_manange_midware_do(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res)
 {
-    if (!user_manager_state())
-    {
-        return true;
-    }
+    if (!user_manager_state()) { return true; }
 
 	return _user_manange_midware_do(sdk_req, sdk_res);
 }

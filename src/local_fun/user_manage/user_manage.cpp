@@ -21,13 +21,11 @@ using namespace wotsen;
 
 // 模块状态
 static bool _module_state = false;
-
 // 用户管理
 static std::unique_ptr<UserManager> user_manager;
 
 // 模块清理
 static void _module_clean(void);
-
 // 用户管理任务
 static void *user_manage_task(void *name);
 
@@ -360,6 +358,7 @@ void user_manager_finit(void)
     // _module_clean();
 }
 
+// 获取用户管理句柄
 const std::unique_ptr<UserManager> &get_user_manager(void)
 {
 	return user_manager;

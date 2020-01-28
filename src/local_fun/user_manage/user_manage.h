@@ -16,7 +16,9 @@
 #include "sdk_net/sdk_network/sdk_midware.h"
 
 ///< 用户管理中间件
-bool user_manange_midware_do(struct sdk_net_interface &interface, const insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res);
+bool user_manange_midware_do(struct sdk_net_interface &interface,
+                             const insider::sdk::Sdk &sdk_req,
+                             insider::sdk::Sdk &sdk_res);
 
 ///< 初始化用户管理
 void user_manager_init(void);
