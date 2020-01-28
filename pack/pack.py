@@ -257,10 +257,10 @@ def make_and_run(release_version, debug):
 
     os.chdir(cur_dir)
 
-    os.system("mkdir ai_platform/ai_runtime/bin/ -p")
-    os.system("cp ../src/AIService ai_platform/ai_runtime/bin/")
-    os.system("cp ../bin/systemcmd_proxyd ai_platform/ai_runtime/bin/")
-    os.chdir("ai_platform/ai_runtime/bin/")
+    os.system("mkdir learning_platform/learning_platform_runtime/bin/ -p")
+    os.system("cp ../src/AIService learning_platform/learning_platform_runtime/bin/")
+    os.system("cp ../bin/systemcmd_proxyd learning_platform/learning_platform_runtime/bin/")
+    os.chdir("learning_platform/learning_platform_runtime/bin/")
     _thread.start_new_thread(run_system_cmd_proxyd, ())
     os.system("sudo ./AIService")
 
@@ -281,13 +281,13 @@ def clean_make_and_run(release_version, debug):
 
     os.chdir(cur_dir)
 
-    os.system("mkdir ai_platform/ai_runtime/bin/ -p")
+    os.system("mkdir learning_platform/learning_platform_runtime/bin/ -p")
 
     # 程序拷贝
-    os.system("cp ../src/AIService ai_platform/ai_runtime/bin/")
-    os.system("cp ../bin/systemcmd_proxyd ai_platform/ai_runtime/bin/")
+    os.system("cp ../src/AIService learning_platform/learning_platform_runtime/bin/")
+    os.system("cp ../bin/systemcmd_proxyd learning_platform/learning_platform_runtime/bin/")
 
-    os.chdir("ai_platform/ai_runtime/bin/")
+    os.chdir("learning_platform/learning_platform_runtime/bin/")
 
     # 启动systemcmd 代理服务器
     _thread.start_new_thread(run_system_cmd_proxyd, ())
@@ -417,7 +417,7 @@ def pack_learn_platform_server(pack_type, pack_name, version, debug):
     @param debug:调试使能
     """
     # make编译
-    clean_make_objs(version, debug)
+    # clean_make_objs(version, debug)
 
     print("编译结束，开始打包 %s" % pack_name)
 
@@ -428,44 +428,44 @@ def pack_learn_platform_server(pack_type, pack_name, version, debug):
     print("创建目录")
 
     # 创建目录
-    os.system("mkdir zip_dir/ai_platform/ai_runtime/bin -p")
-    os.system("mkdir zip_dir/ai_platform/ai_runtime/etc -p")
-    os.system("mkdir zip_dir/ai_platform/ai_runtime/data -p")
-    os.system("mkdir zip_dir/ai_platform/ai_runtime/log -p")
-    os.system("mkdir zip_dir/ai_platform/ai_runtime/err -p")
+    os.system("mkdir zip_dir/learning_platform/learning_platform_runtime/bin -p")
+    os.system("mkdir zip_dir/learning_platform/learning_platform_runtime/etc -p")
+    os.system("mkdir zip_dir/learning_platform/learning_platform_runtime/data -p")
+    os.system("mkdir zip_dir/learning_platform/learning_platform_runtime/log -p")
+    os.system("mkdir zip_dir/learning_platform/learning_platform_runtime/err -p")
 
     print("程序拷贝")
 
     # 程序拷贝
-    os.system("cp ../src/AIService zip_dir/ai_platform/ai_runtime/bin/")
-    os.system("cp ../bin/systemcmd_proxyd zip_dir/ai_platform/ai_runtime/bin/")
+    os.system("cp ../src/AIService zip_dir/learning_platform/learning_platform_runtime/bin/")
+    os.system("cp ../bin/systemcmd_proxyd zip_dir/learning_platform/learning_platform_runtime/bin/")
 
     print("配置文件拷贝")
 
     # 配置文件拷贝
-    os.system("cp ai_platform/ai_runtime/etc/*.json zip_dir/ai_platform/ai_runtime/etc/")
+    os.system("cp learning_platform/learning_platform_runtime/etc/*.json zip_dir/learning_platform/learning_platform_runtime/etc/")
 
     print("默认参数拷贝")
 
     # 默认参数拷贝
-    os.system("cp ai_platform/ai_runtime/data/sys_default_param.json zip_dir/ai_platform/ai_runtime/data/")
+    os.system("cp learning_platform/learning_platform_runtime/data/sys_default_param.json zip_dir/learning_platform/learning_platform_runtime/data/")
 
     print("安装脚本拷贝")
 
     # 安装脚本拷贝
-    os.system("cp ai_platform/install.sh zip_dir/ai_platform/ -r")
+    os.system("cp learning_platform/install.sh zip_dir/learning_platform/ -r")
 
     print("启动脚本拷贝")
 
     # 启动脚本拷贝
-    os.system("cp ai_platform/ai_runtime/run.sh zip_dir/ai_platform/ai_runtime/run.sh")
+    os.system("cp learning_platform/learning_platform_runtime/srv_run.sh zip_dir/learning_platform/learning_platform_runtime/srv_run.sh")
 
     # 时间戳
     zip_name = get_zip_name(pack_type, pack_name, version, debug)
 
     print("压缩文件")
 
-    last_name = zip_dir_file("zip_dir", "ai_platform", "../", zip_name, "pass")
+    last_name = zip_dir_file("zip_dir", "learning_platform", "../", zip_name, "pass")
 
     print("压缩完成 ", last_name)
 
