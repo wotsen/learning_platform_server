@@ -11,33 +11,34 @@ import zipfile
 from optparse import OptionParser
 from collections import namedtuple
 
-
-_DEF_VERSION = "v0.0.0"
+_DEF_VERSION = "0.0.0"
 
 parser = OptionParser(usage="usage: %prog [options]")
 
 parser.add_option("-d", "--debug", dest="debug", action="store_true", default=False,
-                    help="debug模式,默认非debug模式,如果是debug版本：-d or --debug")
+                  help="debug模式,默认非debug模式,如果是debug版本：-d or --debug")
 
 parser.add_option("-v", "--version", dest="release_version", type="string", default=_DEF_VERSION,
                   help="""
 soft release version. 
 将记录到release-version.json，默认值将使用最新值.
-example: --verion=v1.0.0 or -vv1.0.0""")
+example: --version=1.0.0 or -v1.0.0""")
 
 parser.add_option("-p", "--patch", dest="patch", action="store_true", default=False,
-                    help="全量包还是增量包，默认全量包，如果是增量包：-d or --debug")
+                  help="全量包还是增量包，默认全量包，如果是增量包：-d or --debug")
 
 parser.add_option("-n", "--name", dest="name", type="int", default=0,
-                    help="""
-构建升级包(可选):
+                  help="""
+构建升级包，可按需要进行选择，目的是支持全量和增量:
 1 --> 构建所有升级包
+2 --> 只构建打包服务器(不支持)
+3 --> 只构建打包system cmd代理服务器(不支持)
 """)
 
 parser.add_option("-b", "--build",
                   action="store", dest="build", type="int", default=4,
                   help="""
-代码构建(可选1,2,3,4):
+工程构建，将会构建所有服务器所需要的资源(可选1,2,3,4):
 1 --> [make], 
 2 --> [make clean], 
 3 --> [make clean && make], 
@@ -47,7 +48,7 @@ example(default): --build=4 or -b4""")
 
 (options, args) = parser.parse_args()
 
-crc_list = [
+crc_list = (
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
     0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
     0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
@@ -80,9 +81,16 @@ crc_list = [
     0x7c26, 0x6c07, 0x5c64, 0x4c45, 0x3ca2, 0x2c83, 0x1ce0, 0x0cc1,
     0xef1f, 0xff3e, 0xcf5d, 0xdf7c, 0xaf9b, 0xbfba, 0x8fd9, 0x9ff8,
     0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
-]
+)
+
 
 def sum_crc16(crc, file_bit):
+    """
+计算CRC16
+    @param crc:初始校验码
+    @param file_bit:文件2进制流
+    @return:校验码
+    """
     for bit in file_bit:
         crc = 0xffff & crc
         temp = crc // 256
@@ -94,6 +102,11 @@ def sum_crc16(crc, file_bit):
 
 
 def sum_file_crc16(file_name):
+    """
+计算文件校验码，每次计算4096字节
+    @param file_name:文件名
+    @return:校验码
+    """
     crc = 0
     with open(file_name, 'rb') as f:
         while True:
@@ -106,7 +119,9 @@ def sum_file_crc16(file_name):
 
 
 def read_last_release_version():
-    """从历史读取最新版本号"""
+    """从历史读取最新版本号
+    @return: 历史最新的版本号
+    """
 
     print("读取历史版本号")
 
@@ -123,7 +138,10 @@ def read_last_release_version():
 
 
 def save_release_version(release_version):
-    # 记录历史版本号
+    """
+记录历史版本号
+    @param release_version:输入版本号
+    """
 
     with open("release_version.json", "r+", encoding="utf8") as f:
         versions = dict()
@@ -147,48 +165,95 @@ def save_release_version(release_version):
 
 
 def check_build_version(old_version, new_version):
+    """
+检查版本号
+    @param old_version:旧版本号
+    @param new_version:新版本号
+    """
     print("检查版本号")
 
-    if not re.match(r'[vV](0|[1-9][0-9]*.?)\.(0|[1-9][0-9]*.?)\.(0|[1-9][0-9]*.?)$', new_version):
-        print("%s 版本号格式错误，v不区分大小写，以0开头的版本好只能有一个数字." % new_version)
+    if not re.match(r'(0|[1-9][0-9]*.?)\.(0|[1-9][0-9]*.?)\.(0|[1-9][0-9]*.?)$', new_version):
+        print("%s 版本号格式错误，以0开头的版本号只能有一个数字." % new_version)
         exit(-1)
 
-    if old_version.lower() > new_version.lower():
+    if old_version > new_version:
         print("新版本号错误，不能比历史最近版本号还小，old:%s, new:%s" % (old_version, new_version))
         exit(-1)
 
 
+_SRV_DEBUG = "ndebug=true"
+
+
+def srv_debug(debug):
+    """
+调试版本的编译选项
+    @param debug:调试使能
+    @return:编译选项
+    """
+    if debug:
+        return ""
+    else:
+        return _SRV_DEBUG
+
+
 def make_objs(release_version, debug):
+    """
+只进行编译
+    @param release_version: 版本号
+    @param debug: 调试使能
+    """
+    print("只进行编译")
     os.chdir("../src/")
-    os.system("make RELEASE_VERSION=%s" % release_version)
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, srv_debug(debug)))
 
 
 def clean_objs(release_version, debug):
+    """
+清除编译产物
+    @param release_version:版本号
+    @param debug:调试使能
+    """
+
+    print("清除编译产物")
+
     os.chdir("../src/")
     os.system("make clean")
 
 
 def clean_make_objs(release_version, debug):
+    """
+清除后编译
+    @param release_version:版本号
+    @param debug:调试使能
+    """
+    print("清除后编译")
+
     cur_dir = os.getcwd()
     os.chdir("../src/")
     os.system("make clean")
-    os.system("make")
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, srv_debug(debug)))
     os.chdir(cur_dir)
 
 
-def run_systemcmd_proxyd():
-    """启动systemcmd代理"""
+def run_system_cmd_proxyd():
+    """
+启动systemcmd代理"
+    """
     os.system("./systemcmd_proxyd")
 
 
 def make_and_run(release_version, debug):
-    """make and run"""
-    print(make_and_run.__doc__)
+    """
+编译并且运行
+    @param release_version:版本号
+    @param debug:调试使能
+    """
+    print("编译并且运行")
 
     cur_dir = os.getcwd()
 
     os.chdir("../src/")
-    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if not debug else ""))
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, srv_debug(debug)))
 
     os.chdir(cur_dir)
 
@@ -196,41 +261,52 @@ def make_and_run(release_version, debug):
     os.system("cp ../src/AIService ai_platform/ai_runtime/bin/")
     os.system("cp ../bin/systemcmd_proxyd ai_platform/ai_runtime/bin/")
     os.chdir("ai_platform/ai_runtime/bin/")
-    _thread.start_new_thread(run_systemcmd_proxyd, ())
+    _thread.start_new_thread(run_system_cmd_proxyd, ())
     os.system("sudo ./AIService")
 
 
 def clean_make_and_run(release_version, debug):
-    """make clean and make and run"""
-    print(make_and_run.__doc__)
+    """
+重新编译，然后运行
+    @param release_version:版本号
+    @param debug:调试使能
+    """
+    print("重新编译，然后运行")
 
     cur_dir = os.getcwd()
 
     os.chdir("../src/")
     os.system("make clean")
-    os.system("make RELEASE_VERSION=%s %s" % (release_version, "ndebug=true" if not debug else ""))
+    os.system("make RELEASE_VERSION=%s %s" % (release_version, srv_debug(debug)))
 
     os.chdir(cur_dir)
 
     os.system("mkdir ai_platform/ai_runtime/bin/ -p")
-    
+
     # 程序拷贝
     os.system("cp ../src/AIService ai_platform/ai_runtime/bin/")
     os.system("cp ../bin/systemcmd_proxyd ai_platform/ai_runtime/bin/")
-    
+
     os.chdir("ai_platform/ai_runtime/bin/")
 
     # 启动systemcmd 代理服务器
-    _thread.start_new_thread(run_systemcmd_proxyd, ())
+    _thread.start_new_thread(run_system_cmd_proxyd, ())
 
     # 启动应用
     os.system("sudo ./AIService")
 
 
 def build_proc(build_option, version, debug):
+    """
+构建
+    @param build_option:修建选项，选择构建方式
+    @param version:版本
+    @param debug:调试使能
+    @return:
+    """
     BuildProc = namedtuple("BuildProc", ['option', 'proc'])
 
-    build_procs = (
+    build_proc = (
         BuildProc(1, make_objs),
         BuildProc(2, clean_objs),
         BuildProc(2, clean_make_objs),
@@ -238,11 +314,11 @@ def build_proc(build_option, version, debug):
         BuildProc(5, clean_make_and_run),
     )
 
-    for item in build_procs:
+    for item in build_proc:
         if item.option == build_option:
             item.proc(version, debug)
             return
-    
+
     print("不支持构建选项: ", build_option)
     print("使用 --help 查看帮助")
 
@@ -250,9 +326,9 @@ def build_proc(build_option, version, debug):
 def get_zip_file(input_path, result):
     """
     对目录进行深度优先遍历
-    :param input_path:
-    :param result:
-    :return:
+    @param input_path:路径
+    @param result:结果
+    @return:
     """
     files = os.listdir(input_path)
 
@@ -274,26 +350,47 @@ _RELEASE = "r"
 
 
 def get_zip_name(pack_type, pack_name, version, debug):
+    """
+获取zip包名称
+    @param pack_type:打包类型
+    @param pack_name:打包名称
+    @param version:版本
+    @param debug:调试使能
+    @return:
+    """
     return "%s_%s_package_%s%s_%s" % \
-                (_PATCH if pack_type else _UPDATE, \
-                    pack_name, \
-                    time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()), \
-                    _DEBUG if debug else _RELEASE, \
-                    version)
+           (_PATCH if pack_type else _UPDATE,
+            pack_name,
+            time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()),
+            _DEBUG if debug else _RELEASE,
+            version)
 
 
-def zip_dir_file(file_dir, start_dir, out_dir, zip_name, passwd=None):
+def zip_dir_file(file_dir, start_dir, out_dir, zip_name, password=None):
+    """
+使用zip压缩文件
+    @param file_dir: 文件所在目录
+    @param start_dir: 起始目录
+    @param out_dir: 输出目录
+    @param zip_name: 压缩名称
+    @param password: 密码，为空时不加密
+    @return:
+    """
     cur_dir = os.getcwd()
     os.chdir(file_dir)
 
-    if passwd:
-        pass_str = "-P " + passwd
+    if password:
+        pass_str = "-P " + password
     else:
         pass_str = " "
+
+    print("开始压缩")
 
     # 压缩文件
     os.system("zip -r %s %s/%s %s/*" % (pass_str, out_dir, zip_name, start_dir))
     os.chdir(cur_dir)
+
+    print("计算crc16")
 
     # 校验CRC
     crc = hex(sum_file_crc16(zip_name)).upper()[2:]
@@ -312,14 +409,23 @@ def zip_dir_file(file_dir, start_dir, out_dir, zip_name, passwd=None):
 
 
 def pack_learn_platform_server(pack_type, pack_name, version, debug):
+    """
+打包压缩服务器发布包
+    @param pack_type:打包类型，update全量还是patch增量
+    @param pack_name:名称
+    @param version:版本
+    @param debug:调试使能
+    """
     # make编译
-    # clean_make_objs(version, debug)
+    clean_make_objs(version, debug)
 
-    print("开始打包 %s" % pack_name)
+    print("编译结束，开始打包 %s" % pack_name)
 
     # 清除文件
     os.system("rm zip_dir -rf")
     os.system("rm *.zip -f")
+
+    print("创建目录")
 
     # 创建目录
     os.system("mkdir zip_dir/ai_platform/ai_runtime/bin -p")
@@ -328,18 +434,28 @@ def pack_learn_platform_server(pack_type, pack_name, version, debug):
     os.system("mkdir zip_dir/ai_platform/ai_runtime/log -p")
     os.system("mkdir zip_dir/ai_platform/ai_runtime/err -p")
 
+    print("程序拷贝")
+
     # 程序拷贝
     os.system("cp ../src/AIService zip_dir/ai_platform/ai_runtime/bin/")
     os.system("cp ../bin/systemcmd_proxyd zip_dir/ai_platform/ai_runtime/bin/")
 
+    print("配置文件拷贝")
+
     # 配置文件拷贝
     os.system("cp ai_platform/ai_runtime/etc/*.json zip_dir/ai_platform/ai_runtime/etc/")
+
+    print("默认参数拷贝")
 
     # 默认参数拷贝
     os.system("cp ai_platform/ai_runtime/data/sys_default_param.json zip_dir/ai_platform/ai_runtime/data/")
 
+    print("安装脚本拷贝")
+
     # 安装脚本拷贝
     os.system("cp ai_platform/install.sh zip_dir/ai_platform/ -r")
+
+    print("启动脚本拷贝")
 
     # 启动脚本拷贝
     os.system("cp ai_platform/ai_runtime/run.sh zip_dir/ai_platform/ai_runtime/run.sh")
@@ -347,8 +463,14 @@ def pack_learn_platform_server(pack_type, pack_name, version, debug):
     # 时间戳
     zip_name = get_zip_name(pack_type, pack_name, version, debug)
 
+    print("压缩文件")
+
+    last_name = zip_dir_file("zip_dir", "ai_platform", "../", zip_name, "pass")
+
+    print("压缩完成 ", last_name)
+
     # 存放压缩包
-    os.system("cp %s packages/" % zip_dir_file("zip_dir", "ai_platform", "../", zip_name, "pass"))
+    os.system("cp %s packages/" % last_name)
 
     print("打包结束")
 
@@ -361,6 +483,14 @@ pack_proc = (
 
 
 def package_software(pack_type, name_idx, version, debug):
+    """
+打包压缩软件
+    @param pack_type: 打包类型，update全量还是patch增量
+    @param name_idx: 名称索引
+    @param version: 版本
+    @param debug: 调试使能
+    @return:
+    """
     for item in pack_proc:
         if item.option == name_idx:
             item.proc(pack_type, item.name, version, debug)
@@ -373,12 +503,12 @@ def package_software(pack_type, name_idx, version, debug):
 def main():
     # 读取历史版本号
     version = read_last_release_version()
-    
+
     # 默认情况下使用版本号
-    if options.release_version.lower() != _DEF_VERSION:
+    if options.release_version != _DEF_VERSION:
         # 校验版本号
         check_build_version(version, options.release_version)
-        version = options.release_version.lower()
+        version = options.release_version
 
     # 记录版本号
     save_release_version(version)
@@ -388,9 +518,14 @@ def main():
     print("build : ", options.build)
     print("debug : ", options.debug)
 
+    # 添加前缀
+    version = 'v' + version
+
     if options.name != 0:
+        print("update pack : ", not options.patch)
+        print("pack name : ", options.name)
         package_software(options.patch, options.name, version, options.debug)
-        return 
+        return
 
     build_proc(options.build, version, options.debug)
 

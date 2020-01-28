@@ -47,3 +47,4 @@ lib
 *.db3
 sdk_test
 *.zip
+.idea
