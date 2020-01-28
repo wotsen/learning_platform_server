@@ -24,12 +24,18 @@ using namespace wotsen;
 
 // tcp消息处理接口
 static void *task_sdk_stream_do(void *name) noexcept;
-
 // TCP消息队列最大消息数量
 static const int MAX_STREAM_LIST_LEN = 1024;
-
 // tcp消息队列
 static std::list<sdk_package<uv_stream_t>*> stream_list;
+
+// 获取uv tcp网络接口
+static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface &interface);
+// 处理sdk tcp消息
+static void sdk_stream_do(sdk_package<uv_stream_t> *package);
+
+// tcp消息处理任务
+static void *task_sdk_stream_do(void *name) noexcept;
 
 /**
  * @brief tcp消息入队
@@ -102,6 +108,26 @@ static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface 
 	return;
 }
 
+// 处理sdk tcp消息
+static void sdk_stream_do(sdk_package<uv_stream_t> *package)
+{
+	std::string req_data(((uv_buf_t *)package->handle->data)->base);
+	std::string res_data;
+	struct sdk_net_interface interface;
+
+	// 获取uv 网络接口信息
+	_get_uv_tcp_interface(package->handle, interface);
+
+	// 协议处理
+	sdk_protocol_do(interface, req_data, res_data);
+
+	// 发送响应消息
+	// FIXME:需要确认libuv发送数据是否同步发送，如是异步发送,res_data只是栈空间变量，会被销毁
+	package->write(package->handle, res_data);
+
+	return;
+}
+
 /**
  * @brief tcp消息处理任务
  * 
@@ -117,30 +143,18 @@ static void *task_sdk_stream_do(void *name) noexcept
 	{
 		task_alive(tid);
 
-		if (!stream_list.empty())
-		{
-			// 获取队列首部消息
-			sdk_package<uv_stream_t> *package = stream_list.front();
+		if (stream_list.empty()) { continue; }
 
-			std::string req_data(((uv_buf_t *)package->handle->data)->base);
-			std::string res_data;
-			struct sdk_net_interface interface;
+		// 获取队列首部消息
+		sdk_package<uv_stream_t> *package = stream_list.front();
 
-			// 获取uv 网络接口信息
-			_get_uv_tcp_interface(package->handle, interface);
+		// 处理sdk tcp消息
+		sdk_stream_do(package);
 
-            // 协议处理
-			sdk_protocol_do(interface, req_data, res_data);
-
-            // 发送响应消息
-			// FIXME:需要确认libuv发送数据是否同步发送，如是异步发送,res_data只是栈空间变量，会被销毁
-			package->write(package->handle, res_data);
-
-			// 消息出队
-			stream_list.pop_back();
-			delete package;
-			package = nullptr;
-		}
+		// 消息出队
+		stream_list.pop_back();
+		delete package;
+		package = nullptr;
     }
 }
 

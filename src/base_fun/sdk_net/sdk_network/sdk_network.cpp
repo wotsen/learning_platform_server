@@ -35,22 +35,16 @@ static UvSdkNetServer *uv_sdk_net_server = nullptr;
 
 // 内存分配
 static void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
-
 // 读取tcp消息
 static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);
-
 // 发送tcp消息回调接口
 static void on_stream_write(uv_write_t *req, int status);
-
 // tcp连接回调
 static void on_tcp_connection(uv_stream_t *server, int status);
-
 // tcp客户端断开连接
 static void on_tcp_shutdown(uv_shutdown_t *req, int status);
-
 // 关闭服务
 static void on_close(uv_handle_t *peer);
-
 // 发送tcp消息
 static bool uv_stream_write(uv_stream_t *handle, const std::string &data);
 
@@ -186,23 +180,27 @@ static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *
 	sdk_package<uv_stream_t> *package = nullptr;
 	uv_buf_t *data = nullptr;
 
+	// 正常数据
 	if (nread > 0)
 	{
 		package = new sdk_package<uv_stream_t>;
 		data = new uv_buf_t(std::move(uv_buf_init(buf->base, buf->len)));
 
 		package->handle = client;
-		// package->recv_len = nread;
 		package->handle->data = (void *)data;
 		package->write = uv_stream_write;
+
+		// 数据入栈
 		push_sdk_package(package);
 	}
 
+	// 无数据
 	if (0 == nread)
 	{
 		delete buf->base;
 	}
 
+	// 接收异常
 	if (nread < 0)
 	{
 		log_d("close connect\n");

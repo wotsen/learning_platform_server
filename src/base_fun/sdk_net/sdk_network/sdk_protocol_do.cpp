@@ -22,12 +22,14 @@
 
 using namespace insider::sdk;
 
-// body内容处理
-static bool sdk_body_do(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res);
-// header数据处理
-static bool check_sdk_header(struct sdk_net_interface &interface, const Sdk &sdk_req);
 // sdk消息处理
 static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &req, std::string &res);
+// header数据处理
+static bool sdk_header_check(struct sdk_net_interface &interface, const Sdk &sdk_req);
+// body内容处理
+static bool sdk_body_do(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res);
+// 打包sdk数据
+static void sdk_pack_res_msg(struct sdk_net_interface interface, const Sdk &sdk_res, std::string &res);
 
 /**
  * @brief body内容处理
@@ -67,7 +69,7 @@ static bool sdk_body_do(struct sdk_net_interface &interface, const Sdk &sdk_req,
  * @return true 
  * @return false 
  */
-bool check_sdk_header(struct sdk_net_interface &interface, const Sdk &req_sdk)
+static bool sdk_header_check(struct sdk_net_interface &interface, const Sdk &req_sdk)
 {
 	const Header &header = req_sdk.header();
 
@@ -127,10 +129,8 @@ bool check_sdk_header(struct sdk_net_interface &interface, const Sdk &req_sdk)
  * @param interface 
  * @param sdk_res 
  * @param res 
- * @return true 
- * @return false 
  */
-static bool sdk_pack_res_msg(struct sdk_net_interface interface, const Sdk &sdk_res, std::string &res)
+static void sdk_pack_res_msg(struct sdk_net_interface interface, const Sdk &sdk_res, std::string &res)
 {
 	// TODO:添加响应信息
 
@@ -138,10 +138,10 @@ static bool sdk_pack_res_msg(struct sdk_net_interface interface, const Sdk &sdk_
 	if (!sdk_res.SerializeToString(&res))
 	{
 		log_e("serial response packet error\n");
-		return false;
 	}
 
-	return true;
+	google::protobuf::ShutdownProtobufLibrary();
+	return ;
 }
 
 /**
@@ -165,7 +165,7 @@ static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &r
 	}
 
 	// sdk头检查
-	if (!check_sdk_header(interface, sdk_req))
+	if (!sdk_header_check(interface, sdk_req))
 	{
 		log_e("sdk header verify error\n");
 		return;
@@ -175,7 +175,8 @@ static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &r
 	if (!sdk_midware_do(interface, sdk_req, sdk_res))
 	{
 		log_e("sdk midware proc failed\n");
-		goto over;
+		sdk_pack_res_msg(interface, sdk_res, res);
+		return;
 	}
 
 	// sdk内容部分
@@ -190,16 +191,8 @@ static void sdk_msg_do(struct sdk_net_interface &interface, const std::string &r
 		sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("ok");
 	}
 
-over:
-
-	// 组包
-	if (!sdk_pack_res_msg(interface, sdk_res, res))
-	{
-		log_e("pack response msg failed\n");
-	}
-
-	google::protobuf::ShutdownProtobufLibrary();
-
+	// 响应消息
+	sdk_pack_res_msg(interface, sdk_res, res);
 	return ;
 }
 

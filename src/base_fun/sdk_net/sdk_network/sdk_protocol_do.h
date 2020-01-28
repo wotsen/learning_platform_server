@@ -11,7 +11,6 @@
 #pragma once
 
 #include <string>
-#include <inttypes.h>
 #include "sdk_package_distribution.h"
 
 // sdk协议处理
