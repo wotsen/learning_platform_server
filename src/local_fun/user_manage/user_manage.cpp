@@ -209,7 +209,6 @@ bool UserManager::create_user_session(const UserSessionMsg &user_info, std::stri
 		return true;
 	}
 
-	// FIXME:要每次执行结果都不一样
 	token = sole::uuid4().str();
 
 	return add_session(user_info, token);
