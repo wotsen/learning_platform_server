@@ -218,6 +218,7 @@ def clean_objs(release_version, debug):
 
     os.chdir("../src/")
     os.system("make clean")
+    os.system("rm -f ../pack/learning_platform/learning_platform_runtime/bin/AIService")
 
 
 def clean_make_objs(release_version, debug):
@@ -231,6 +232,7 @@ def clean_make_objs(release_version, debug):
     cur_dir = os.getcwd()
     os.chdir("../src/")
     os.system("make clean")
+    os.system("rm -f ../pack/learning_platform/learning_platform_runtime/bin/AIService")
     os.system("make RELEASE_VERSION=%s %s" % (release_version, srv_debug(debug)))
     os.chdir(cur_dir)
 
@@ -277,6 +279,7 @@ def clean_make_and_run(release_version, debug):
 
     os.chdir("../src/")
     os.system("make clean")
+    os.system("rm -f ../pack/learning_platform/learning_platform_runtime/bin/AIService")
     os.system("make RELEASE_VERSION=%s %s" % (release_version, srv_debug(debug)))
 
     os.chdir(cur_dir)

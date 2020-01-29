@@ -18,7 +18,7 @@
 #include "sdk_net/sdk_network/sdk_network.h"
 #include "sdk_net/sdk_network/sdk_midware.h"
 #ifdef DEBUG
-// #include "sdk_net/sdk_tree/sdk_tree.h"
+#include "sdk_net/sdk_tree/sdk_tree.h"
 #endif
 
 // 应用模块导入
@@ -35,18 +35,44 @@
 #include "os_param.h"
 #include "usr_apps.h"
 
-class AppModuleManager;
-struct app_module_config;
+using namespace insider::sdk;
 
 using app_module_fun = void (*)(void);
 using app_module_status_fun = bool (*)(void);
+
+// 模块列表结束符
+#define END_OF_APP_MODULE { create_moudle_base("", false, E_APP_MODULE_BAD, E_APP_MODULE_CFG_PERMISSION_DISENABLE) }
+
+// 生成一个模块的基本信息
+static AppModuleBaseInfo create_moudle_base(const char *name, const bool enable,
+                                      const AppModuleState state, const AppModuleCfgPermission permission);
+
+// sdk中间件注册
+static void register_sdk_midwares(void);
+// 基础功能模块初始化
+static void base_function_module_init(void);
+// 应用业务模块初始化
+static void applications_module_init(void);
 
 /**
  * @brief 模块配置信息
  * 
  */
 struct app_module_config {
-    struct app_module_base_info base_info;  ///< 模块基本配置信息
+
+    app_module_config() {}
+
+    app_module_config(const AppModuleBaseInfo &base_info) : base_info(base_info), init(nullptr), exit(nullptr), status(nullptr)
+    {
+    }
+
+    app_module_config(const AppModuleBaseInfo &base_info, const app_module_fun &init, app_module_fun exit, app_module_status_fun status)
+                        : base_info(base_info), init(init), exit(exit), status(status)
+    {
+        // static_assert(init != nullptr, "app module init is null!");
+    }
+
+    AppModuleBaseInfo base_info;    ///< 模块基本配置信息
     app_module_fun init;            ///< 模块初始化接口
     app_module_fun exit;            ///< 模块卸载接口
     app_module_status_fun status;   ///< 模块状态接口
@@ -57,134 +83,197 @@ struct app_module_config {
  * 
  */
 class AppModuleManager {
-    private:
-        static AppModuleManager *app_module_manager;
-        static struct app_module_config app_modules[OS_SYS_MAX_APP_MODULES];
-        uint32_t app_module_num;
-        pthread_mutex_t mutex;
-    public:
-        AppModuleManager() : app_module_num(0) {
-            pthread_mutex_init(&mutex, NULL);
-            for (int i = 0; i < OS_SYS_MAX_APP_MODULES; i++)
-            {
-                if (app_modules[i].init)
-                {
-                    app_module_num++;
-                }
-            }
+private:
+    // 模块管理句柄
+    static AppModuleManager *app_module_manager_;
+    // 模块列表
+    static struct app_module_config app_modules_[OS_SYS_MAX_APP_MODULES];
+    // 模块最大数量
+    uint32_t app_module_num_;
+    // 互斥锁
+    pthread_mutex_t mutex_;
+public:
+    AppModuleManager();
 
-            log_i("init app modules [%d]\n", app_module_num);
-        }
+    ~AppModuleManager();
 
-        ~AppModuleManager() {
-            pthread_mutex_destroy(&mutex);
-        }
+    // 模块管理句柄
+    static AppModuleManager *get_app_module_manager(void);
 
-        static AppModuleManager *get_app_module_manager(void)
-        {
-            if (!app_module_manager)
-            {
-                app_module_manager = new AppModuleManager();
-            }
-
-            return app_module_manager;
-        }
-
-        // 模块初始化
-        void app_modules_init(void) noexcept {
-            pthread_mutex_lock(&mutex);
-
-            struct app_module_config *item = app_modules;
-
-            for (int i = 0; i < (int)app_module_num; i++)
-            {
-                if (item[i].base_info.enable && E_APP_MODULE_IDLE == item[i].base_info.state && item[i].init)
-                {
-                    log_i("init app modules : %s\n", item[i].base_info.name.c_str());
-                    item[i].init();
-                    item[i].base_info.state = E_APP_MODULE_INSTALLED;
-                }
-            }
-            pthread_mutex_unlock(&mutex);
-        }
-
-        // 单个模块初始化
-        void init_single_app_module(const uint32_t id, const std::string &name) noexcept
-        {
-            if (id >= app_module_num) { return ; }
-
-            pthread_mutex_lock(&mutex);
-            struct app_module_config *item = &app_modules[id];
-
-            if (name == item->base_info.name
-                && item->base_info.enable
-                && E_APP_MODULE_IDLE == item->base_info.state
-                && item->init
-                && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission)
-            {
-                log_i("init app modules : %s\n", item[id].base_info.name.c_str());
-                item->init();
-                item->base_info.state = E_APP_MODULE_INSTALLED;
-            }
-            pthread_mutex_unlock(&mutex);
-        }
-
-        // 单个模块卸载
-        void finit_single_app_module(const uint32_t id, const std::string &name) noexcept
-        {
-            if (id >= app_module_num) { return ; }
-
-            pthread_mutex_lock(&mutex);
-            struct app_module_config *item = &app_modules[id];
-
-            if (name == item->base_info.name
-                && item->base_info.enable
-                && E_APP_MODULE_INSTALLED == item->base_info.state
-                && item->exit
-                && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission)
-            {
-                log_i("finit app modules : %s\n", item[id].base_info.name.c_str());
-                item->exit();
-                item->base_info.state = E_APP_MODULE_IDLE;
-            }
-            pthread_mutex_unlock(&mutex);
-        }
-
-        // 获取当前所有模块状态
-        std::vector<struct app_module_cout_info> &&app_modules_current_status(void) noexcept {
-            std::vector<struct app_module_cout_info> module_list;
-
-            pthread_mutex_lock(&mutex);
-            struct app_module_config *item = app_modules;
-
-            for (uint32_t i = 0; i < app_module_num; i++)
-            {
-                struct app_module_cout_info info = {
-                    i,
-                    item[i].status ? (item[i].status() ? E_APP_MODULE_RUN_ST_OK : E_APP_MODULE_RUN_ST_ERR) : E_APP_MODULE_RUN_ST_UNKNOWN,
-                    {
-                        item[i].base_info.name,
-                        item[i].base_info.enable,
-                        item[i].base_info.state,
-                        item[i].base_info.permission
-                    }
-                };
-
-                module_list.push_back(info);
-            }
-            pthread_mutex_unlock(&mutex);
-
-            return std::move(module_list);
-        }
+    // 模块初始化
+    void app_modules_init(void) noexcept;
+    // 单个模块初始化
+    void init_single_app_module(const uint32_t id, const std::string &name) noexcept;
+    // 单个模块卸载
+    void finit_single_app_module(const uint32_t id, const std::string &name) noexcept;
+    // 获取当前所有模块状态
+    void app_modules_current_status(AppModuleCoutInfoList &moduel_list) noexcept;
+    // 合法模块数量
+    uint32_t valid_module_num(void) const noexcept;
 };
 
+AppModuleManager::AppModuleManager() : app_module_num_(OS_SYS_MAX_APP_MODULES) {
+    pthread_mutex_init(&mutex_, NULL);
+
+    log_i("init app modules [%d]\n", valid_module_num());
+}
+
+AppModuleManager::~AppModuleManager() {
+    pthread_mutex_destroy(&mutex_);
+}
+
+// 合法模块数量
+uint32_t AppModuleManager::valid_module_num(void) const noexcept
+{
+    uint32_t valid_module = 0;
+
+    for (uint32_t i = 0; i < app_module_num_; i++)
+    {
+        if (app_modules_[i].init)
+        {
+            valid_module++;
+        }
+    }
+
+    return valid_module;
+}
+
+// 模块管理句柄
+AppModuleManager *AppModuleManager::get_app_module_manager(void)
+{
+    if (!app_module_manager_)
+    {
+        app_module_manager_ = new AppModuleManager();
+    }
+
+    return app_module_manager_;
+}
+
+// 模块初始化
+void AppModuleManager::app_modules_init(void) noexcept {
+    pthread_mutex_lock(&mutex_);
+
+    struct app_module_config *item = app_modules_;
+
+    for (int i = 0; i < (int)app_module_num_; i++)
+    {
+        if (item[i].base_info.enable() && E_APP_MODULE_IDLE == item[i].base_info.state() && item[i].init)
+        {
+            log_d("init app modules : %s\n", item[i].base_info.name().c_str());
+            item[i].init();
+            item[i].base_info.set_state(E_APP_MODULE_INSTALLED);
+        }
+    }
+    pthread_mutex_unlock(&mutex_);
+}
+
+// 单个模块初始化
+void AppModuleManager::init_single_app_module(const uint32_t id, const std::string &name) noexcept
+{
+    if (id >= app_module_num_) { return ; }
+
+    pthread_mutex_lock(&mutex_);
+    struct app_module_config *item = &app_modules_[id];
+
+    if (name == item->base_info.name()
+        && item->base_info.enable()
+        && E_APP_MODULE_IDLE == item->base_info.state()
+        && item->init
+        && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
+    {
+        log_d("init app modules : %s\n", item[id].base_info.name().c_str());
+        item->init();
+        item->base_info.set_state(E_APP_MODULE_INSTALLED);
+    }
+    pthread_mutex_unlock(&mutex_);
+}
+
+// 单个模块卸载
+void AppModuleManager::finit_single_app_module(const uint32_t id, const std::string &name) noexcept
+{
+    if (id >= app_module_num_) { return ; }
+
+    pthread_mutex_lock(&mutex_);
+    struct app_module_config *item = &app_modules_[id];
+
+    if (name == item->base_info.name()
+        && item->base_info.enable()
+        && E_APP_MODULE_INSTALLED == item->base_info.state()
+        && item->exit
+        && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
+    {
+        log_d("finit app modules : %s\n", item[id].base_info.name().c_str());
+        item->exit();
+        item->base_info.set_state(E_APP_MODULE_IDLE);
+    }
+    pthread_mutex_unlock(&mutex_);
+}
+
+// 获取当前所有模块状态
+void AppModuleManager::app_modules_current_status(AppModuleCoutInfoList &moduel_list) noexcept
+{
+    pthread_mutex_lock(&mutex_);
+    struct app_module_config *item = app_modules_;
+
+    for (uint32_t i = 0; i < app_module_num_; i++)
+    {
+        // 没有初始化接口的模块认为是无效的
+        if (!item[i].init) { continue; }
+
+        // 添加一个模块
+        AppModuleCoutInfo *module = moduel_list.add_app_modules();
+        AppModuleBaseInfo *info = module->mutable_base_info();
+
+        module->set_id(i);
+        module->set_run_state(item[i].status
+                                ? (item[i].status() ? E_APP_MODULE_RUN_ST_OK : E_APP_MODULE_RUN_ST_ERR)
+                                : E_APP_MODULE_RUN_ST_UNKNOWN);
+        
+        info->set_name(item[i].base_info.name());
+        info->set_enable(item[i].base_info.enable());
+        info->set_state(item[i].base_info.state());
+        info->set_permission(item[i].base_info.permission());
+    }
+    pthread_mutex_unlock(&mutex_);
+
+    return ;
+}
+
 // 获取模块信息
-std::vector<struct app_module_cout_info> &&app_modules_current_status(void) noexcept
+void app_modules_current_status(AppModuleCoutInfoList &moduel_list) noexcept
 {
     AppModuleManager *app_module_manager = AppModuleManager::get_app_module_manager();
 
-    return app_module_manager->app_modules_current_status();
+    app_module_manager->app_modules_current_status(moduel_list);
 }
+
+#ifdef DEBUG
+// 打印模块信息
+static void _print_app_module_state()
+{
+    AppModuleCoutInfoList moduel_list;
+    app_modules_current_status(moduel_list);
+
+    int size = moduel_list.app_modules_size();
+
+    using namespace std;
+
+    for (int i = 0; i < size; i++)
+    {
+        const AppModuleCoutInfo &module = moduel_list.app_modules(i);
+
+        cout << "module id : " << module.id() << endl;
+        cout << "run state : " << module.run_state() << endl;
+
+        cout << "modules name : " << module.base_info().name() << endl;
+        cout << "modules enable : " << module.base_info().enable() << endl;
+        cout << "state : " << module.base_info().state() << endl;
+        cout << "permission : " << module.base_info().permission() << endl;
+
+        cout << "########################################" << endl;
+    }
+}
+#endif
 
 // 初始化单个模块
 void init_single_app_module(const uint32_t id, const std::string &name) noexcept
@@ -202,19 +291,31 @@ void finit_single_app_module(const uint32_t id, const std::string &name) noexcep
     app_module_manager->finit_single_app_module(id, name);
 }
 
-static bool enable = true;
-static bool disable = false;
+AppModuleManager *AppModuleManager::app_module_manager_ = nullptr;
 
-AppModuleManager *AppModuleManager::app_module_manager = nullptr;
+// 生成一个模块的基本信息
+static AppModuleBaseInfo create_moudle_base(const char *name, const bool enable,
+                                      const AppModuleState state, const AppModuleCfgPermission permission)
+{
+    AppModuleBaseInfo _module;
 
-#define END_OF_APP_MODULE { {"", disable, E_APP_MODULE_BAD, E_APP_MODULE_CFG_PERMISSION_DISENABLE}, NULL, NULL, NULL }
+    _module.set_name(name);
+    _module.set_enable(enable);
+    _module.set_state(state);
+    _module.set_permission(permission);
+
+    return _module;
+}
 
 // 应用模块配置表
-struct app_module_config AppModuleManager::app_modules[OS_SYS_MAX_APP_MODULES] = {
+struct app_module_config AppModuleManager::app_modules_[OS_SYS_MAX_APP_MODULES] = {
     // 升级模块
-    { { "system upgrade",      enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     system_upgrade_task_init,      NULL, system_upgrade_task_state},
+    { create_moudle_base("system upgrade", true, E_APP_MODULE_IDLE, E_APP_MODULE_CFG_PERMISSION_DISENABLE),
+        system_upgrade_task_init, nullptr, system_upgrade_task_state },
+    
     // 用户管理模块
-    { { "user manage",         enable,  E_APP_MODULE_IDLE,     E_APP_MODULE_CFG_PERMISSION_DISENABLE },     user_manager_init,      NULL, user_manager_state},
+    { create_moudle_base("user manage", true, E_APP_MODULE_IDLE, E_APP_MODULE_CFG_PERMISSION_DISENABLE),
+        user_manager_init, nullptr, user_manager_state },
 
     /*******************************************************************************************************************************************************/ 
 
@@ -225,7 +326,7 @@ struct app_module_config AppModuleManager::app_modules[OS_SYS_MAX_APP_MODULES] =
     END_OF_APP_MODULE
 };
 
-// sdk中间件
+// sdk中间件注册
 static void register_sdk_midwares(void)
 {
 	SDK_IMPORT_MIDWARE(user_manange_midware_do, true);
@@ -238,6 +339,7 @@ void except_task_alarm(const struct except_task_info &except_task)
     // TODO:记录到异常任务日志，告警上报
 }
 
+// 基础功能模块初始化
 static void base_function_module_init(void)
 {
     wotsen::task_manage_init(OS_SYS_TASK_NUM, reinterpret_cast<wotsen::abnormal_task_do>(except_task_alarm));
@@ -249,13 +351,14 @@ static void base_function_module_init(void)
 	sdk_uv_net_init();
 
 #ifdef DEBUG
-    // sdk_tree_map();
+    sdk_tree_map();
 #endif
 
 	// 注册sdk中间件
 	register_sdk_midwares();
 }
 
+// 应用业务模块初始化
 static void applications_module_init(void)
 {
     AppModuleManager *app_module_manager = AppModuleManager::get_app_module_manager();
@@ -263,12 +366,12 @@ static void applications_module_init(void)
     // 私有功能模块与第三方模块初始化
     app_module_manager->app_modules_init();
 
-    // 告警
-    // 升级，文件传输校验以及如何安装，设计扩展
-    // 图像上传下载、图像信息、搜索
-    // ai模型加载及运行，级联python
+#ifdef DEBUG
+    // _print_app_module_state();
+#endif
 }
 
+// 用户应用初始化
 void usr_apps_init(void)
 {
     // 基础模块初始化
