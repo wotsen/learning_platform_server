@@ -19,11 +19,11 @@ void test_sdk_pack(Sdk &msg)
 	header->mutable_time()->set_out_time(2019);
 	header->set_data_dir(DataFlow::DATA_IN);
     header->mutable_host()->set_ip_version(IpVersion::IPV4);
-	header->mutable_host()->set_port(9001);
+	header->mutable_host()->set_port(9002);
 	header->mutable_host()->set_ip("127.0.0.1");
     header->mutable_dest()->set_ip_version(IpVersion::IPV4);
 	header->mutable_dest()->set_port(9001);
-	header->mutable_dest()->set_ip("127.0.0.1");
+	header->mutable_dest()->set_ip("0.0.0.0");
 	header->set_trans_proto(TransProto::TCP);
 
     /***********************************************************/
@@ -36,7 +36,7 @@ void test_sdk_pack(Sdk &msg)
 	body->mutable_user_session()->set_token("asdf");
 	body->mutable_user_session()->set_alive_time(80);
 
-	body->set_url("xxx.com");
+	body->set_url("/index");
 	body->set_method(OperationType::GET);
 
     Content *content = body->mutable_content();

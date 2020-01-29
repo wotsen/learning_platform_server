@@ -21,7 +21,6 @@
 #include "user_manage_private.h"
 
 using namespace SQLite;
-using namespace insider::sdk;
 
 #define USER_TABLE SDK_USER_TABLE
 

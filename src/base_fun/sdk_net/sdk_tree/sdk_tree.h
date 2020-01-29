@@ -11,12 +11,12 @@
 #pragma once
 
 #include <vector>
-#include "../sdk_network/sdk_protocol_do.h"
+#include "../sdk_network/sdk_interface.h"
 
 using namespace insider::sdk;
 
 // 节点处理接口
-using sdk_app_node_fn = bool (*)(struct sdk_net_interface &interface, Sdk &sdk_req, Sdk &sdk_res);
+using sdk_app_node_fn = bool (*)(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res);
 
 #define SDK_GET OperationType::GET				///< get方法
 #define SDK_PUT OperationType::PUT				///< put方法
@@ -47,9 +47,12 @@ struct sdk_tree_node
 // 添加sdk tree
 const struct sdk_tree_node *add_sdk_tree(const struct sdk_tree_node *sdk_tree);
 
-// 模块添加sdk tree，一个模块只能添加一个
+// 模块添加sdk tree，一个模块(文件)只能添加一个
 #define MODULE_ADD_SDK_TREE(method, url, fn, next) \
-	static std::vector<const struct sdk_tree_node *> __sdk_tree___{add_sdk_tree(sdk_url(method, url, fn, next))}
+	static std::vector<const struct sdk_tree_node *> ___sdk_tree___{add_sdk_tree(sdk_url(method, url, fn, next))}
+
+// sdk树路径统计
+void sdk_tree_map(void);
 
 // sdk 路径处理
-bool sdk_tree_do(struct sdk_net_interface &interface, Sdk &sdk_req, Sdk &sdk_res);
+bool sdk_tree_do(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res);

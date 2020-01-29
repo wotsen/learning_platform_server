@@ -17,7 +17,7 @@
 #include <sole/sole.hpp>
 #include "util_time/util_time.h"
 #include "../session/session_manage.h"
-#include "user_manage.h"
+#include "sdk_net/sdk_network/sdk_interface.h"
 
 using namespace insider::sdk;
 

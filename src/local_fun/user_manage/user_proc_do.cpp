@@ -110,45 +110,46 @@ static UserRequestProc *find_user_proc(const enum UserSessionMsg_UserMethod &typ
 // 填写返回短语
 static bool fill_proc_result_code(const enum ContentResultE &user_ret, Sdk &sdk_res)
 {
+	// 填写返回码，可能会被后续操作覆盖
+	sdk_content_set_result(user_ret, sdk_res);
+
     switch (user_ret)
 	{
 		case ContentResultE::R_CODE_OK:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("ok");
+			sdk_content_set_result("ok", sdk_res);
 			return true;
 
 		case ContentResultE::R_CODE_USER_EXIST:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user exist");
+			sdk_content_set_result("user exist", sdk_res);
 			return false;
 
 		case ContentResultE::R_CODE_USER_NOT_EXIST:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user not exist");
+			sdk_content_set_result("user not exist", sdk_res);
 			return false;
 
 		case ContentResultE::R_CODE_USER_TOKEN_TIMEOUT:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user token timeout");
+			sdk_content_set_result("user token timeout", sdk_res);
 			return false;
 
 		case ContentResultE::R_CODE_USER_IN_BLACK_LIST:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user in balcklist");
+			sdk_content_set_result("user in balcklist", sdk_res);
 			return false;
 
 		case ContentResultE::R_CODE_USER_NO_PERMISSION:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user no permission");
+			sdk_content_set_result("user no permission", sdk_res);
 			return false;
 
 		case ContentResultE::R_CODE_USER_PASS_ERROR:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("user password error");
+			sdk_content_set_result("user password error", sdk_res);
 			return false;
 
 		case ContentResultE::R_CODE_USER_ALIVE_TIME_TOOLONG:
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code(
-						fmt::format("alive tiem too long, max is {}", max_alive_time));
+			sdk_content_set_result(fmt::format("alive tiem too long, max is {}", max_alive_time), sdk_res);
 			return false;
 
 		default:
 			log_d("unknown error\n");
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(ContentResultE::R_CODE_ERROR);
-			sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_code("unknown error");
+			sdk_content_set_result(ContentResultE::R_CODE_ERROR, "unknown error", sdk_res);
 			return false;
 	}
 
@@ -170,9 +171,6 @@ static bool _user_manange_midware_do(const Sdk &sdk_req, Sdk &sdk_res)
 						R_CODE_ERROR :
 						item->proc(user_info, sdk_res.mutable_body()->mutable_user_session());
 
-	// 填写返回码，可能会被后续操作覆盖
-	sdk_res.mutable_footer()->mutable_result()->mutable_content_result()->set_status_code(user_ret);
-
     // 填写返回短语
     return fill_proc_result_code(user_ret, sdk_res);
 }
@@ -180,13 +178,13 @@ static bool _user_manange_midware_do(const Sdk &sdk_req, Sdk &sdk_res)
 /**
  * @brief 用户管理中间件
  * 
- * @param interface 网络接口
+ * @param sdk_interface 网络接口
  * @param sdk_req sdk请求内容
  * @param sdk_res sdk应答内容
  * @return true 成功
  * @return false 失败
  */
-bool user_manange_midware_do(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res)
+bool user_manange_midware_do(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res)
 {
     if (!user_manager_state()) { return true; }
 

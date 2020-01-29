@@ -30,7 +30,7 @@ static const int MAX_STREAM_LIST_LEN = 1024;
 static std::list<sdk_package<uv_stream_t>*> stream_list;
 
 // 获取uv tcp网络接口
-static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface &interface);
+static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface &sdk_interface);
 // 处理sdk tcp消息
 static void sdk_stream_do(sdk_package<uv_stream_t> *package);
 
@@ -67,7 +67,7 @@ template <> bool push_sdk_package<uv_stream_t>(sdk_package<uv_stream_t> *package
 }
 
 // 获取tcp地址信息
-static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface &interface)
+static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface &sdk_interface)
 {
 	std::string ip_version;
 	std::string ip_version_cap;
@@ -82,26 +82,28 @@ static void _get_uv_tcp_interface(uv_stream_t *handle, struct sdk_net_interface 
 	}
 
     // 本地信息从配置获取
-	get_sdk_tcp_host_config(ip_version, interface.des_ip, (int &)interface.des_port);
-	get_net_interface_config(interface.interface);
-	get_net_gateway_config(interface.gateway);
+	get_sdk_tcp_host_config(ip_version, sdk_interface.des_ip, (int &)sdk_interface.des_port);
+	get_net_interface_config(sdk_interface.interface);
+	get_net_gateway_config(sdk_interface.gateway);
 
-	interface.trans_protocol = insider::sdk::TransProto::TCP;
+	sdk_interface.trans_protocol = insider::sdk::TransProto::TCP;
 
 	if (ip_version == "ipv4")
 	{
-		interface.ip_version = insider::sdk::IpVersion::IPV4;
+		sdk_interface.ip_version = insider::sdk::IpVersion::IPV4;
 	}
 	else
 	{
-		interface.ip_version = insider::sdk::IpVersion::IPV6;
+		sdk_interface.ip_version = insider::sdk::IpVersion::IPV6;
 	}
 
-	uv_tcp_getsockname((uv_tcp_t *)handle, (struct sockaddr *)&addr, &namelen);
+	// uv_tcp_getsockname : 用于获取自身ip及端口
+	// uv_tcp_getpeername : 用于获取客户端
+	uv_tcp_getpeername((uv_tcp_t *)handle, (struct sockaddr *)&addr, &namelen);
 
 	// 源地址
-	interface.src_ip = inet_ntoa(addr.sin_addr);
-	interface.src_port = ntohs(addr.sin_port);
+	sdk_interface.src_ip = inet_ntoa(addr.sin_addr);
+	sdk_interface.src_port = ntohs(addr.sin_port);
 
 	log_i("client ip = %s, port = %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
@@ -113,13 +115,13 @@ static void sdk_stream_do(sdk_package<uv_stream_t> *package)
 {
 	std::string req_data(((uv_buf_t *)package->handle->data)->base);
 	std::string res_data;
-	struct sdk_net_interface interface;
+	struct sdk_net_interface sdk_interface;
 
 	// 获取uv 网络接口信息
-	_get_uv_tcp_interface(package->handle, interface);
+	_get_uv_tcp_interface(package->handle, sdk_interface);
 
 	// 协议处理
-	sdk_protocol_do(interface, req_data, res_data);
+	sdk_protocol_do(sdk_interface, req_data, res_data);
 
 	// 发送响应消息
 	// FIXME:需要确认libuv发送数据是否同步发送，如是异步发送,res_data只是栈空间变量，会被销毁

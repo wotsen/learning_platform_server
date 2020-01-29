@@ -35,7 +35,7 @@ public:
 	void register_midware(const char *name, sdk_midware midware_fn, bool enable);
 
 	// 处理中间件
-	bool proc_midwares(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res) const;
+	bool proc_midwares(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res) const;
 
 	// 中间件是否存在
 	bool is_midware_exist(const std::string &name);
@@ -84,18 +84,17 @@ void SdkMidWareManager::register_midware(const char *name, sdk_midware midware_f
  * @return true 成功
  * @return false 失败
  */
-bool SdkMidWareManager::proc_midwares(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res) const
+bool SdkMidWareManager::proc_midwares(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res) const
 {
 	for (auto &item : midwares_)
 	{
 		if (!item->midware_ || !item->enable_) { continue; }
 
-		if (!item->midware_(interface, sdk_req, sdk_res))
+		if (!item->midware_(sdk_interface, sdk_req, sdk_res))
 		{
 			log_d("proc midware %s failed\n", item->name_.c_str());
 
-			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_status_code(ResponseResult::ERROR);
-			sdk_res.mutable_footer()->mutable_result()->mutable_sdk_result()->set_code("error module : " + item->name_);
+			sdk_set_result(ResponseResult::ERROR, "error module : " + item->name_, sdk_res);
 
 			// 一个中间件处理失败不再向后传递
 			return false;
@@ -148,7 +147,7 @@ void _register_sdk_midware(const char *name, sdk_midware midware_fn, bool enable
  * @return true 成功
  * @return false 失败
  */
-bool sdk_midware_do(struct sdk_net_interface &interface, const Sdk &sdk_req, Sdk &sdk_res)
+bool sdk_midware_do(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res)
 {
-	return midware_mannager.proc_midwares(interface, sdk_req, sdk_res);
+	return midware_mannager.proc_midwares(sdk_interface, sdk_req, sdk_res);
 }

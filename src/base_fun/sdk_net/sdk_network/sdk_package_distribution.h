@@ -27,21 +27,6 @@ struct sdk_package
 	bool (*write)(T *handle, const std::string &data);	///< 响应回调接口
 };
 
-/**
- * @brief sdk 网络接口
- * 
- */
-struct sdk_net_interface {
-	insider::sdk::IpVersion ip_version;				///< ip版本
-	insider::sdk::TransProto trans_protocol;		///< 传输层
-	std::string interface;							///< 本地网口
-	std::string gateway;							///< 本地网关
-	std::string src_ip;								///< 源地址
-	uint32_t src_port;								///< 源端口
-	std::string des_ip;								///< 目的地址
-	uint32_t des_port;								///< 目的端口
-};
-
 // 消息入队
 template <class T>
 bool push_sdk_package(sdk_package<T> *package);

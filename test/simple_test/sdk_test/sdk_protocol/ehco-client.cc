@@ -116,6 +116,11 @@ int main(void)
 
 	// TCP コネクション用の構造体
 	uv_connect_t connect_req;
+	
+	struct sockaddr_in addr;
+	uv_ip4_addr("127.0.0.1", 9002, &addr);
+
+	uv_tcp_bind(&client, (const struct sockaddr *)&addr, 0);
 
 	// 接続
 	uv_tcp_connect(&connect_req, &client, (const struct sockaddr*)&req_addr, on_connect);

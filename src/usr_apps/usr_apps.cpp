@@ -16,6 +16,10 @@
 #include "task_manage/task_manage.h"
 #include "uv_event/uv_event.h"
 #include "sdk_net/sdk_network/sdk_network.h"
+#include "sdk_net/sdk_network/sdk_midware.h"
+#ifdef DEBUG
+// #include "sdk_net/sdk_tree/sdk_tree.h"
+#endif
 
 // 应用模块导入
 /**************************************************************************************/
@@ -243,6 +247,10 @@ static void base_function_module_init(void)
 
 	// 初始化sdk网络
 	sdk_uv_net_init();
+
+#ifdef DEBUG
+    // sdk_tree_map();
+#endif
 
 	// 注册sdk中间件
 	register_sdk_midwares();
