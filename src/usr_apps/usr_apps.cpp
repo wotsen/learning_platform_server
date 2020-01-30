@@ -14,12 +14,12 @@
 #include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
 #include "task_manage/task_manage.h"
-#include "uv_event/uv_event.h"
 #include "sdk_net/sdk_network/sdk_network.h"
 #include "sdk_net/sdk_network/sdk_midware.h"
 #ifdef DEBUG
 #include "sdk_net/sdk_tree/sdk_tree.h"
 #endif
+#include "handy_loop/handy_loop.h"
 
 // 应用模块导入
 /**************************************************************************************/
@@ -344,11 +344,10 @@ static void base_function_module_init(void)
 {
     wotsen::task_manage_init(OS_SYS_TASK_NUM, reinterpret_cast<wotsen::abnormal_task_do>(except_task_alarm));
 
-	// 初始化uv任务
-	task_uv_event_init();
+    task_handy_loop_init();
 
 	// 初始化sdk网络
-	sdk_uv_net_init();
+	sdk_net_init();
 
 #ifdef DEBUG
     sdk_tree_map();
@@ -367,7 +366,7 @@ static void applications_module_init(void)
     app_module_manager->app_modules_init();
 
 #ifdef DEBUG
-    // _print_app_module_state();
+    _print_app_module_state();
 #endif
 }
 

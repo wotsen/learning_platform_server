@@ -13,292 +13,253 @@
 #include <iostream>
 #include <easylogger/easylogger_setup.h>
 #include "util_time/util_time.h"
+#include "os_param.h"
 #include "sys_config.h"
 #include "sys_capability.h"
-#include "sdk_package_distribution.h"
+#include "sdk_interface.h"
+#include "sdk_protocol_do.h"
 #include "sdk_network.h"
 
-#define DEFAULT_BACKLOG 128 // 连接队列
+using namespace insider::sdk;
 
-/**
- * @brief libuv应答
- * 
- */
-typedef struct
+// sdk服务器
+static SdkServer _sdk_server(OS_SYS_SDK_TCP_CONNECT_NUM);
+
+// 使用handy初始化sdk网络
+static void sdk_handy_net_init(void);
+// 解码
+static bool sdk_msg_decode(Buffer &input, Sdk &req);
+// 编码
+static bool sdk_msg_encode(const Sdk &res, Buffer &output);
+// 获取地址
+template <int trans_proto = TCP>
+static bool get_host_addr(const Ip4Addr &src, const Ip4Addr &dest, struct sdk_net_interface &sdk_interface);
+
+// 解码
+static bool sdk_msg_decode(Buffer &input, Sdk &req)
 {
-	uv_write_t req;		///< 响应
-	uv_buf_t buf;		///< 数据
-} write_req_t;
-
-// uv服务器
-static UvSdkNetServer *uv_sdk_net_server = nullptr;
-
-// 内存分配
-static void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
-// 读取tcp消息
-static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);
-// 发送tcp消息回调接口
-static void on_stream_write(uv_write_t *req, int status);
-// tcp连接回调
-static void on_tcp_connection(uv_stream_t *server, int status);
-// tcp客户端断开连接
-static void on_tcp_shutdown(uv_shutdown_t *req, int status);
-// 关闭服务
-static void on_close(uv_handle_t *peer);
-// 发送tcp消息
-static bool uv_stream_write(uv_stream_t *handle, const std::string &data);
-
-/**
- * @brief 创建tcp服务器
- * 
- * @param ipv4 ipv4地址
- * @param port 端口号
- * @return true 成功
- * @return false 失败
- */
-bool UvSdkNetServer::create_tcp_server(const char *ipv4, const int &port)
-{
-	std::shared_ptr<UvSdkNetSrvType<uv_tcp_t>> server(new UvSdkNetSrvType<uv_tcp_t>);
-
-	uv_tcp_init(loop, &server->handle);
-	uv_ip4_addr(ipv4, port, &server->addr);
-
-	uv_tcp_bind(&server->handle, (const struct sockaddr *)&server->addr, 0);
-
-	int r = uv_listen((uv_stream_t *)&server->handle, DEFAULT_BACKLOG, on_tcp_connection);
-	if (r)
+	bool ret = true;
+	if (!req.ParseFromString(std::string(input.data())))
 	{
-		log_e("Listen error %s\n", uv_strerror(r));
+		log_e("parser sdk msg failed\n");
+		ret = false;
+	}
+
+	input.consume(input.size());
+	return ret;
+}
+
+// 编码
+static bool sdk_msg_encode(const Sdk &res, Buffer &output)
+{
+	std::string out;
+
+	if (!res.SerializeToString(&out) || out.empty())
+	{
+		log_e("serial sdk msg error\n");
 		return false;
 	}
 
-	tcp_servers.push_back(std::move(server));
+	size_t offset = output.size();
+
+	output.append(out.data(), out.size());
+	*(uint32_t *) (output.begin() + offset) = output.size() - offset;
 
 	return true;
 }
 
-/**
- * @brief 创建tcp服务器
- * 
- * @param ipv4 ipv4地址
- * @param port 端口号
- * @return true 成功
- * @return false 失败
- */
-bool UvSdkNetServer::create_tcp_server(const std::string &ipv4, const int &port)
+// 获取地址
+template <int trans_proto = TCP>
+static bool get_host_addr(const Ip4Addr &src, const Ip4Addr &dest, struct sdk_net_interface &sdk_interface)
 {
-	return create_tcp_server(ipv4.c_str(), port);
-}
+	std::string ip_version;
 
-/**
- * @brief Destroy the Uv Sdk Net Server:: Uv Sdk Net Server object
- * 
- */
-UvSdkNetServer::~UvSdkNetServer()
-{
-	for (auto &tcp_s : tcp_servers)
-	{
-		uv_close((uv_handle_t *)&tcp_s->handle, NULL);
-	}
-	tcp_servers.clear();
-}
+	get_ip_version(ip_version);
 
-/**
- * @brief 发送tcp消息回调接口
- * 
- * @param req uv句柄
- * @param status 发送状态码
- */
-static void on_stream_write(uv_write_t *req, int status)
-{
-	write_req_t *wr = (write_req_t *)req;
-	uv_buf_t *recv = (uv_buf_t *)(wr->req.handle->data);
+	// 本地信息从配置获取
+	get_net_interface_config(sdk_interface.interface);
+	get_net_gateway_config(sdk_interface.gateway);
 
-	if (status)
-	{
-		fprintf(stderr, "Write error %s\n", uv_strerror(status));
+	sdk_interface.trans_protocol = static_cast<TransProto>(trans_proto);
+
+	if (ip_version == "ipv4") {
+		sdk_interface.ip_version = IpVersion::IPV4;
+	} else {
+		sdk_interface.ip_version = IpVersion::IPV6;
 	}
 
-	// 释放分配的内存
-	delete recv->base;		///< 接受消息区
-	delete recv;			///< uv_buf
-	delete wr;				///< 句柄
-}
+	// 源地址
+	sdk_interface.src_ip = src.ip();
+	sdk_interface.src_port = src.port();
 
-/**
- * @brief 发送tcp消息
- * 
- * @param handle 回调接口间数据句柄
- * @param data 数据部分
- * @return true 成功
- * @return false 失败
- */
-static bool uv_stream_write(uv_stream_t *handle, const std::string &data)
-{
-	write_req_t *wr = new write_req_t;
-
-	wr->buf = uv_buf_init(const_cast<char *>(data.data()), data.size());
-
-	log_d("send sdk data\n");
-
-	if (0 != uv_write((uv_write_t *)wr, handle, &wr->buf, 1, on_stream_write))
-	{
-		log_e("uv_write failed\n");
-		wr->req.handle = handle;
-		// 发送失败也需要释放内存
-		on_stream_write((uv_write_t *)wr, 0);
-		return false;
-	}
+	// 目的地址
+	sdk_interface.des_ip = dest.ip();
+	sdk_interface.des_port = dest.port();
 
 	return true;
 }
 
-/**
- * @brief 内存分配
- * 
- * @param handle 
- * @param suggested_size 预分配数据长度
- * @param buf 消息缓冲区
- */
-static void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
+SdkServer::SdkServer(const uint32_t _max_links)
+	: max_links(_max_links), tcp_links(0), tcp_srv_(nullptr), udp_srv_(nullptr)
+{}
+
+// 连接已经达到最大
+bool SdkServer::is_tcp_links_max(void)
 {
-	// FIXME：每次都分配内存是否造成内存碎片，使用内存池?
-	buf->base = new char[suggested_size];
-	buf->len = suggested_size;
+	return tcp_links >= max_links;
 }
 
-/**
- * @brief 读取tcp消息
- * 
- * @param client 持续化句柄
- * @param nread 读取到的长度
- * @param buf 缓冲区
- */
-static void read_stream_msg(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf)
+// 增加tcp连接
+bool SdkServer::tcp_links_inc(void)
 {
-	uv_shutdown_t *sreq = nullptr;
-	sdk_package<uv_stream_t> *package = nullptr;
-	uv_buf_t *data = nullptr;
+	if (is_tcp_links_max()) { return false; }
 
-	// 正常数据
-	if (nread > 0)
-	{
-		package = new sdk_package<uv_stream_t>;
-		data = new uv_buf_t(std::move(uv_buf_init(buf->base, buf->len)));
+	tcp_links++;
+	return true;
+}
 
-		package->handle = client;
-		package->handle->data = (void *)data;
-		package->write = uv_stream_write;
+// 减少tcp连接
+void SdkServer::tcp_links_dec(void)
+{
+	if (tcp_links) { tcp_links--; }
+}
 
-		// 数据入栈
-		push_sdk_package(package);
-	}
+// tcp连接处理
+bool SdkServer::tcp_connection_made(void)
+{
+	if (!tcp_srv_) { return false; }
 
-	// 无数据
-	if (0 == nread)
-	{
-		delete buf->base;
-	}
+	tcp_srv_->onConnCreate([&] {
+        TcpConnPtr con(new TcpConn);
+        con->onState([&](const TcpConnPtr &con) {
+            if (con->getState() == TcpConn::Connected) {
+				log_d("[%s] connetd\n", con->peer_.toString().c_str());
+				if (!tcp_links_inc()) {
+					log_i("tcp_links_inc faild\n");
+					con->close();
+				}
+            } else if (con->getState() == TcpConn::Closed) {
+                tcp_links_dec(); // FIXME:手动close是否会执行此处
+				log_d("close links\n");
+            } else {
+				/* code */
+			}
+        });
 
-	// 接收异常
-	if (nread < 0)
-	{
-		log_d("close connect\n");
-		if (nread != UV_EOF)
-		{
-			log_e("Read error %s\n", uv_err_name(nread));
+		con->onRead([&](TcpConnPtr con) {
+			Buffer &buf = con->getInput();
+
+			if (buf.empty()) { return ; }
+
+			Sdk req;
+			Sdk res;
+			struct sdk_net_interface sdk_interface;
+
+			// 解码
+			if (!sdk_msg_decode(buf, req)) {
+				con->close();
+				return ;
+			}
+
+			// 消息处理
+			get_host_addr<TCP>(con->peer_, con->local_, sdk_interface);
+			sdk_protocol_do(sdk_interface, req, res);
+
+			// 响应
+			Buffer &send = con->getOutput();
+			if (sdk_msg_encode(res, send)) { con->sendOutput(); }
+    	});
+
+        return con;
+    });
+
+	return true;
+}
+
+// udp数据接收处理
+bool SdkServer::udp_data_received(void)
+{
+	if (!udp_srv_) { return false; }
+
+	udp_srv_->onMsg([](const UdpServerPtr &p, Buffer buf, Ip4Addr peer) {
+		if (buf.empty()) { return ; }
+
+		Sdk req;
+		Sdk res;
+		struct sdk_net_interface sdk_interface;
+
+		// 解码
+		if (!sdk_msg_decode(buf, req)) {
+			return ;
 		}
-		delete buf->base;
-		sreq = new uv_shutdown_t;
-		// 关闭客户连接
-		uv_shutdown(sreq, client, on_tcp_shutdown);
-	}
+
+		// 消息处理
+		get_host_addr<UDP>(peer, p->getAddr(), sdk_interface);
+		sdk_protocol_do(sdk_interface, req, res);
+
+		// 响应
+		Buffer send;
+		if (sdk_msg_encode(res, send)) {
+			p->sendTo(send, peer);
+		}
+    });
+
+	return true;
 }
 
-/**
- * @brief 关闭套接字
- * 
- * @param req 
- * @param status 状态码
- */
-static void on_tcp_shutdown(uv_shutdown_t *req, int status)
-{
-	uv_close((uv_handle_t *)req->handle, on_close);
-	delete req;
-}
-
-/**
- * @brief 关闭连接回调接口，释放内存
- * 
- * @param peer 
- */
-static void on_close(uv_handle_t *peer)
-{
-	delete peer;
-}
-
-/**
- * @brief 客户连接处理
- * 
- * @param server 服务器句柄
- * @param status 状态码
- */
-static void on_tcp_connection(uv_stream_t *server, int status)
-{
-	if (status < 0)
-	{
-		log_e("New connection error %s\n", uv_strerror(status));
-		return;
-	}
-
-	uv_tcp_t *client = new uv_tcp_t;
-
-	uv_tcp_init(server->loop, client);
-
-	// 监听客户连接
-	if (0 == uv_accept(server, (uv_stream_t *)client))
-	{
-		uv_read_start((uv_stream_t *)client, alloc_buffer, read_stream_msg);
-	}
-	else
-	{
-		uv_close((uv_handle_t *)client, NULL);
-	}
-}
-
-/**
- * @brief 启动sdk libuv服务器
- * 
- */
-void sdk_uv_net_init(void)
+// 创建tcp服务
+bool SdkServer::create_tcp_srv(void)
 {
 	std::string ip_version;
 	std::string ip_version_cap;
 	std::string ip;
 	int port;
 
-	uv_sdk_net_server = new UvSdkNetServer(UvEvent::get_uv_event()->get_uv_loop());
-
 	get_sdk_tcp_host_config(ip_version, ip, port);
-
 	get_ip_version_capability(ip_version_cap);
 
 	// 校验配置与能力
 	if (ip_version_cap != ip_version)
 	{
 		log_e("not support ip version : %s\n", ip_version.c_str());
-
-		return ;
+		return false;
 	}
 
-	// FIXME:目前只实现ipv4
-	// 无须创建线程，由libuv管理
-	uv_sdk_net_server->create_tcp_server(ip, port);
+	tcp_srv_ = TcpServer::startServer(&handy_base(), ip, port, true);
 
-	// 初始化sdk消息分发任务
-	task_sdk_package_distribution_init();
+	return tcp_connection_made();
+}
 
-	log_i("sdk-uv网络任务初始化完成...\n");
+// 创建udp服务
+bool SdkServer::create_udp_srv(void)
+{
+	std::string ip_version;
+	std::string ip_version_cap;
+	std::string ip;
+	int port;
 
-	return;
+	get_sdk_udp_host_config(ip_version, ip, port);
+	get_ip_version_capability(ip_version_cap);
+
+	// 校验配置与能力
+	if (ip_version_cap != ip_version)
+	{
+		log_e("not support ip version : %s\n", ip_version.c_str());
+		return false;
+	}
+
+	udp_srv_ = UdpServer::startServer(&handy_base(), ip, port, true);
+
+	return udp_data_received();
+}
+
+// 初始化handy sdk网络实例
+static void sdk_handy_net_init(void)
+{
+	_sdk_server.create_tcp_srv();
+}
+
+void sdk_net_init(void)
+{
+	sdk_handy_net_init();
 }

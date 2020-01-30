@@ -13,41 +13,40 @@
 #include <iostream>
 #include <list>
 #include <memory>
-#include "uv_event/uv_event.h"
+#include "handy_loop/handy_loop.h"
 
-/**
- * @brief sdk网络服务器
- * 
- */
-class UvSdkNetServer
-{
+using namespace handy;
+
+class SdkServer {
 public:
-	/**
-	 * @brief sdk网络类型
-	 * 
-	 * @tparam T uv类型
-	 */
-	template <class T>
-	struct UvSdkNetSrvType
-	{
-		T handle;
-		struct sockaddr_in addr;
-	};
+	SdkServer(const uint32_t _max_links = 128);
 
-	UvSdkNetServer(uv_loop_t *loop) : loop(loop) {}
-
-	// 创建tcp服务器
-	bool create_tcp_server(const std::string &ipv4, const int &port);
-	bool create_tcp_server(const char *ipv4, const int &port);
-
-	~UvSdkNetServer();
+	// 创建tcp服务
+	bool create_tcp_srv(void);
+	// 创建udp服务
+	bool create_udp_srv(void);
+	// tcp连接处理
+	bool tcp_connection_made(void);
+	// udp数据接收处理
+	bool udp_data_received(void);
+	// tcp连接是否达到最大
+	bool is_tcp_links_max(void);
+	// 增加tcp连接
+	bool tcp_links_inc(void);
+	// 减少tcp连接
+	void tcp_links_dec(void);
 
 private:
-	uv_loop_t *loop;
+	// 最大连接数量
+	const uint32_t max_links;
+	// tcp连接数量，用于限制连接数
+	uint32_t tcp_links;
 
-	std::list<std::shared_ptr<UvSdkNetSrvType<uv_tcp_t>>> tcp_servers;
-	std::list<std::shared_ptr<UvSdkNetSrvType<uv_udp_t>>> udp_servers;
-	std::list<uv_timer_t *> timers;
+private:
+	// tcp服务器
+	TcpServerPtr tcp_srv_;
+	// udp服务器
+	UdpServerPtr udp_srv_;
 };
 
-void sdk_uv_net_init(void);
+void sdk_net_init(void);

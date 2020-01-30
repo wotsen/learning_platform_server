@@ -134,6 +134,23 @@ void get_sdk_tcp_host_config(std::string &ip_version, std::string &ip, int &port
     port = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["port"];
 }
 
+void get_sdk_udp_host_config(std::string &ip_version, std::string &ip, int &port)
+{
+    json j = get_json_config();
+
+    ip_version = j["modules"]["base_fun"]["network"]["ip-version"];
+    ip = j["modules"]["base_fun"]["network"]["ip"];
+    port = j["modules"]["base_fun"]["network"]["sdk"]["udp"]["port"];
+}
+
+void get_ip_version(std::string &ip_version)
+{
+    json &j = get_json_config();
+
+    ip_version = j["modules"]["base_fun"]["network"]["ip-version"];
+    return;
+}
+
 // 获取网络接口
 void get_net_interface_config(std::string &interface)
 {

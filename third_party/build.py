@@ -75,16 +75,16 @@ def json_build(source_dir, debug, install_path):
     os.chdir(cur_dir)
 
 
-def libuv_build(source_dir, debug, install_path):
-    cur_dir = os.getcwd()
+# def libuv_build(source_dir, debug, install_path):
+#     cur_dir = os.getcwd()
 
-    os.chdir(source_dir)
-    os.system("./autogen.sh")
-    os.system("./configure --prefix=%s --enable-shared=no" % install_path)
-    os.system("make")
-    os.system("make install")
+#     os.chdir(source_dir)
+#     os.system("./autogen.sh")
+#     os.system("./configure --prefix=%s --enable-shared=no" % install_path)
+#     os.system("make")
+#     os.system("make install")
 
-    os.chdir(cur_dir)
+#     os.chdir(cur_dir)
 
 
 def protobuf_build(source_dir, debug, install_path):
@@ -162,7 +162,7 @@ third_party_modules = [
     ThirdPartyModule(c_log_build, "c-log", "c语言实现的日志,easyLogger"),
     ThirdPartyModule(c_time_build, "c-time", "c语言封装的时间函数接口"),
     ThirdPartyModule(json_build, "json", "c++很直观的json库"),
-    ThirdPartyModule(libuv_build, "libuv", "libuv库"),
+    # ThirdPartyModule(libuv_build, "libuv", "libuv库"),
     ThirdPartyModule(protobuf_build, "protobuf", "google protobuf协议开源库"),
     ThirdPartyModule(sole_build, "sole", "简单uuid库"),
     ThirdPartyModule(util_pthread_build, "util_pthread", "pthread线程简单接口封装"),

@@ -14,4 +14,4 @@
 #include "sdk_interface.h"
 
 // sdk协议处理
-void sdk_protocol_do(struct sdk_net_interface &sdk_interface, const std::string &req, std::string &res);
+void sdk_protocol_do(struct sdk_net_interface &sdk_interface, const insider::sdk::Sdk &sdk_req, insider::sdk::Sdk &sdk_res);

@@ -1,9 +1,6 @@
 [submodule "third_party/c-log"]
 	path = third_party/c-log
 	url = https://github.com/wotsen/c-log
-[submodule "third_party/libuv"]
-	path = third_party/libuv
-	url = https://github.com/libuv/libuv
 [submodule "third_party/protobuf"]
 	path = third_party/protobuf
 	url = https://github.com/wotsen/protobuf

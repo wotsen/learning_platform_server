@@ -23,8 +23,6 @@
 
 using namespace insider::sdk;
 
-// sdk消息处理
-static void sdk_msg_do(struct sdk_net_interface &sdk_interface, const std::string &req, std::string &res);
 // header数据处理
 static bool sdk_header_check(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req);
 // 业务内容内容处理
@@ -37,11 +35,6 @@ static bool sdk_body_proc(struct sdk_net_interface &sdk_interface, const Sdk &sd
 
 // 打包响应消息头
 static void sdk_pack_res_msg_header(struct sdk_net_interface sdk_interface, const Sdk &sdk_req, Sdk &sdk_res);
-
-// 解包sdk数据
-static bool sdk_decode_req_msg(const std::string &req, Sdk &sdk_req);
-// 打包sdk数据
-static void sdk_encode_res_msg(struct sdk_net_interface sdk_interface, const Sdk &sdk_req, Sdk &sdk_res, std::string &res);
 
 // 魔术数字校验
 static bool sdk_header_check_magic(const Header &header);
@@ -66,7 +59,6 @@ static bool sdk_header_check_data_dir(const Header &header);
 static bool sdk_body_do(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res)
 {
 	const Body &body = sdk_req.body();
-
 	OperationType op_type = body.method();
 
 	if (op_type > OperationType::DELETE)
@@ -97,7 +89,7 @@ static bool sdk_header_check_magic(const Header &header)
 // 版本检查
 static bool sdk_header_check_version(const Header &header)
 {
-		// 版本检查，不同版本不兼容，后续可去除
+	// 版本检查，不同版本不兼容，后续可去除
 	if (SdkVersion::SDK_CUR_VERSION != header.version())
 	{
 		log_e("msg version is %x\n", header.version());
@@ -196,15 +188,7 @@ static void sdk_pack_res_msg_header(struct sdk_net_interface sdk_interface, cons
 	return ;
 }
 
-/**
- * @brief tcp header数据处理
- * 
- * @tparam  
- * @param sdk_interface 网络接口
- * @param req_sdk 请求
- * @return true 
- * @return false 
- */
+// header数据处理
 static bool sdk_header_check(struct sdk_net_interface &sdk_interface, const Sdk &req_sdk)
 {
 	const Header &header = req_sdk.header();
@@ -214,35 +198,6 @@ static bool sdk_header_check(struct sdk_net_interface &sdk_interface, const Sdk 
 		   && sdk_header_check_net(header, sdk_interface)
 		   && sdk_header_check_time(header)
 		   && sdk_header_check_data_dir(header);
-}
-
-// 解包sdk数据
-static void sdk_encode_res_msg(struct sdk_net_interface sdk_interface, const Sdk &sdk_req, Sdk &sdk_res, std::string &res)
-{
-	// 添加响应信息
-	sdk_pack_res_msg_header(sdk_interface, sdk_req, sdk_res);
-
-	// 响应包
-	if (!sdk_res.SerializeToString(&res))
-	{
-		log_e("serial sdk msg error\n");
-	}
-
-	// FIXME:是否是每次都要清除
-	google::protobuf::ShutdownProtobufLibrary();
-	return ;
-}
-
-// 解析sdk原始数据
-static bool sdk_decode_req_msg(const std::string &req, Sdk &sdk_req)
-{
-	if (!sdk_req.ParseFromString(req))
-	{
-		log_e("parser sdk msg failed\n");
-		return false;
-	}
-
-	return true;
 }
 
 // 中间件处理，中间件处理失败时直接响应
@@ -258,21 +213,16 @@ static bool sdk_body_proc(struct sdk_net_interface &sdk_interface, const Sdk &sd
 }
 
 /**
- * @brief sdk消息处理
+ * @brief sdk协议处理
  * 
- * @tparam T uv类型
  * @param sdk_interface 网络接口
- * @param req 请求
- * @param res 响应
+ * @param sdk_req 请求
+ * @param sdk_res 应答
  */
-static void sdk_msg_do(struct sdk_net_interface &sdk_interface, const std::string &req, std::string &res)
+void sdk_protocol_do(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res)
 {
-	Sdk sdk_req;	// sdk请求消息
-	Sdk sdk_res;	// sdk应答消息
-
-	// 处理顺序：协议解析->协议头校验->中间件处理->业务内容分发->响应
-
-	if (!sdk_decode_req_msg(req, sdk_req) || !sdk_header_check(sdk_interface, sdk_req))
+	// 头部检查
+	if (!sdk_header_check(sdk_interface, sdk_req))
 	{
 		return ;
 	}
@@ -281,7 +231,7 @@ static void sdk_msg_do(struct sdk_net_interface &sdk_interface, const std::strin
 	if (!sdk_midware_proc(sdk_interface, sdk_req, sdk_res))
 	{
 		// 中间件响应消息不走正常流程，单独存在错误码，会填写具体中间件
-		sdk_encode_res_msg(sdk_interface, sdk_req, sdk_res, res);
+		sdk_pack_res_msg_header(sdk_interface, sdk_req, sdk_res);
 		return ;
 	}
 	
@@ -292,29 +242,8 @@ static void sdk_msg_do(struct sdk_net_interface &sdk_interface, const std::strin
 	}
 
 	// 响应消息
-	sdk_encode_res_msg(sdk_interface, sdk_req, sdk_res, res);
-	
-	return ;
-}
-
-/**
- * @brief tcp sdk协议处理
- * 
- * @tparam  uv类型
- * @param sdk_interface 网络接口
- * @param req 请求
- * @param res 响应
- */
-void sdk_protocol_do(struct sdk_net_interface &sdk_interface, const std::string &req, std::string &res)
-{
-	if (req.empty())
-	{
-		log_e("requset msg is empty\n");
-		return ;
-	}
-
-	// 实际消息处理
-	sdk_msg_do(sdk_interface, req, res);
+	sdk_pack_res_msg_header(sdk_interface, sdk_req, sdk_res);
 
 	return ;
 }
+

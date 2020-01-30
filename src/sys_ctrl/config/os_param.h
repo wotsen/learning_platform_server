@@ -19,6 +19,9 @@
 // 系统任务个数
 #define OS_SYS_TASK_NUM 1024
 
+// sdk tcp连接个数
+#define OS_SYS_SDK_TCP_CONNECT_NUM 1024
+
 // 能力集配置文件
 #define OS_SYS_CAPAABILITY_FILENAME "../etc/sys_capability.json"
 
