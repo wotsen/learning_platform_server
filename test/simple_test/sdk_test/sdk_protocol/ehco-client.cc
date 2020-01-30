@@ -29,9 +29,24 @@ void echo_read(uv_stream_t *server, ssize_t nread, const uv_buf_t *buf)
 		return;
 	}
 
-	printf("read addr=[%p]\n", buf->base);
+	Sdk test;
+
+	std::string out(buf->base, nread);
+
+	if (!test.ParseFromString(out))
+	{
+		printf("parser sdk msg error\n");
+	}
+
+	// for (size_t i = 0; i < nread; i++)
+	// {
+	// 	printf("%x ", buf->base[i]);
+	// }
+
+	// printf("\n");
+
 	// 結果を buf から取得して表示
-	printf("result: %s\n", buf->base + sizeof(size_t));
+	printf("result: %s\n", buf->base);
 	free(buf->base);
 }
 

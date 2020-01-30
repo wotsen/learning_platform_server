@@ -60,10 +60,11 @@ static bool sdk_msg_encode(const Sdk &res, Buffer &output)
 		return false;
 	}
 
-	size_t offset = output.size();
+	// size_t offset = output.size();
 
 	output.append(out.data(), out.size());
-	*(uint32_t *) (output.begin() + offset) = output.size() - offset;
+	
+	// *(char *) (output.begin() + offset) = output.size() - offset;
 
 	return true;
 }
