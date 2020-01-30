@@ -146,6 +146,16 @@ def fmt_build(source_dir, debug, install_path):
     os.chdir(cur_dir)
 
 
+def handy_build(source_dir, debug, install_path):
+    cur_dir = os.getcwd()
+
+    os.chdir(source_dir)
+    os.system("make")
+    os.system("make MAKE_INSTALL_PREFIX=%s install" % install_path)
+
+    os.chdir(cur_dir)
+
+
 # 模块信息
 third_party_modules = [
     ThirdPartyModule(SQLiteCpp_build, "SQLiteCpp", "c++封装的sqlite3"),
@@ -158,6 +168,7 @@ third_party_modules = [
     ThirdPartyModule(util_pthread_build, "util_pthread", "pthread线程简单接口封装"),
     ThirdPartyModule(linux_systemcmd_proxy_build, "linux-systemcmd-proxy", "linux下system接口的代理库"),
     ThirdPartyModule(fmt_build, "fmt", "c++更好的格式话输出，类似python format"),
+    ThirdPartyModule(handy_build, "handy", "c++异步网络库"),
 ]
 
 # 模块索引列表
