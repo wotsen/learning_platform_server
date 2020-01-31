@@ -22,9 +22,6 @@
 
 using namespace insider::sdk;
 
-// sdk服务器
-static SdkServer _sdk_server(OS_SYS_SDK_TCP_CONNECT_NUM);
-
 // 使用handy初始化sdk网络
 static void sdk_handy_net_init(void);
 // 解码
@@ -73,17 +70,13 @@ static bool sdk_msg_encode(const Sdk &res, Buffer &output)
 template <int trans_proto = TCP>
 static bool get_host_addr(const Ip4Addr &src, const Ip4Addr &dest, struct sdk_net_interface &sdk_interface)
 {
-	std::string ip_version;
-
-	get_ip_version(ip_version);
-
 	// 本地信息从配置获取
-	get_net_interface_config(sdk_interface.interface);
-	get_net_gateway_config(sdk_interface.gateway);
+	sdk_interface.interface = get_net_interface_config();
+	sdk_interface.gateway = get_net_gateway_config();
 
 	sdk_interface.trans_protocol = static_cast<TransProto>(trans_proto);
 
-	if (ip_version == "ipv4") {
+	if (get_ip_version_config() == "ipv4") {
 		sdk_interface.ip_version = IpVersion::IPV4;
 	} else {
 		sdk_interface.ip_version = IpVersion::IPV6;
@@ -211,22 +204,17 @@ bool SdkServer::udp_data_received(void)
 // 创建tcp服务
 bool SdkServer::create_tcp_srv(void)
 {
-	std::string ip_version;
-	std::string ip_version_cap;
-	std::string ip;
-	int port;
-
-	get_sdk_tcp_host_config(ip_version, ip, port);
-	get_ip_version_capability(ip_version_cap);
-
 	// 校验配置与能力
-	if (ip_version_cap != ip_version)
+	if (get_ip_version_capability() != get_ip_version_config())
 	{
-		log_e("not support ip version : %s\n", ip_version.c_str());
+		log_e("not support ip version : %s\n", get_ip_version_config().c_str());
 		return false;
 	}
 
-	tcp_srv_ = TcpServer::startServer(&handy_base(), ip, port, true);
+	tcp_srv_ = TcpServer::startServer(&handy_base(),
+									  get_sdk_ip_config(),
+									  get_sdk_tcp_port_config(),
+									  true);
 
 	return tcp_connection_made();
 }
@@ -234,22 +222,17 @@ bool SdkServer::create_tcp_srv(void)
 // 创建udp服务
 bool SdkServer::create_udp_srv(void)
 {
-	std::string ip_version;
-	std::string ip_version_cap;
-	std::string ip;
-	int port;
-
-	get_sdk_udp_host_config(ip_version, ip, port);
-	get_ip_version_capability(ip_version_cap);
-
 	// 校验配置与能力
-	if (ip_version_cap != ip_version)
+	if (get_ip_version_capability() != get_ip_version_config())
 	{
-		log_e("not support ip version : %s\n", ip_version.c_str());
+		log_e("not support ip version : %s\n", get_ip_version_config().c_str());
 		return false;
 	}
 
-	udp_srv_ = UdpServer::startServer(&handy_base(), ip, port, true);
+	udp_srv_ = UdpServer::startServer(&handy_base(),
+									  get_sdk_ip_config(),
+									  get_sdk_udp_port_config(),
+									  true);
 
 	return udp_data_received();
 }
@@ -257,6 +240,9 @@ bool SdkServer::create_udp_srv(void)
 // 初始化handy sdk网络实例
 static void sdk_handy_net_init(void)
 {
+	// sdk服务器
+	static SdkServer _sdk_server(get_max_tcp_connect_capability());
+
 	_sdk_server.create_tcp_srv();
 }
 

@@ -11,12 +11,28 @@
 
 #define LOG_TAG "SYS_CAPABILITY"
 
+#include <easylogger/inc/elog.h>
 #include "os_param.h"
 #include "sys_capability.h"
-#include <easylogger/inc/elog.h>
+#include "sys_load_json.h"
 
 using json = nlohmann::json;
 
+class SysCapability : public AbsSysLoadJson
+{
+public:
+
+    ~SysCapability();
+
+    static SysCapability *get_sys_capability(void);
+
+private:
+    SysCapability(){};
+
+    static SysCapability *instance;
+};
+
+// 系统能力集
 SysCapability *SysCapability::instance = nullptr;
 
 /**
@@ -115,21 +131,34 @@ bool sys_capability_init(void)
     return true;
 }
 
-/**
- * @brief Get the user manage max users object
- * 
- * @return uint32_t 
- */
+// 获取用户管理最大用户数量能力
 uint32_t get_user_manage_max_users_capability(void)
 {
-    json j = get_json_capability();
+    json &j = get_json_capability();
 
     return j["service"]["modules"]["module_fun"]["user_manage"]["max_users"];
 }
 
-void get_ip_version_capability(std::string &ip_version)
+// 获取ip版本能力
+std::string get_ip_version_capability(void)
 {
-    json j = get_json_capability();
+    json &j = get_json_capability();
 
-    ip_version = j["service"]["modules"]["base_fun"]["network"]["sdk"]["support-version"][0];
+    return j["service"]["modules"]["base_fun"]["network"]["sdk"]["support-version"][0];
+}
+
+// 获取最大任务个数能力
+uint32_t get_max_task_num_capability(void)
+{
+    json &j = get_json_capability();
+
+    return j["service"]["system"]["sys_max_task_num"];
+}
+
+// 获取tcp最大连接数能力
+uint32_t get_max_tcp_connect_capability(void)
+{
+    json &j = get_json_capability();
+
+    return j["service"]["modules"]["base_fun"]["network"]["sdk"]["max_tcp_connect"];
 }

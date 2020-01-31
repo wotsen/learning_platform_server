@@ -12,22 +12,8 @@
  */
 #pragma once
 
-#include "sys_load_json.h"
-
-class SysConfig : public AbsSysLoadJson
-{
-public:
-
-    ~SysConfig();
-
-    ///< 获取系统配置
-    static SysConfig *get_sys_config(void);
-
-private:
-    SysConfig(){};
-
-    static SysConfig *instance;
-};
+#include <string>
+#include <nlohmann/json.hpp>
 
 ///< 系统配置初始化
 bool sys_config_init(void);
@@ -35,15 +21,24 @@ bool sys_config_init(void);
 ///< 配置参数json指针
 nlohmann::json &get_json_config(void);
 
-/************************************************************************************************/
+
+/*****************************************************获取配置接口*******************************************/
 /* 获取sdk tcp网络配置 */
-void get_sdk_tcp_host_config(std::string &ip_version, std::string &ip, int &port);
-void get_sdk_udp_host_config(std::string &ip_version, std::string &ip, int &port);
 
-void get_ip_version(std::string &ip_version);
+// 获取sdk tcp端口
+int get_sdk_tcp_port_config(void);
+
+// 获取sdk udp端口
+int get_sdk_udp_port_config(void);
+
+// 获取sdkip地址
+std::string get_sdk_ip_config(void);
+
+// 获取ip版本
+std::string get_ip_version_config(void);
 
 // 获取网络接口
-void get_net_interface_config(std::string &interface);
+std::string get_net_interface_config(void);
 
 // 获取网络接口
-void get_net_gateway_config(std::string &gateway);
+std::string get_net_gateway_config(void);

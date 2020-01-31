@@ -12,21 +12,6 @@
 
 #include <string>
 #include <nlohmann/json.hpp>
-#include "sys_load_json.h"
-
-class SysCapability : public AbsSysLoadJson
-{
-public:
-
-    ~SysCapability();
-
-    static SysCapability *get_sys_capability(void);
-
-private:
-    SysCapability(){};
-
-    static SysCapability *instance;
-};
 
 /*****************************************************
  * 初始化接口接口
@@ -41,6 +26,15 @@ nlohmann::json &get_json_capability(void);
 /*****************************************************
  * 能力获取接口
  *****************************************************/
+
+// 获取用户管理最大用户数量能力
 uint32_t get_user_manage_max_users_capability(void);
-// 获取ip版能力
-void get_ip_version_capability(std::string &ip_version);
+
+// 获取ip版本能力
+std::string get_ip_version_capability(void);
+
+// 获取最大任务个数能力
+uint32_t get_max_task_num_capability(void);
+
+// 获取tcp最大连接数能力
+uint32_t get_max_tcp_connect_capability(void);

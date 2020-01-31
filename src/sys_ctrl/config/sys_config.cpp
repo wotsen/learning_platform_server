@@ -14,10 +14,27 @@
 #include <iostream>
 #include <easylogger/inc/elog.h>
 #include "os_param.h"
+#include "sys_load_json.h"
 #include "sys_config.h"
 
 using json = nlohmann::json;
 
+class SysConfig : public AbsSysLoadJson
+{
+public:
+
+    ~SysConfig();
+
+    ///< 获取系统配置
+    static SysConfig *get_sys_config(void);
+
+private:
+    SysConfig(){};
+
+    static SysConfig *instance;
+};
+
+// 系统只读配置
 SysConfig *SysConfig::instance = nullptr;
 
 /**
@@ -112,57 +129,56 @@ bool sys_config_init(void)
         exit(0);
         return false;
     }
-    // log_d("sys_config json : %s\n", j.dump(4).c_str());
+
     log_i("parser sys config json success!\n");
 
     return true;
 }
 
-/**
- * @brief Get the sdk tcp host object
- * 
- * @param ip_version : ip版本
- * @param ip : ip地址
- * @param port : 端口
- */
-void get_sdk_tcp_host_config(std::string &ip_version, std::string &ip, int &port)
-{
-    json j = get_json_config();
-
-    ip_version = j["modules"]["base_fun"]["network"]["ip-version"];
-    ip = j["modules"]["base_fun"]["network"]["ip"];
-    port = j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["port"];
-}
-
-void get_sdk_udp_host_config(std::string &ip_version, std::string &ip, int &port)
-{
-    json j = get_json_config();
-
-    ip_version = j["modules"]["base_fun"]["network"]["ip-version"];
-    ip = j["modules"]["base_fun"]["network"]["ip"];
-    port = j["modules"]["base_fun"]["network"]["sdk"]["udp"]["port"];
-}
-
-void get_ip_version(std::string &ip_version)
+// 获取sdk tcp端口
+int get_sdk_tcp_port_config(void)
 {
     json &j = get_json_config();
 
-    ip_version = j["modules"]["base_fun"]["network"]["ip-version"];
-    return;
+    return j["modules"]["base_fun"]["network"]["sdk"]["tcp"]["port"];
+}
+
+// 获取sdk udp端口
+int get_sdk_udp_port_config(void)
+{
+    json &j = get_json_config();
+
+    return j["modules"]["base_fun"]["network"]["sdk"]["udp"]["port"];
+}
+
+// 获取sdkip地址
+std::string get_sdk_ip_config(void)
+{
+    json &j = get_json_config();
+
+    return j["modules"]["base_fun"]["network"]["ip"];
+}
+
+// 获取ip版本
+std::string get_ip_version_config(void)
+{
+    json &j = get_json_config();
+
+    return j["modules"]["base_fun"]["network"]["ip-version"];
 }
 
 // 获取网络接口
-void get_net_interface_config(std::string &interface)
+std::string get_net_interface_config(void)
 {
-    json j = get_json_config();
+    json &j = get_json_config();
 
-    interface = j["modules"]["base_fun"]["network"]["interface"];
+    return j["modules"]["base_fun"]["network"]["interface"];
 }
 
 // 获取网络接口
-void get_net_gateway_config(std::string &gateway)
+std::string get_net_gateway_config(void)
 {
-    json j = get_json_config();
+    json &j = get_json_config();
 
-    gateway = j["modules"]["base_fun"]["network"]["gateway"];
+    return j["modules"]["base_fun"]["network"]["gateway"];
 }

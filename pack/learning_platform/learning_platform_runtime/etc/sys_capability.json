@@ -3,12 +3,16 @@
         "enable": "true"
     },
     "service": {
+        "system": {
+            "sys_max_task_num": 1024
+        },
         "modules": {
             "base_fun": {
                 "network": {
                     "sdk":{
                         "support-version": ["ipv4"],
-                        "support-layer": ["tcp", "udp"]
+                        "support-layer": ["tcp", "udp"],
+                        "max_tcp_connect": 1024
                     }
                 }
             },

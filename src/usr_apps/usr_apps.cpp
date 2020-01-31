@@ -13,6 +13,7 @@
 #include <pthread.h>
 #include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
+#include "sys_capability.h"
 #include "task_manage/task_manage.h"
 #include "sdk_net/sdk_network/sdk_network.h"
 #include "sdk_net/sdk_network/sdk_midware.h"
@@ -342,7 +343,7 @@ void except_task_alarm(const struct except_task_info &except_task)
 // 基础功能模块初始化
 static void base_function_module_init(void)
 {
-    wotsen::task_manage_init(OS_SYS_TASK_NUM, reinterpret_cast<wotsen::abnormal_task_do>(except_task_alarm));
+    wotsen::task_manage_init(get_max_task_num_capability(), reinterpret_cast<wotsen::abnormal_task_do>(except_task_alarm));
 
     task_handy_loop_init();
 
