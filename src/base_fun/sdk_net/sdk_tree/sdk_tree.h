@@ -32,7 +32,7 @@ class SdkTreeTable;
 class SdkTreeTable
 {
 public:
-	typedef std::vector<const SdkTreeNode *> sdk_tree_table_t;
+	typedef std::vector<std::shared_ptr<SdkTreeNode>> sdk_tree_table_t;
 private:
 	// sdk实际树表格
 	mutable sdk_tree_table_t table_;
@@ -43,13 +43,17 @@ public:
 	// 拷贝构造
 	SdkTreeTable(const SdkTreeTable &table);
 	// 支持初始化列表 {} 格式
-	SdkTreeTable(const std::initializer_list<SdkTreeNode *> &li);
+	SdkTreeTable(const std::initializer_list<std::shared_ptr<SdkTreeNode>> &li);
+
+	~SdkTreeTable();
 
 	// 适配for i : v 迭代
 	sdk_tree_table_t::iterator begin() const;
 	sdk_tree_table_t::iterator end() const;
 	// 适配vector push_back
 	void push_back(const SdkTreeNode *node);
+	// 适配vector push_back
+	void push_back(const std::shared_ptr<SdkTreeNode> &node);
 	// 适配empty
 	bool empty(void) const;
 	// 查找url对应的处理接口
@@ -74,9 +78,7 @@ public:
 };
 
 // sdk url
-#define sdk_url(method, url, fn, next) new SdkTreeNode(method, url, fn, next)
-
-// FIXME:现在是直接把指针放到表里面，如果是局部变量或者被堆变量被释放?
+#define sdk_url(method, url, fn, next) std::make_shared<SdkTreeNode>(method, url, fn, next)
 
 // 添加sdk tree(默认到根)
 const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node);
@@ -85,7 +87,15 @@ const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node, SdkTreeTable &tabl
 // 作为指定节点的子节点
 const SdkTreeNode *append_sdk_tree_node(const SdkTreeNode *node, SdkTreeNode &father);
 
+// 智能指针版本
+// 添加sdk tree(默认到根)
+const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node);
+// 添加到指定的表当中
+const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeTable &table);
+// 作为指定节点的子节点
+const std::shared_ptr<SdkTreeNode> &append_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeNode &father);
+
 // 模块添加sdk tree，一个模块(文件)只能添加一个
 #define MODULE_ADD_SDK_TREE(method, url, fn, next) \
-	static std::vector<const SdkTreeNode *> ___sdk_tree___{add_sdk_tree_node(sdk_url(method, url, fn, next))}
+	static SdkTreeTable ___sdk_tree___{add_sdk_tree_node(sdk_url(method, url, fn, next))}
 

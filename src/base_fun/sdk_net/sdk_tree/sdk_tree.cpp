@@ -21,12 +21,17 @@ SdkTreeTable::SdkTreeTable() {}
 SdkTreeTable::SdkTreeTable(const SdkTreeTable &table) : table_(table.table_) {}
 
 // 支持初始化列表 {} 格式
-SdkTreeTable::SdkTreeTable(const std::initializer_list<SdkTreeNode *> &li)
+SdkTreeTable::SdkTreeTable(const std::initializer_list<std::shared_ptr<SdkTreeNode>> &li)
 {
     for (auto it : li)
     {
         table_.push_back(it);
     }
+}
+
+SdkTreeTable::~SdkTreeTable()
+{
+    table_.clear();
 }
 
 // 适配for i : v 迭代
@@ -48,6 +53,13 @@ bool SdkTreeTable::empty(void) const
 
 // 适配vector push_back
 void SdkTreeTable::push_back(const SdkTreeNode *node)
+{
+    if (!node) { return; }
+    table_.push_back(std::make_shared<SdkTreeNode>(*node));
+}
+
+// 适配vector push_back
+void SdkTreeTable::push_back(const std::shared_ptr<SdkTreeNode> &node)
 {
     table_.push_back(node);
 }
@@ -110,6 +122,13 @@ const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node)
 	return node;
 }
 
+// 添加sdk tree(默认到根)
+const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node)
+{
+    get_sdk_tree_root().push_back(node);
+    return node;
+}
+
 // 添加到指定的表当中
 const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node, SdkTreeTable &table)
 {
@@ -121,6 +140,13 @@ const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node, SdkTreeTable &tabl
     return node;
 }
 
+// 添加到指定的表当中
+const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeTable &table)
+{
+    table.push_back(node);
+    return node;
+}
+
 // 作为指定节点的子节点
 const SdkTreeNode *append_sdk_tree_node(const SdkTreeNode *node, SdkTreeNode &father)
 {
@@ -129,5 +155,12 @@ const SdkTreeNode *append_sdk_tree_node(const SdkTreeNode *node, SdkTreeNode &fa
         father.next_.push_back(node);
     }
 
+    return node;
+}
+
+// 作为指定节点的子节点
+const std::shared_ptr<SdkTreeNode> &append_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeNode &father)
+{
+    father.next_.push_back(node);
     return node;
 }
