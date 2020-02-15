@@ -17,7 +17,7 @@
 #include <inttypes.h>
 #include <easylogger/easylogger_setup.h>
 #include "tools_func/calculate_crc16.h"
-#include "../sdk_tree/sdk_tree.h"
+#include "../sdk_tree/sdk_tree_do.h"
 #include "sdk_protocol_do.h"
 #include "sdk_midware.h"
 
@@ -226,6 +226,10 @@ void sdk_protocol_do(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req
 	{
 		return ;
 	}
+
+	// 需要填写回去
+	sdk_res.mutable_body()->set_url(sdk_req.body().url());
+	sdk_res.mutable_body()->set_method(sdk_req.body().method());
 
 	/* NOTE:如果是中间件出错，其中的sdk错误码由中间件填写 */
 	if (!sdk_midware_proc(sdk_interface, sdk_req, sdk_res))

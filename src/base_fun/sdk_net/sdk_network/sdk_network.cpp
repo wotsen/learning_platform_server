@@ -38,7 +38,7 @@ static bool sdk_msg_decode(Buffer &input, Sdk &req)
 	bool ret = true;
 	if (!req.ParseFromString(std::string(input.data())))
 	{
-		log_e("parser sdk msg failed\n");
+		log_e("parser sdk msg failed ：%ld\n", input.size());
 		ret = false;
 	}
 

@@ -18,7 +18,7 @@
 #include "sdk_net/sdk_network/sdk_network.h"
 #include "sdk_net/sdk_network/sdk_midware.h"
 #ifdef DEBUG
-#include "sdk_net/sdk_tree/sdk_tree.h"
+#include "sdk_net/sdk_tree/sdk_tree_do.h"
 #endif
 #include "handy_loop/handy_loop.h"
 
