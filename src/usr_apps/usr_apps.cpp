@@ -330,7 +330,7 @@ struct app_module_config AppModuleManager::app_modules_[OS_SYS_MAX_APP_MODULES] 
 // sdk中间件注册
 static void register_sdk_midwares(void)
 {
-	SDK_IMPORT_MIDWARE(user_manange_midware_do, true);
+	SDK_IMPORT_MIDWARE(user_manange_midware_do, "user_manange_midware", true);
 	// TODO:记录访问者，ip，端口，时间(),json格式
 }
 
