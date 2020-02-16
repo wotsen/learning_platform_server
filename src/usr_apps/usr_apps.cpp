@@ -16,7 +16,7 @@
 #include "sys_capability.h"
 #include "task_manage/task_manage.h"
 #include "sdk_net/sdk_network/sdk_network.h"
-#include "sdk_net/sdk_network/sdk_midware.h"
+#include "sdk_net/sdk_network/sdk_midware_manage.h"
 #ifdef DEBUG
 #include "sdk_net/sdk_tree/sdk_tree_do.h"
 #endif
