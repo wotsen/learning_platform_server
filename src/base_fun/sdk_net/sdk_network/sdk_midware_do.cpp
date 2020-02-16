@@ -10,6 +10,7 @@
  */
 #define LOG_TAG "SDK_MIDWARE_DO"
 #include <easylogger/easylogger_setup.h>
+#include "sdk_midware.h"
 #include "_sdk_midware_manage.h"
 #include "sdk_midware_do.h"
 
@@ -24,7 +25,7 @@
  */
 bool sdk_midware_do(struct sdk_net_interface &sdk_interface, const Sdk &sdk_req, Sdk &sdk_res)
 {
-    sdk_midware_list &midwares = get_sdk_midware_manager().midwares();
+    auto &midwares = get_sdk_midware_manager().midwares();
 
     for (auto &item : midwares) {
 		if (!item->is_enable()) { continue; }

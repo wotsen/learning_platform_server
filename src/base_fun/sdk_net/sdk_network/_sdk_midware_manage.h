@@ -11,7 +11,10 @@
 #pragma once
 
 #include <list>
-#include "sdk_midware.h"
+#include <string>
+#include <memory>
+
+class ISdkMidWare;
 
 using sdk_midware_list = std::list<std::shared_ptr<ISdkMidWare>>;
 

@@ -14,6 +14,9 @@
 #include "_sdk_midware_manage.h"
 #include "sdk_midware_manage.h"
 
+// 中间件管理器
+static SdkMidWareManager midware_mannager;
+
 // 获取中间件列表
 sdk_midware_list &SdkMidWareManager::midwares(void)
 {
@@ -39,10 +42,6 @@ bool SdkMidWareManager::is_midware_exist(const std::string &name)
 	return false;
 }
 
-// 中间件管理器
-static SdkMidWareManager midware_mannager;
-
-// 获取中间件管理器
 SdkMidWareManager &get_sdk_midware_manager(void)
 {
     return midware_mannager;
