@@ -105,13 +105,19 @@ SdkTreeNode::SdkTreeNode(const int &method, const std::string &url, const sdk_ap
 SdkTreeNode::SdkTreeNode(const int &method, const std::string &url, const sdk_app_node_fn fn) :
     method_(method), url_(url), fn_(fn) {}
 
-/**
- * @brief 添加sdk 树节点
- * 
- * @param node 
- * @return const SdkTreeNode* 
- */
-const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node)
+// 节点追加到下级表
+void SdkTreeNode::append_node(const SdkTreeNode *node)
+{
+    if (node) { next_.push_back(node); }
+}
+
+void SdkTreeNode::append_node(const std::shared_ptr<SdkTreeNode> &node)
+{
+    next_.push_back(node);
+}
+
+// 添加sdk tree 根
+const SdkTreeNode *append_sdk_tree_node_to_root_table(const SdkTreeNode *node)
 {
     if (node)
     {
@@ -122,45 +128,9 @@ const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node)
 	return node;
 }
 
-// 添加sdk tree(默认到根)
-const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node)
+// 添加sdk tree 根
+const std::shared_ptr<SdkTreeNode> &append_sdk_tree_node_to_root_table(const std::shared_ptr<SdkTreeNode> &node)
 {
     get_sdk_tree_root().push_back(node);
-    return node;
-}
-
-// 添加到指定的表当中
-const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node, SdkTreeTable &table)
-{
-    if (node)
-    {
-        table.push_back(node);
-    }
-
-    return node;
-}
-
-// 添加到指定的表当中
-const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeTable &table)
-{
-    table.push_back(node);
-    return node;
-}
-
-// 作为指定节点的子节点
-const SdkTreeNode *append_sdk_tree_node(const SdkTreeNode *node, SdkTreeNode &father)
-{
-    if (node)
-    {
-        father.next_.push_back(node);
-    }
-
-    return node;
-}
-
-// 作为指定节点的子节点
-const std::shared_ptr<SdkTreeNode> &append_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeNode &father)
-{
-    father.next_.push_back(node);
     return node;
 }

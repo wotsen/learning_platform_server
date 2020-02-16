@@ -11,6 +11,7 @@
 #pragma once
 
 #include <vector>
+#include <list>
 #include <iterator>
 #include "../sdk_network/sdk_interface.h"
 
@@ -32,7 +33,7 @@ class SdkTreeTable;
 class SdkTreeTable
 {
 public:
-	typedef std::vector<std::shared_ptr<SdkTreeNode>> sdk_tree_table_t;
+	typedef std::list<std::shared_ptr<SdkTreeNode>> sdk_tree_table_t;
 private:
 	// sdk实际树表格
 	mutable sdk_tree_table_t table_;
@@ -75,27 +76,19 @@ public:
 	SdkTreeNode(const int &method, const std::string &url, const sdk_app_node_fn fn, void *ptr);
 	// 下级表为空，不填参数
 	SdkTreeNode(const int &method, const std::string &url, const sdk_app_node_fn fn);
+	// 节点追加到下级表
+	void append_node(const SdkTreeNode *node);
+	void append_node(const std::shared_ptr<SdkTreeNode> &node);
 };
 
-// sdk url
-#define sdk_url(method, url, fn, next) std::make_shared<SdkTreeNode>(method, url, fn, next)
+#define new_sdk_node(method, url, fn, next) std::make_shared<SdkTreeNode>(method, url, fn, next)
 
 // 添加sdk tree(默认到根)
-const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node);
-// 添加到指定的表当中
-const SdkTreeNode *add_sdk_tree_node(const SdkTreeNode *node, SdkTreeTable &table);
-// 作为指定节点的子节点
-const SdkTreeNode *append_sdk_tree_node(const SdkTreeNode *node, SdkTreeNode &father);
-
-// 智能指针版本
+const SdkTreeNode *append_sdk_tree_node_to_root_table(const SdkTreeNode *node);
 // 添加sdk tree(默认到根)
-const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node);
-// 添加到指定的表当中
-const std::shared_ptr<SdkTreeNode> &add_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeTable &table);
-// 作为指定节点的子节点
-const std::shared_ptr<SdkTreeNode> &append_sdk_tree_node(const std::shared_ptr<SdkTreeNode> &node, SdkTreeNode &father);
+const std::shared_ptr<SdkTreeNode> &append_sdk_tree_node_to_root_table(const std::shared_ptr<SdkTreeNode> &node);
 
 // 模块添加sdk tree，一个模块(文件)只能添加一个
 #define MODULE_ADD_SDK_TREE(method, url, fn, next) \
-	static SdkTreeTable ___sdk_tree___{add_sdk_tree_node(sdk_url(method, url, fn, next))}
+	static SdkTreeTable ___sdk_tree___{append_sdk_tree_node_to_root_table(new_sdk_node(method, url, fn, next))}
 

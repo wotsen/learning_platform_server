@@ -20,7 +20,7 @@ static bool _index_fn(struct sdk_net_interface &sdk_interface, const Sdk &sdk_re
 
 // 基础树(默认路径)
 static SdkTreeTable base_sdk_tree = {
-	sdk_url(SDK_GET, "index", _index_fn, nullptr),
+	new_sdk_node(SDK_GET, "index", _index_fn, nullptr),
 };
 
 // 添加根节点
