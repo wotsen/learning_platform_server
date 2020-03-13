@@ -56,7 +56,8 @@ def sum_crc16(crc, file_bit):
     """
     for bit in file_bit:
         crc = 0xffff & crc
-        temp = crc // 256
+        # temp = crc // 256
+        temp  = crc >> 8
         crc = 0xffff & crc
         crc <<= 8
         crc = 0xffff & crc
@@ -92,9 +93,11 @@ def get_srv_crc():
     if not os.path.exists(srv_name) or os.path.isdir(srv_name):
         print("no srv build AIService")
         exit(-1)
-    crc = hex(sum_file_crc16(srv_name)).upper()[2:]
-    crc = '0' * (4 - len(crc)) + crc
-    return crc
+
+    return sum_file_crc16(srv_name)
+    # crc = hex(sum_file_crc16(srv_name)).upper()[2:]
+    # crc = '0' * (4 - len(crc)) + crc
+    # return crc
 
 
 def check_first_line(line):
@@ -116,7 +119,7 @@ def add_pre_msg():
 
             text.append(line)
 
-        pre = "[version : %s] [srv-crc16 : %s]\n" % (get_version(), get_srv_crc())
+        pre = "[version : %s] [srv-crc16 : %04X]\n" % (get_version(), get_srv_crc())
 
         if check_first_line(text[0]):
             text[0] = pre

@@ -93,7 +93,8 @@ def sum_crc16(crc, file_bit):
     """
     for bit in file_bit:
         crc = 0xffff & crc
-        temp = crc // 256
+        # temp = crc // 256
+        temp = crc >> 8
         crc = 0xffff & crc
         crc <<= 8
         crc = 0xffff & crc
@@ -396,11 +397,11 @@ def zip_dir_file(file_dir, start_dir, out_dir, zip_name, password=None):
     print("计算crc16")
 
     # 校验CRC
-    crc = hex(sum_file_crc16(zip_name)).upper()[2:]
-    crc = '0' * (4 - len(crc)) + crc
+    # crc = hex(sum_file_crc16(zip_name)).upper()[2:]
+    # crc = '0' * (4 - len(crc)) + crc
 
     # 添加crc后缀
-    last_name = "%s_crc%s.zip" % (zip_name, crc)
+    last_name = "%s_crc%04X.zip" % (zip_name, sum_file_crc16(zip_name))
 
     # 重命名
     os.system("mv %s %s" % (zip_name, last_name))
