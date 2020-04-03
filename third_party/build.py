@@ -108,7 +108,7 @@ def sole_build(source_dir, debug, install_path):
 
     os.chdir(source_dir)
     os.system("mkdir %s/include/sole/ -p" % install_path)
-    os.system("cp sole/sole.hpp %s/include/sole/ -f" % install_path)
+    os.system("cp sole.hpp %s/include/sole/ -f" % install_path)
 
     os.chdir(cur_dir)
 
