@@ -23,63 +23,79 @@ class SdkRouterNode;
 
 using sdk_response_fun_t = bool (*)(SdkRequest &);
 using sdk_router_node_ptr_t = std::shared_ptr<SdkRouterNode>;
-using sdk_father_router_node = std::shared_ptr<SdkRouterNode>;
-using sdk_children_router_node = std::shared_ptr<SdkRouterNode>;
 
+// 路由节点
 class SdkRouterNode
 {
 public:
 	SdkRouterNode(const SdkRouterNode &node);
-	SdkRouterNode(const std::initializer_list<std::shared_ptr<SdkRouterNode>> &li);
+
+	SdkRouterNode(const std::initializer_list<sdk_router_node_ptr_t> &li);
+
 	SdkRouterNode(const std::string &url,
 				  sdk_response_fun_t fun,
 				  const uint32_t &method);
+
 	SdkRouterNode(const std::string &url,
 				  sdk_response_fun_t fun,
 				  const uint32_t &method,
-				  const std::shared_ptr<SdkRouterNode> &father);
+				  const sdk_router_node_ptr_t &father);
+
 	SdkRouterNode(const std::string &url,
 				  sdk_response_fun_t fun,
 				  const uint32_t &method,
-				  const std::vector<std::shared_ptr<SdkRouterNode>> &next_li);
+				  const std::vector<sdk_router_node_ptr_t> &next_li);
+
 	SdkRouterNode(const std::string &url,
 				  sdk_response_fun_t fun,
 				  const uint32_t &method,
-				  const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li);
+				  const std::initializer_list<sdk_router_node_ptr_t> &next_li);
+
 	SdkRouterNode(const std::string &url,
 				  sdk_response_fun_t fun,
 				  const uint32_t &method,
-				  const std::shared_ptr<SdkRouterNode> &father,
-				  const std::vector<std::shared_ptr<SdkRouterNode>> &next_li);
+				  const sdk_router_node_ptr_t &father,
+				  const std::vector<sdk_router_node_ptr_t> &next_li);
+
 	SdkRouterNode(const std::string &url,
 				  sdk_response_fun_t fun,
 				  const uint32_t &method,
-				  const std::shared_ptr<SdkRouterNode> &father,
-				  const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li);
+				  const sdk_router_node_ptr_t &father,
+				  const std::initializer_list<sdk_router_node_ptr_t> &next_li);
 
 public:
+	// 追加子节点
 	bool append(const SdkRouterNode &node);
-	bool append(const std::shared_ptr<SdkRouterNode> &node);
-	bool append(const std::vector<std::shared_ptr<SdkRouterNode>> &next_li);
-	bool mount(const std::shared_ptr<SdkRouterNode> &father);
+	bool append(const sdk_router_node_ptr_t &node);
+	bool append(const std::vector<sdk_router_node_ptr_t> &next_li);
+	// 挂载到父节点
+	bool mount(const sdk_router_node_ptr_t &father);
 
-	std::vector<std::shared_ptr<SdkRouterNode>>::iterator begin();
-	std::vector<std::shared_ptr<SdkRouterNode>>::iterator end();
+	// 迭代
+	std::vector<sdk_router_node_ptr_t>::iterator begin();
+	std::vector<sdk_router_node_ptr_t>::iterator end();
+
+	// 是否为空
 	bool empty(void) { return next_.empty(); }
+
+	// 显示路由信息
 	void show(const std::string& prev);
 
+	// 路由查找
 	friend sdk_response_fun_t sdk_router_lookup(const std::string &url, const OperationType &method);
 
 private:
+	// 检查方法是否合法
 	bool check_method(const OperationType &method);
+	// 路由查找
 	sdk_response_fun_t router_lookup(const std::string &url, const OperationType &method);
 
 private:
-	std::string url_;
-	sdk_response_fun_t fun_;
-	uint32_t method_;
-	std::shared_ptr<SdkRouterNode> father_;
-	std::vector<std::shared_ptr<SdkRouterNode>> next_;
+	std::string url_;							///< url
+	sdk_response_fun_t fun_;					///< 处理接口
+	uint32_t method_;							///< 支持方法
+	sdk_router_node_ptr_t father_;				///< 父节点
+	std::vector<sdk_router_node_ptr_t> next_;	///< 子节点列表
 };
 
 /**
@@ -90,52 +106,56 @@ private:
  * @param method 方法
  * @param father 父节点
  * @param next_li 子节点列表
- * @return std::shared_ptr<SdkRouterNode> 
+ * @return sdk_router_node_ptr_t 
  */
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::shared_ptr<SdkRouterNode> &father,
-	const std::vector<std::shared_ptr<SdkRouterNode>> &next_li);
+	const sdk_router_node_ptr_t &father,
+	const std::vector<sdk_router_node_ptr_t> &next_li);
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::shared_ptr<SdkRouterNode> &father,
-	const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li);
+	const sdk_router_node_ptr_t &father,
+	const std::initializer_list<sdk_router_node_ptr_t> &next_li);
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::shared_ptr<SdkRouterNode> &father);
+	const sdk_router_node_ptr_t &father);
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::vector<std::shared_ptr<SdkRouterNode>> &next_li);
+	const std::vector<sdk_router_node_ptr_t> &next_li);
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li);
+	const std::initializer_list<sdk_router_node_ptr_t> &next_li);
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method);
 
 // 路由注册
 bool register_router(const SdkRouterNode &router);
-bool register_router(const std::shared_ptr<SdkRouterNode> &router);
+bool register_router(const sdk_router_node_ptr_t &router);
 
+// sdk是否支持该方法
 bool is_support_sdk_method(const OperationType &method);
+// url是否合法
 bool is_sdk_url_valid(const std::string &url);
+// 路由查找
 sdk_response_fun_t sdk_router_lookup(const std::string &url, const OperationType &method);
+// 打印路由表
 void show_sdk_router_map(void);
 
 // 路由注册，可用于全局注册

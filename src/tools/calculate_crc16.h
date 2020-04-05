@@ -12,5 +12,10 @@
 
 #include <inttypes.h>
 
+namespace wotsen
+{
+
 /* 计算crc16 */
 uint16_t calculate_crc16(uint16_t crc, uint8_t *ptr, uint32_t len);
+
+} // namespace wotsen

@@ -12,11 +12,12 @@
 #ifndef __wotsenLearnPlatSrv_SDK_MIDWARE_TABLE_H__
 #define __wotsenLearnPlatSrv_SDK_MIDWARE_TABLE_H__
 
-// namespace wotsen
-// {
+namespace wotsen
+{
 
+// 注册在中间件
 void register_sdk_midwares(void);
 
-// }
+}
 
 #endif // !__wotsenLearnPlatSrv_SDK_MIDWARE_TABLE_H__

@@ -17,7 +17,8 @@
 #include "user_manage_private.h"
 #include "user_manage.h"
 
-using namespace wotsen;
+namespace wotsen
+{
 
 // 处理是否成功
 static bool is_proc_ok(enum ContentResultE &user_ret);
@@ -192,3 +193,5 @@ bool user_manange_midware_do(SdkRequest &sdk_request)
 
 	return _user_manange_midware_do(sdk_request.request, sdk_request.response);
 }
+
+} // !namespace wotsen

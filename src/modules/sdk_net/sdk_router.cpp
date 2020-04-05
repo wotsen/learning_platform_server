@@ -26,7 +26,7 @@ SdkRouterNode::SdkRouterNode(const SdkRouterNode &node) : url_(node.url_),
 {
 }
 
-SdkRouterNode::SdkRouterNode(const std::initializer_list<std::shared_ptr<SdkRouterNode>> &li) : url_(""),
+SdkRouterNode::SdkRouterNode(const std::initializer_list<sdk_router_node_ptr_t> &li) : url_(""),
 																								fun_(nullptr),
 																								method_(GET),
 																								next_(li)
@@ -44,7 +44,7 @@ SdkRouterNode::SdkRouterNode(const std::string &url,
 SdkRouterNode::SdkRouterNode(const std::string &url,
 							 sdk_response_fun_t fun,
 							 const uint32_t &method,
-							 const std::shared_ptr<SdkRouterNode> &father) : url_(url),
+							 const sdk_router_node_ptr_t &father) : url_(url),
 																			 fun_(fun),
 																			 method_(method)
 {
@@ -57,7 +57,7 @@ SdkRouterNode::SdkRouterNode(const std::string &url,
 SdkRouterNode::SdkRouterNode(const std::string &url,
 							 sdk_response_fun_t fun,
 							 const uint32_t &method,
-							 const std::vector<std::shared_ptr<SdkRouterNode>> &next_li) : url_(url),
+							 const std::vector<sdk_router_node_ptr_t> &next_li) : url_(url),
 																						   fun_(fun),
 																						   method_(method)
 {
@@ -70,7 +70,7 @@ SdkRouterNode::SdkRouterNode(const std::string &url,
 SdkRouterNode::SdkRouterNode(const std::string &url,
 							 sdk_response_fun_t fun,
 							 const uint32_t &method,
-							 const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li) : url_(url),
+							 const std::initializer_list<sdk_router_node_ptr_t> &next_li) : url_(url),
 																									 fun_(fun),
 																									 method_(method)
 {
@@ -83,8 +83,8 @@ SdkRouterNode::SdkRouterNode(const std::string &url,
 SdkRouterNode::SdkRouterNode(const std::string &url,
 							 sdk_response_fun_t fun,
 							 const uint32_t &method,
-							 const std::shared_ptr<SdkRouterNode> &father,
-							 const std::vector<std::shared_ptr<SdkRouterNode>> &next_li) : url_(url),
+							 const sdk_router_node_ptr_t &father,
+							 const std::vector<sdk_router_node_ptr_t> &next_li) : url_(url),
 																						   fun_(fun),
 																						   method_(method)
 {
@@ -102,8 +102,8 @@ SdkRouterNode::SdkRouterNode(const std::string &url,
 SdkRouterNode::SdkRouterNode(const std::string &url,
 							 sdk_response_fun_t fun,
 							 const uint32_t &method,
-							 const std::shared_ptr<SdkRouterNode> &father,
-							 const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li) : url_(url),
+							 const sdk_router_node_ptr_t &father,
+							 const std::initializer_list<sdk_router_node_ptr_t> &next_li) : url_(url),
 																									 fun_(fun),
 																									 method_(method)
 {
@@ -124,13 +124,13 @@ bool SdkRouterNode::append(const SdkRouterNode &node)
 	return true;
 }
 
-bool SdkRouterNode::append(const std::shared_ptr<SdkRouterNode> &node)
+bool SdkRouterNode::append(const sdk_router_node_ptr_t &node)
 {
 	next_.push_back(node);
 	return true;
 }
 
-bool SdkRouterNode::append(const std::vector<std::shared_ptr<SdkRouterNode>> &next_li)
+bool SdkRouterNode::append(const std::vector<sdk_router_node_ptr_t> &next_li)
 {
 	for (auto item : next_li)
 	{
@@ -139,7 +139,7 @@ bool SdkRouterNode::append(const std::vector<std::shared_ptr<SdkRouterNode>> &ne
 	return true;
 }
 
-bool SdkRouterNode::mount(const std::shared_ptr<SdkRouterNode> &father)
+bool SdkRouterNode::mount(const sdk_router_node_ptr_t &father)
 {
 	if (father)
 	{
@@ -148,12 +148,12 @@ bool SdkRouterNode::mount(const std::shared_ptr<SdkRouterNode> &father)
 	return true;
 }
 
-std::vector<std::shared_ptr<SdkRouterNode>>::iterator SdkRouterNode::begin()
+std::vector<sdk_router_node_ptr_t>::iterator SdkRouterNode::begin()
 {
 	return next_.begin();
 }
 
-std::vector<std::shared_ptr<SdkRouterNode>>::iterator SdkRouterNode::end()
+std::vector<sdk_router_node_ptr_t>::iterator SdkRouterNode::end()
 {
 	return next_.end();
 }
@@ -206,59 +206,59 @@ void SdkRouterNode::show(const std::string& prev)
 	}
 }
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::shared_ptr<SdkRouterNode> &father,
-	const std::vector<std::shared_ptr<SdkRouterNode>> &next_li)
+	const sdk_router_node_ptr_t &father,
+	const std::vector<sdk_router_node_ptr_t> &next_li)
 {
 	return std::make_shared<SdkRouterNode>(url, fun, method, father, next_li);
 }
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::shared_ptr<SdkRouterNode> &father,
-	const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li)
+	const sdk_router_node_ptr_t &father,
+	const std::initializer_list<sdk_router_node_ptr_t> &next_li)
 {
 	return std::make_shared<SdkRouterNode>(url, fun, method, father, next_li);
 }
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::shared_ptr<SdkRouterNode> &father)
+	const sdk_router_node_ptr_t &father)
 {
-	return std::make_shared<SdkRouterNode>(url, fun, method, father, std::vector<std::shared_ptr<SdkRouterNode>>());
+	return std::make_shared<SdkRouterNode>(url, fun, method, father, std::vector<sdk_router_node_ptr_t>());
 }
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method,
-	const std::vector<std::shared_ptr<SdkRouterNode>> &next_li)
-{
-	return std::make_shared<SdkRouterNode>(url, fun, method, nullptr, next_li);
-}
-
-std::shared_ptr<SdkRouterNode> create_router(
-	const std::string &url,
-	sdk_response_fun_t fun,
-	const uint32_t &method,
-	const std::initializer_list<std::shared_ptr<SdkRouterNode>> &next_li)
+	const std::vector<sdk_router_node_ptr_t> &next_li)
 {
 	return std::make_shared<SdkRouterNode>(url, fun, method, nullptr, next_li);
 }
 
-std::shared_ptr<SdkRouterNode> create_router(
+sdk_router_node_ptr_t create_router(
+	const std::string &url,
+	sdk_response_fun_t fun,
+	const uint32_t &method,
+	const std::initializer_list<sdk_router_node_ptr_t> &next_li)
+{
+	return std::make_shared<SdkRouterNode>(url, fun, method, nullptr, next_li);
+}
+
+sdk_router_node_ptr_t create_router(
 	const std::string &url,
 	sdk_response_fun_t fun,
 	const uint32_t &method)
 {
-	return std::make_shared<SdkRouterNode>(url, fun, method, nullptr, std::vector<std::shared_ptr<SdkRouterNode>>());
+	return std::make_shared<SdkRouterNode>(url, fun, method, nullptr, std::vector<sdk_router_node_ptr_t>());
 }
 
 // 请求方法是否支持
@@ -286,6 +286,9 @@ bool is_sdk_url_valid(const std::string &url)
 
 #define DO_NOTHING [](SdkRequest &) -> bool { std::cout << "root do nothing." << std::endl; return true; }
 
+/********************************************************************************************************
+ * !路由根节点
+********************************************************************************************************/
 static SdkRouterNode root_router = {
 	create_router("", DO_NOTHING, GET,
 					{
@@ -293,7 +296,7 @@ static SdkRouterNode root_router = {
 					}),
 };
 
-bool register_router(const std::shared_ptr<SdkRouterNode> &router)
+bool register_router(const sdk_router_node_ptr_t &router)
 {
 	return root_router.append(router);
 }
@@ -313,7 +316,10 @@ void show_sdk_router_map(void)
 	root_router.show("");
 }
 
-static std::shared_ptr<SdkRouterNode> index_node = create_router("/index", DO_NOTHING, GET);
+/********************************************************************************************************
+ * !测试节点
+********************************************************************************************************/
+static sdk_router_node_ptr_t index_node = create_router("/index", DO_NOTHING, GET);
 static SdkRouterNode index_node2 = {"/index2", DO_NOTHING, GET};
 
 SDK_REGISTER_ROUTER(index_node);

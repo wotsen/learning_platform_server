@@ -11,6 +11,11 @@
 #ifndef __CORE_DUMP_H__
 #define __CORE_DUMP_H__
 
+namespace wotsen
+{
+
 bool setup_coredump(const char *path_dir, size_t core_size);
+
+} // namespace wotsen
 
 #endif // !__CORE_DUMP_H__

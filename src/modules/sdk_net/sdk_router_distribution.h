@@ -17,6 +17,7 @@
 namespace wotsen
 {
 
+// 路由分发
 bool sdk_router_distribution(SdkRequest &sdk_request);
 
 } // !namespace wotsen

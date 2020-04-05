@@ -22,6 +22,9 @@
 
 using namespace SQLite;
 
+namespace wotsen
+{
+
 #define USER_TABLE SDK_USER_TABLE
 
 // 用户数据库
@@ -111,3 +114,5 @@ bool user_db_init(void)
 
 	return true;
 }
+
+} // !namespace wotsen

@@ -42,6 +42,7 @@ public:
     sdk_midware_list_t &midwares(void);
 
 public:
+	// 中间件管理器引用
 	static std::shared_ptr<SdkMidWareManager> sdk_midware_manager(void);
 
 private:

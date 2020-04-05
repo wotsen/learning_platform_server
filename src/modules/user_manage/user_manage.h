@@ -15,6 +15,9 @@
 #include <memory>
 #include "sdk_net/sdk_request.h"
 
+namespace wotsen
+{
+
 ///< 用户管理中间件
 bool user_manange_midware_do(wotsen::SdkRequest &sdk_request);
 
@@ -26,3 +29,5 @@ void user_manager_finit(void);
 
 ///< 用户管理模块状态
 bool user_manager_state(void);
+
+} // !namespace wotsen

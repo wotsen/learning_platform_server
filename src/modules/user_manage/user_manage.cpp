@@ -17,7 +17,8 @@
 #include "user_manage_private.h"
 #include "user_manage.h"
 
-using namespace wotsen;
+namespace wotsen
+{
 
 // 模块状态
 static bool _module_state = false;
@@ -378,3 +379,5 @@ void user_manager_init(void)
 
 	task_create(user_manage_task, STACKSIZE(8000), "user_manage", OS_MIN(5), E_TASK_IGNORE, _module_clean);
 }
+
+} // !namespace wotsen

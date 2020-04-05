@@ -36,8 +36,7 @@ const std::string &ISdkMidWare::name(void) const
 }
 
 // 仿函数，用于中间件实际处理
-bool ISdkMidWare::operator ()
-		(SdkRequest &sdk_request) const
+bool ISdkMidWare::operator () (SdkRequest &sdk_request) const
 {
 	// 如果使用函数注册，则执行函数接口
 	if (fn_) { return fn_(sdk_request); }

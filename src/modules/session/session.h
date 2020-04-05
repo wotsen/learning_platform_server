@@ -13,6 +13,9 @@
 
 #include <inttypes.h>
 
+namespace wotsen
+{
+
 /**
  * @brief 会话
  * 
@@ -22,5 +25,7 @@ public:
 	uint32_t sid;
 	Session() : sid(0) {}
 };
+
+} // !namespace wotsen
 
 #endif // !__SESSION_H__

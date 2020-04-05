@@ -15,7 +15,8 @@
 #include "task_manage/task_manage.h"
 #include "upgrade.h"
 
-using namespace wotsen;
+namespace wotsen
+{
 
 // 升级协议头
 // 升级包分类
@@ -68,3 +69,5 @@ void system_upgrade_task_init(void)
 {
     task_create(system_upgrade, STACKSIZE(100 * 1024), "system_upgrade", OS_MIN(30), E_TASK_REBOOT_SYSTEM);
 }
+
+} // !namespace wotsen

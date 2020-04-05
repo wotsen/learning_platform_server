@@ -35,22 +35,30 @@ struct SdkNetInterface {
 	uint32_t des_port;								///< 目的端口
 };
 
+/**
+ * @brief 消息头，FIXME:可以去掉
+ * 
+ */
 struct SdkMsgHead
 {
 	OperationType method;
 	// TODO
 };
 
+/**
+ * @brief sdk请求
+ * 
+ */
 struct SdkRequest
 {
 public:
 	SdkRequest(const SdkNetInterface &interface, const SdkMsgHead &head, const Sdk &request, Sdk &response) :
 				interface(interface), head(head), request(request), response(response) {}
 
-	const SdkNetInterface &interface;
-	const SdkMsgHead &head;
-	const Sdk &request;
-	Sdk &response;
+	const SdkNetInterface &interface;	///< 网络接口信息
+	const SdkMsgHead &head;				///< 消息头
+	const Sdk &request;					///< sdk请求消息
+	Sdk &response;						///< sdk相应消息
 	// TODO:增加透传通道
 };
 

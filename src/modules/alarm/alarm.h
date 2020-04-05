@@ -12,5 +12,10 @@
  */
 #pragma once
 
+namespace wotsen
+{
+
 ///< 告警任务初始化
 void task_alarm_init(void);
+
+} // !namespace wotsen

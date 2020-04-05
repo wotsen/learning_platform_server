@@ -21,6 +21,9 @@
 
 using namespace insider::sdk;
 
+namespace wotsen
+{
+
 // 最长存活时间，7天
 const static time_t max_alive_time = OS_HOUR(24 * 7) / OS_SEC(1);
 
@@ -116,3 +119,5 @@ bool user_verify(const UserSessionMsg &user_info);
 
 // 添加用户
 bool add_user(const UserSessionMsg &user_info);
+
+} // !namespace wotsen

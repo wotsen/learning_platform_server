@@ -16,6 +16,9 @@
 #include <sys/resource.h>
 #include "coredump.h"
 
+namespace wotsen
+{
+
 static const char * const core_format = "core-%e-%p-%t";
 
 /**
@@ -62,3 +65,5 @@ bool setup_coredump(const char *path_dir, size_t core_size)
 
 	return true;
 }
+
+} // namespace wotsen

@@ -42,8 +42,7 @@ public:
 
 	// 仿函数，子类可重写该方法用于处理自身逻辑，
 	// 如果不重写该方法则不会发生任何事情
-	virtual bool operator ()
-		(SdkRequest &sdk_request) const;
+	virtual bool operator () (SdkRequest &sdk_request) const;
 };
 
 // 中间件注册

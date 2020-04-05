@@ -15,6 +15,9 @@
 #include <inttypes.h>
 #include "session.h"
 
+namespace wotsen
+{
+
 /**
  * @brief 会话管理
  * 
@@ -34,5 +37,7 @@ public:
 		sessions_.clear();
 	}
 };
+
+} // !namespace wotsen
 
 #endif // !__SESSION_MANAGE_H__

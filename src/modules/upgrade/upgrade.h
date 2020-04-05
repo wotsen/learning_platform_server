@@ -10,8 +10,13 @@
  */
 #pragma once
 
+namespace wotsen
+{
+
 ///< 初始化升级任务
 void system_upgrade_task_init(void);
 
 ///< 系统升级模块状态
 bool system_upgrade_task_state(void);
+
+} // !namespace wotsen

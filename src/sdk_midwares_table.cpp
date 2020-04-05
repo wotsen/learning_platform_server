@@ -12,8 +12,8 @@
 #include "sdk_net/sdk_midware.h"
 #include "sdk_midwares_table.h"
 
-// namespace wotsen
-// {
+namespace wotsen
+{
 
 using namespace wotsen;
 
@@ -23,4 +23,4 @@ void register_sdk_midwares(void)
 	// TODO:记录访问者，ip，端口，时间(),json格式
 }
 
-// }
+}
