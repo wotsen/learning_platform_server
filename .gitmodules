@@ -28,3 +28,6 @@
 [submodule "third_party/handy"]
 	path = third_party/handy
 	url = https://github.com/wotsen/handy
+[submodule "third_party/tfile"]
+	path = third_party/tfile
+	url = https://github.com/rec/tfile

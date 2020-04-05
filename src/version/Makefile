@@ -1,4 +1,4 @@
-OBJS := calculate_crc16.o coredump.o
+OBJS := version.o
 DIRS := 
 
 include $(SUB_MAKE_INCLUDE)

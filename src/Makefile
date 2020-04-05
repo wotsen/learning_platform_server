@@ -3,11 +3,11 @@ TARGET := AIService
 MAIN_SRC := main.cpp
 
 # compile marcros
-DIRS := sys_ctrl base_fun local_fun third_fun usr_apps tools
-OBJS := 
+DIRS := core apps tools version config modules macro
+OBJS := app.o appmodule_table.o sdk_midwares_table.o
 
 # intermedia compile marcros
-ALL_OBJS := 
+ALL_OBJS := $(OBJS)
 CLEAN_FILES := $(TARGET) $(OBJS)
 DIST_CLEAN_FILES := $(OBJS)
 
@@ -21,7 +21,7 @@ default: show-info all
 #@echo -e "\t" CC $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG)
 $(TARGET): build-subdirs $(OBJS) find-all-objs
 	@echo -e "\t" CC $@
-	@$(CC) $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG) 
+	@$(CC) $(ALL_OBJS) $(MAIN_SRC) -o $@ $(CCFLAG)
 
 # phony targets
 .PHONY: all

@@ -15,10 +15,12 @@ CC := g++
 
 # compile flags
 INC := -I$(ROOT_DIR)/../include \
-		-I$(ROOT_DIR)/sys_ctrl/config \
-		-I$(ROOT_DIR)/base_fun \
-		-I$(ROOT_DIR)/local_fun \
-		-I$(ROOT_DIR)/third_fun \
+		-I$(ROOT_DIR) \
+		-I$(ROOT_DIR)/config \
+		-I$(ROOT_DIR)/core \
+		-I$(ROOT_DIR)/macro \
+		-I$(ROOT_DIR)/version \
+		-I$(ROOT_DIR)/modules \
 		-I$(ROOT_DIR)/tools
 
 # github三方库使用静态链接

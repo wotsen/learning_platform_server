@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package insider.sdk;
+
+// 模块状态
+enum AppModuleState {
+    E_APP_MODULE_IDLE = 0;              ///< 模块空闲
+    E_APP_MODULE_INIT = 1;              ///< 模块初始化中
+    E_APP_MODULE_INSTALLED = 2;         ///< 模块已经安装
+    E_APP_MODULE_BAD = 3;               ///< 模块损坏
+}
+
+/**
+ * @brief 模块运行状态
+ * 
+ */
+ enum AppModuleRunState {
+    E_APP_MODULE_RUN_ST_OK = 0;         ///< 运行状态正常
+    E_APP_MODULE_RUN_ST_ERR = 1;        ///< 运行状态异常
+    E_APP_MODULE_RUN_ST_UNKNOWN = 2;    ///< 运行状态未知
+}
+
+/**
+ * @brief 模块配置权限
+ * 
+ */
+enum AppModuleCfgPermission {
+    E_APP_MODULE_CFG_PERMISSION_ENABLE = 0;         ///< 可配置
+    E_APP_MODULE_CFG_PERMISSION_DISENABLE = 1;      ///< 不可配置
+}
+
+/**
+ * @brief 模块配置权限
+ * 
+ */
+enum AppModuleType {
+    E_SYS_MODULE = 0;               ///< 系统模块
+    E_THIRD_MODULE = 1;             ///< 第三方扩展模块
+    E_SYS_APP = 2;                  ///< 系统app
+    E_THIRD_APP = 3;                ///< 第三方扩展app
+}
+
+/**
+ * @brief 模块类别
+ * 
+ */
+ message AppModuleBaseInfo {
+    string name = 1;                        ///< 模块名称
+    AppModuleType type = 2;                 ///< 类别
+    uint32 identifier= 3;                   ///< 识别码
+    bool enable = 4;                        ///< 使能
+    AppModuleState state = 5;               ///< 模块状态
+    AppModuleCfgPermission permission = 6;  ///< 模块配置权限
+}
+
+/**
+ * @brief 模块输出信息
+ * 
+ */
+ message AppModuleCoutInfo {
+    uint32 id = 1;
+    AppModuleRunState run_state = 2;    ///< 模块运行状态
+    AppModuleBaseInfo base_info = 3;    ///< 模块基本配置信息
+}
+
+message AppModuleCoutInfoList {
+    // 模块信息列表，可变个数
+    repeated AppModuleCoutInfo app_modules = 1;
+}
+
