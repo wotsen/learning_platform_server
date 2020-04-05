@@ -155,6 +155,14 @@ def handy_build(source_dir, debug, install_path):
 
     os.chdir(cur_dir)
 
+def tfile_build(source_dir, debug, install_path):
+    cur_dir = os.getcwd()
+
+    os.chdir(source_dir)
+    os.system("cp include/tfile %s/include/ -rf" % install_path)
+
+    os.chdir(cur_dir)
+
 
 # 模块信息
 third_party_modules = [
@@ -169,6 +177,7 @@ third_party_modules = [
     ThirdPartyModule(linux_systemcmd_proxy_build, "linux-systemcmd-proxy", "linux下system接口的代理库"),
     ThirdPartyModule(fmt_build, "fmt", "c++更好的格式话输出，类似python format"),
     ThirdPartyModule(handy_build, "handy", "c++异步网络库"),
+    ThirdPartyModule(tfile_build, "tfile", "c++文件操作库"),
 ]
 
 # 模块索引列表
