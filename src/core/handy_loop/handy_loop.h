@@ -8,7 +8,8 @@
  * @copyright Copyright (c) 2020
  * 
  */
-#pragma once
+#ifndef __wotsenLearnPlatSrv_HANDY_LOOP_H__
+#define __wotsenLearnPlatSrv_HANDY_LOOP_H__
 
 #include <handy/handy.h>
 
@@ -22,3 +23,5 @@ EventBase &handy_base(void);
 void task_handy_loop_init(void);
 
 } // !namespace wotsen
+
+#endif // !__wotsenLearnPlatSrv_HANDY_LOOP_H__

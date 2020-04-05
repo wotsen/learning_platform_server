@@ -10,7 +10,9 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#pragma once
+
+#ifndef __wotsenLearnPlatSrv_ALARM_H__
+#define __wotsenLearnPlatSrv_ALARM_H__
 
 namespace wotsen
 {
@@ -19,3 +21,5 @@ namespace wotsen
 void task_alarm_init(void);
 
 } // !namespace wotsen
+
+#endif // !__wotsenLearnPlatSrv_ALARM_H__

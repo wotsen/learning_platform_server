@@ -13,7 +13,9 @@
 #include "config.h"
 
 using json = nlohmann::json;
-using namespace wotsen;
+
+namespace wotsen
+{
 
 // 获取sdk tcp端口
 int get_sdk_tcp_port_config(void)
@@ -62,3 +64,5 @@ std::string get_net_gateway_config(void)
 
     return j["modules"]["base_fun"]["network"]["gateway"];
 }
+
+} // !namespace wotsen

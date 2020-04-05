@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#ifndef __CORE_DUMP_H__
-#define __CORE_DUMP_H__
+#ifndef __wotsenLearnPlatSrv_COREDUMP_H__
+#define __wotsenLearnPlatSrv_COREDUMP_H__
 
 namespace wotsen
 {
@@ -18,4 +18,4 @@ bool setup_coredump(const char *path_dir, size_t core_size);
 
 } // namespace wotsen
 
-#endif // !__CORE_DUMP_H__
+#endif // !__wotsenLearnPlatSrv_COREDUMP_H__

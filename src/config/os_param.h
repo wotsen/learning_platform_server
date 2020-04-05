@@ -8,7 +8,11 @@
  * @copyright Copyright (c) 2020
  * 
  */
-#pragma once
+#ifndef __wotsenLearnPlatSrv_OS_PARAM_H__
+#define __wotsenLearnPlatSrv_OS_PARAM_H__
+
+namespace wotsen
+{
 
 // cordump路径
 #define SYS_SOFT_CORDUMP_PATH "../err/"
@@ -40,4 +44,6 @@
 #define SDK_USER_TABLE "sdk_user"			///< 账户表
 /******************************************/
 
+} // !namespace wotsen
 
+#endif // !__wotsenLearnPlatSrv_OS_PARAM_H__

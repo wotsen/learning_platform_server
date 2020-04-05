@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#ifndef __SESSION_H__
-#define __SESSION_H__
+#ifndef __wotsenLearnPlatSrv_SESSION_H__
+#define __wotsenLearnPlatSrv_SESSION_H__
 
 #include <inttypes.h>
 
@@ -28,4 +28,4 @@ public:
 
 } // !namespace wotsen
 
-#endif // !__SESSION_H__
+#endif // !__wotsenLearnPlatSrv_SESSION_H__

@@ -12,8 +12,14 @@
  */
 #pragma once
 
+#ifndef __wotsenLearnPlatSrv_SYS_CONFIG_H__
+#define __wotsenLearnPlatSrv_SYS_CONFIG_H__
+
 #include <string>
 #include <cinttypes>
+
+namespace wotsen
+{
 
 /*****************************************************获取配置接口*******************************************/
 /* 获取sdk tcp网络配置 */
@@ -35,3 +41,7 @@ std::string get_net_interface_config(void);
 
 // 获取网络接口
 std::string get_net_gateway_config(void);
+
+} // !namespace wotsen
+
+#endif // !__wotsenLearnPlatSrv_SYS_CONFIG_H__

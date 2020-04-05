@@ -12,6 +12,7 @@
 #ifdef DEBUG
 #include <iostream>
 #endif
+#include <cstring>
 #include <tfile/tfile.h>
 #include "os_param.h"
 #include "config.h"

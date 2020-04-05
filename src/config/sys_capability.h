@@ -8,10 +8,14 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#pragma once
+#ifndef __wotsenLearnPlatSrv_SYS_CAPABILITY_H__
+#define __wotsenLearnPlatSrv_SYS_CAPABILITY_H__
 
 #include <cinttypes>
 #include <string>
+
+namespace wotsen
+{
 
 /*****************************************************
  * 能力获取接口
@@ -28,3 +32,7 @@ uint32_t get_max_task_num_capability(void);
 
 // 获取tcp最大连接数能力
 uint32_t get_max_tcp_connect_capability(void);
+
+} // !namespace wotsen
+
+#endif // !__wotsenLearnPlatSrv_SYS_CAPABILITY_H__

@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#ifndef __SESSION_MANAGE_H__
-#define __SESSION_MANAGE_H__
+#ifndef __wotsenLearnPlatSrv_SESSION_MANAGE_H__
+#define __wotsenLearnPlatSrv_SESSION_MANAGE_H__
 
 #include <vector>
 #include <inttypes.h>
@@ -40,4 +40,4 @@ public:
 
 } // !namespace wotsen
 
-#endif // !__SESSION_MANAGE_H__
+#endif // !__wotsenLearnPlatSrv_SESSION_MANAGE_H__

@@ -10,6 +10,9 @@
  */
 #pragma once
 
+#ifndef __wotsenLearnPlatSrv_UPGRADE_H__
+#define __wotsenLearnPlatSrv_UPGRADE_H__
+
 namespace wotsen
 {
 
@@ -20,3 +23,5 @@ void system_upgrade_task_init(void);
 bool system_upgrade_task_state(void);
 
 } // !namespace wotsen
+
+#endif // !__wotsenLearnPlatSrv_UPGRADE_H__

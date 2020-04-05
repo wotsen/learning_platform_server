@@ -9,7 +9,8 @@
  * 
  */
 
-#pragma once
+#ifndef __wotsenLearnPlatSrv_USER_MANAGE_PRIVATE_H__
+#define __wotsenLearnPlatSrv_USER_MANAGE_PRIVATE_H__
 
 #include <string>
 #include <easylogger/easylogger_setup.h>
@@ -121,3 +122,5 @@ bool user_verify(const UserSessionMsg &user_info);
 bool add_user(const UserSessionMsg &user_info);
 
 } // !namespace wotsen
+
+#endif // !__wotsenLearnPlatSrv_USER_MANAGE_PRIVATE_H__

@@ -13,7 +13,9 @@
 #include "config.h"
 
 using json = nlohmann::json;
-using namespace wotsen;
+
+namespace wotsen
+{
 
 // 获取用户管理最大用户数量能力
 uint32_t get_user_manage_max_users_capability(void)
@@ -46,3 +48,5 @@ uint32_t get_max_tcp_connect_capability(void)
 
     return j["service"]["modules"]["base_fun"]["network"]["sdk"]["max_tcp_connect"];
 }
+
+} // !namespace wotsen

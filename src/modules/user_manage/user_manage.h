@@ -8,7 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#pragma once
+#ifndef __wotsenLearnPlatSrv_USER_MANAGE_H__
+#define __wotsenLearnPlatSrv_USER_MANAGE_H__
 
 #include <iostream>
 #include <list>
@@ -31,3 +32,5 @@ void user_manager_finit(void);
 bool user_manager_state(void);
 
 } // !namespace wotsen
+
+#endif // !__wotsenLearnPlatSrv_USER_MANAGE_H__
