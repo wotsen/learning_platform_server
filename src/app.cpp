@@ -9,10 +9,7 @@
  * 
  */
 
-// #define LOG_TAG "APP"
-
 #include <iostream>
-// #include <easylogger/easylogger_setup.h>
 #include <loguru.hpp>
 #include "tools/coredump.h"
 #include "config/os_param.h"
@@ -70,32 +67,17 @@ void PlatSrvApp::stop(void)
 
 static void log_init(int argc, char **argv)
 {
-    // 日志采用elog
-//     struct elog_custom_config elog_config = {
-//         .log_path = (char *)SYS_ELOG_PATH,
-// #ifdef NDEBUG
-//         .log_lv = ELOG_LVL_INFO
-// #else
-//         // debug版本打印所有日志
-//         .log_lv = ELOG_LVL_VERBOSE
-// #endif
-//     };
-
-//     if (easylogger_setup(&elog_config))
-//     {
-//         log_i("日志模块初始化完成...\n");
-//     }
-//     else
-//     {
-//         std::cout << "日志模块初始化失败!\n";
-//         exit(0);
-//     }
-
     loguru::init(argc, argv);
-    loguru::g_stderr_verbosity = loguru::Verbosity_INFO;
-    loguru::add_file("../log/everything.log", loguru::Append, loguru::Verbosity_MAX);
 
-    loguru::set_fatal_handler([](const loguru::Message& message){
+#ifdef DEBUG
+    loguru::g_stderr_verbosity = loguru::Verbosity_INFO;
+#else
+    loguru::g_stderr_verbosity = loguru::Verbosity_ERROR;
+#endif
+    loguru::add_file(SYS_LOG_PATH, loguru::Append, loguru::Verbosity_MAX);
+    loguru::add_file(SYS_ERRLOG_PATH, loguru::Append, loguru::Verbosity_ERROR);
+
+    loguru::set_fatal_handler([](const loguru::Message& message) {
         std::string signal_name(message.message);
 
         if (signal_name == "SIGINT"

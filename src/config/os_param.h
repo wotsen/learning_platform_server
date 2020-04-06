@@ -21,18 +21,14 @@ namespace wotsen
 // pid路径
 #define PID_FILE "/var/run/learn_plat_service.pid"
 
+// 系统配置文件
+#define SYS_CONFIG_FILENAME "../etc/sys_config.json"
 // 能力集配置文件
 #define OS_SYS_CAPAABILITY_FILENAME "../etc/sys_capability.json"
 
-// 参数配置文件
-#define SYS_RUNTIME_CONFIG_FILENAME "../data/sys_runtime_param.json"
-#define SYS_DEFAULT_CONFIG_FILENAME "../data/sys_default_param.json"
-
-// 系统配置文件
-#define SYS_CONFIG_FILENAME "../etc/sys_config.json"
-
 // 日志文件路径
-#define SYS_ELOG_PATH "../log/elog_file.log"
+#define SYS_LOG_PATH "../log/everything.log"
+#define SYS_ERRLOG_PATH "../log/error.log"
 
 // app模块最大个数
 #define OS_SYS_MAX_APP_MODULES 1024
