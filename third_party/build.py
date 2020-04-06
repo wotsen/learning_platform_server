@@ -175,6 +175,17 @@ def loguru_build(source_dir, debug, install_path):
     os.chdir(cur_dir)
 
 
+def task_build(source_dir, debug, install_path):
+    cur_dir = os.getcwd()
+
+    os.chdir(source_dir)
+    os.system("make")
+    os.system("make MAKE_INSTALL_PREFIX=%s install" % install_path)
+    os.system("rm %s/lib/libwotsen_task.so -f" % install_path)
+
+    os.chdir(cur_dir)
+
+
 # 模块信息
 third_party_modules = [
     ThirdPartyModule(SQLiteCpp_build, "SQLiteCpp", "c++封装的sqlite3"),
@@ -190,6 +201,7 @@ third_party_modules = [
     ThirdPartyModule(handy_build, "handy", "c++异步网络库"),
     ThirdPartyModule(tfile_build, "tfile", "c++文件操作库"),
     ThirdPartyModule(loguru_build, "loguru", "c++比较好用的日志"),
+    ThirdPartyModule(task_build, "task", "c++线程管理"),
 ]
 
 # 模块索引列表

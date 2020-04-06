@@ -10,7 +10,7 @@
  */
 #include <memory>
 #include <loguru.hpp>
-#include "task_manage/task_manage.h"
+#include <task/task.h>
 #include "sys_capability.h"
 #include "user_manage_private.h"
 #include "user_manage.h"
@@ -25,8 +25,6 @@ static std::unique_ptr<UserManager> user_manager;
 
 // 模块清理
 static void _module_clean(void);
-// 用户管理任务
-static void *user_manage_task(void *name);
 
 // 模块清除接口
 static void _module_clean(void)
@@ -331,22 +329,16 @@ enum ContentResultE UserManager::user_register(const UserSessionMsg &user_info, 
  * @param name 
  * @return void* 
  */
-static void *user_manage_task(void *name)
+static void user_manage_task(void)
 {
-	pthread_t tid = pthread_self();
-
     _module_state = true;
 
-	for (; _module_state; )
+	for (; Task::is_task_alive(task_id()) && _module_state; )
     {
-        task_alive(tid);          // 自身任务心跳
-
         ostime_delay(OS_SEC(1)); // 1秒刷新一次
 
 		user_manager->update_session();
     }
-
-	return (void *)0;
 }
 
 ///< 反初始化用户管理
@@ -375,7 +367,23 @@ void user_manager_init(void)
 	    user_manager = std::unique_ptr<UserManager>(new UserManager(get_user_manage_max_users_capability()));
     }
 
-	task_create(user_manage_task, STACKSIZE(8000), "user_manage", OS_MIN(5), E_TASK_IGNORE, _module_clean);
+	TaskRegisterInfo reg_info;
+
+	reg_info.task_attr.task_name = "user_manage";
+	reg_info.task_attr.stacksize = TASK_STACKSIZE(8 * 1024);
+	reg_info.task_attr.priority = e_sys_task_pri_lv;
+	reg_info.alive_time = OS_MIN(5);
+	reg_info.e_action = e_task_default;
+
+	auto ret = Task::register_task(reg_info, user_manage_task);
+
+    // 添加退出回调
+	Task::add_task_exit_action(ret.tid, _module_clean);
+	Task::add_task_timeout_action(ret.tid, _module_clean);
+	Task::add_task_except_action(ret.tid, _module_clean);
+
+    // 启动
+	Task::task_run(ret.tid);
 }
 
 } // !namespace wotsen

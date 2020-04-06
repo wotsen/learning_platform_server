@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <loguru.hpp>
+#include <task/task.h>
+#include <cstdarg>
 #include "tools/coredump.h"
 #include "config/os_param.h"
 #include "version.h"
@@ -18,7 +20,6 @@
 #include "sys_capability.h"
 #include "appmodule_manager.h"
 #include "appmodule_table.h"
-#include "task_manage/task_manage.h"
 #ifdef DEBUG
 #include "sdk_net/sdk_router.h"
 #endif
@@ -62,6 +63,7 @@ void PlatSrvApp::run(int argc, char **argv)
 
 void PlatSrvApp::stop(void)
 {
+    // TODO
 	std::cout << "stop app..................version: " << get_service_version() << std::endl;
 }
 
@@ -87,6 +89,7 @@ static void log_init(int argc, char **argv)
             || signal_name == "SIGBUS"
             || signal_name == "SIGILL")
         {
+            // TODO:保证只有主线程会受到这些信号
             wotsen::PlatSrvApp::plat_srv_app()->stop();
             exit(-1);
         }
@@ -101,10 +104,13 @@ void PlatSrvApp::init(int argc, char **argv)
     // 加载配置
 	Configures::configures();
 
-    // 初始化任务管理
-    wotsen::task_manage_init(get_max_task_num_capability(),
-                            (wotsen::abnormal_task_do)(
-                                [](const struct except_task_info &except_task) -> void {}));
+    // set_task_debug_cb([](const char *fmt, ...) -> void {});
+
+    Task::task_init(get_max_task_num_capability(),
+        [](const TaskExceptInfo &info) -> void {
+            // TODO
+            LOG_F(ERROR, "except task %ld, %s reason %s\n", info.tid, info.task_name.c_str(), info.reason.c_str());
+    });
 
     // 应用模块初初始化
     PlatSrvAppModuleManager::appmodule_manager(

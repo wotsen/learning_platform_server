@@ -9,7 +9,7 @@
  * 
  */
 
-#include <iostream>
+#include <loguru.hpp>
 #include "appmodule.h"
 
 namespace wotsen
@@ -35,7 +35,7 @@ void IAppModules::init_appmodules(void)
 	{
 		if (item->base_info.enable() && E_APP_MODULE_IDLE == item->base_info.state() && item->init)
 		{
-			// log_d("init app modules : %s\n", item[i].base_info.name().c_str());
+			LOG_F(WARNING, "init app modules : %s\n", item->base_info.name().c_str());
 			item->init();
 			item->base_info.set_state(E_APP_MODULE_INSTALLED);
 		}
@@ -48,10 +48,13 @@ void IAppModules::finit_appmodules(void)
 
 	for (auto &item : appmodule_list_)
 	{
-		if (item->base_info.enable() && E_APP_MODULE_INSTALLED == item->base_info.state() && item->exit && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
+		if (item->base_info.enable()
+			&& E_APP_MODULE_INSTALLED == item->base_info.state()
+			&& item->exit
+			&& E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
 		{
-			// log_d("init app modules : %s\n", item[i].base_info.name().c_str());
-			// log_d("finit app modules : %s\n", item[id].base_info.name().c_str());
+			LOG_F(WARNING, "init app modules : %s\n", item->base_info.name().c_str());
+			LOG_F(WARNING, "finit app modules : %s\n", item->base_info.name().c_str());
 			item->exit();
 			item->base_info.set_state(E_APP_MODULE_IDLE);
 		}
@@ -67,7 +70,7 @@ void IAppModules::init_single_appmodule(const uint32_t identifier, const std::st
 	{
 		if (name == item->base_info.name() && identifier == item->base_info.identifier() && item->base_info.enable() && E_APP_MODULE_IDLE == item->base_info.state() && item->init && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
 		{
-			// log_d("init app modules : %s\n", item[id].base_info.name().c_str());
+			LOG_F(WARNING, "init app modules : %s\n", item->base_info.name().c_str());
 			item->init();
 			item->base_info.set_state(E_APP_MODULE_INSTALLED);
 		}
@@ -83,7 +86,7 @@ void IAppModules::finit_single_appmodule(const uint32_t identifier, const std::s
 	{
 		if (name == item->base_info.name() && identifier == item->base_info.identifier() && item->base_info.enable() && E_APP_MODULE_INSTALLED == item->base_info.state() && item->exit && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
 		{
-			// log_d("exit app modules : %s\n", item[id].base_info.name().c_str());
+			LOG_F(WARNING, "exit app modules : %s\n", item->base_info.name().c_str());
 			item->exit();
 			item->base_info.set_state(E_APP_MODULE_INSTALLED);
 		}

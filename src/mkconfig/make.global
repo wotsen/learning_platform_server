@@ -32,7 +32,8 @@ LIBS := -L$(ROOT_DIR)/../lib \
 		-lSQLiteCpp \
 		-lsqlite3 \
 		-lfmt \
-		-lhandy
+		-lhandy \
+		-lwotsen_task
 LIBS += $(LIBS) -lrt -lpthread -ldl
 
 DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\" -DLOGURU_WITH_STREAMS=1

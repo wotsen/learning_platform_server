@@ -34,3 +34,6 @@
 [submodule "third_party/loguru"]
 	path = third_party/loguru
 	url = https://github.com/emilk/loguru
+[submodule "third_party/task"]
+	path = third_party/task
+	url = https://github.com/wotsen/task

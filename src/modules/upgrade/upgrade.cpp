@@ -9,8 +9,8 @@
  * 
  */
 #include <loguru.hpp>
+#include <task/task.h>
 #include "util_time/util_time.h"
-#include "task_manage/task_manage.h"
 #include "upgrade.h"
 
 namespace wotsen
@@ -26,29 +26,20 @@ namespace {
 
 static bool _module_state = false;
 
-static void *system_upgrade(void *name);
-
 /**
  * @brief 升级任务
  * 
  * @param name 
  * @return void* 
  */
-static void *system_upgrade(void *name)
+static void system_upgrade(void)
 {
-    pthread_t tid = pthread_self();
     _module_state = true;
 
-    LOG_F(INFO, "升级任务初始化完成...\n");
-
-    for (; _module_state; )
+    for (; Task::is_task_alive(task_id()) && _module_state; )
     {
-        task_alive(tid); // 自身任务心跳
-
         ostime_delay(OS_SEC(3)); // 3秒刷新一次
     }
-
-    return (void*)0;
 }
 
 }
@@ -65,7 +56,23 @@ bool system_upgrade_task_state(void)
  */
 void system_upgrade_task_init(void)
 {
-    task_create(system_upgrade, STACKSIZE(100 * 1024), "system_upgrade", OS_MIN(30), E_TASK_REBOOT_SYSTEM);
+    TaskRegisterInfo reg_info;
+
+	reg_info.task_attr.task_name = "system_upgrade";
+	reg_info.task_attr.stacksize = TASK_STACKSIZE(20 * 1024);
+	reg_info.task_attr.priority = e_sys_task_pri_lv;
+	reg_info.alive_time = OS_MIN(30);
+	reg_info.e_action = e_task_reboot_system;
+
+	auto ret = Task::register_task(reg_info, system_upgrade);
+
+    // 添加退出回调
+	Task::add_task_exit_action(ret.tid, [&]() { _module_state = false; });
+	Task::add_task_timeout_action(ret.tid, [&]() { _module_state = false; });
+	Task::add_task_except_action(ret.tid, [&]() { _module_state = false; });
+
+    // 启动
+	Task::task_run(ret.tid);
 }
 
 } // !namespace wotsen
