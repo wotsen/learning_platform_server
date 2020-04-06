@@ -9,6 +9,7 @@
  * 
  */
 
+#include <loguru.hpp>
 #include "sdk_request.h"
 
 using namespace insider::sdk;

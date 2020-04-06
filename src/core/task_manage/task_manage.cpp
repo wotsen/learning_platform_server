@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#define LOG_TAG "TASK_MANAGE"
-
+#include <loguru.hpp>
 #include <string.h>
 #include <errno.h>
 #include <sys/prctl.h>
@@ -17,7 +16,6 @@
 #include <sys/types.h>
 #include <memory>
 #include <algorithm>
-#include <easylogger/inc/elog.h>
 #include "util_time/util_time.h"
 #include "task_manage.h"
 
@@ -176,7 +174,7 @@ TasksManage::~TasksManage()
         // 释放所有线程任务
         if (pthread_cancel(item->tid) < 0)
         {
-            log_e("%s, can not kill thread=[%d]\n", strerror(errno), item->tid);
+            LOG_F(ERROR, "%s, can not kill thread=[%d]\n", strerror(errno), item->tid);
         }
 
         pthread_mutex_unlock(&item->mutex);
@@ -204,13 +202,13 @@ bool TasksManage::task_create(const struct task_record &task) noexcept
 
     if (NULL == task.func || NULL == task.thread_name)
     {
-        log_e("can not create thread, parameter error!\n");
+        LOG_F(ERROR, "can not create thread, parameter error!\n");
         return false;
     }
 
     if (task.stacksize < PTHREAD_STACK_MIN)
     {
-        log_e("stacksize too little : %zu, need over %zu\n", task.stacksize, PTHREAD_STACK_MIN);
+        LOG_F(ERROR, "stacksize too little : %zu, need over %zu\n", task.stacksize, PTHREAD_STACK_MIN);
         return false;
     }
 
@@ -219,7 +217,7 @@ bool TasksManage::task_create(const struct task_record &task) noexcept
     // 任务队列已满
     if (task_pool_->tasks_.size() > TasksManage::max_tasks_)
     {
-        log_e("task_pool full!\n");
+        LOG_F(ERROR, "task_pool full!\n");
         goto err_return;
     }
 
@@ -231,7 +229,7 @@ bool TasksManage::task_create(const struct task_record &task) noexcept
 
     if (!create_thread(&_task->tid, task.stacksize, task.priority, (thread_func)task_run, this))
     {
-        log_e("%s\n", strerror(errno));
+        LOG_F(ERROR, "%s\n", strerror(errno));
         goto err_return;
     }
 
@@ -240,7 +238,7 @@ bool TasksManage::task_create(const struct task_record &task) noexcept
     _task->timeout_times = 0;
     _task->state = E_TASK_ALIVE;
 
-    log_d("create task tid=[%zu], name=[%s]\n", _task->tid, _task->thread_name);
+    LOG_F(INFO, "create task tid=[%zu], name=[%s]\n", _task->tid, _task->thread_name);
 
     // 任务入队
     task_pool_->tasks_.push_back(std::move(_task));
@@ -417,7 +415,7 @@ void TasksManage::task_clean(void) noexcept
                                                   // 死亡任务先尝试关闭
                                                   if (!release_thread(_task->tid))
                                                   {
-                                                      log_e("%s, can not kill thread=[%d]\n", strerror(errno), _task->tid);
+                                                      LOG_F(ERROR, "%s, can not kill thread=[%d]\n", strerror(errno), _task->tid);
                                                   }
                                                   pthread_mutex_unlock(&_task->mutex);
                                                   pthread_mutex_destroy(&_task->mutex);
@@ -474,7 +472,7 @@ void TasksManage::task_kill(std::shared_ptr<struct task_record> &_task) noexcept
 {
     if (!release_thread(_task->tid))
     {
-        log_e("%s, can not kill thread=[%d]\n", strerror(errno), _task->tid);
+        LOG_F(ERROR, "%s, can not kill thread=[%d]\n", strerror(errno), _task->tid);
     }
     if (NULL != _task->clean)
     {
@@ -623,11 +621,11 @@ void TasksManage::task_check_timeout(void) noexcept
         // 任务超时
         if ((uint32_t)abs(now - item->last_update_time) > (item->alive_time + task_time_error_range))
         {
-            log_e("task tid=[%d], taskname=[%s]\n", item->tid, item->thread_name);
+            LOG_F(ERROR, "task tid=[%d], taskname=[%s]\n", item->tid, item->thread_name);
 
             if (item->timeout_times++ > max_task_timeout_times)
             {
-				log_e("task tid=[%d], taskname=[%s] : timeout with [%x]\n",
+				LOG_F(ERROR, "task tid=[%d], taskname=[%s] : timeout with [%x]\n",
 						item->tid, item->thread_name, item->action);
 
                 // 超时处理
@@ -681,7 +679,7 @@ static void *task_manage(void *name) noexcept
     TasksManage *task_pool = TasksManage::get_task_pool();
     pthread_t tid = pthread_self();
 
-    log_i("任务管理初始化完成...\n");
+    LOG_F(INFO, "任务管理初始化完成...\n");
 
     for (;;)
     {
@@ -752,7 +750,7 @@ void *task_run(TasksManage *tasks)
 
     if (nullptr == _task)
     {
-        log_e("not find task info = [%zu], can not run task!\n", tid);
+        LOG_F(ERROR, "not find task info = [%zu], can not run task!\n", tid);
         return (void *)0;
     }
 

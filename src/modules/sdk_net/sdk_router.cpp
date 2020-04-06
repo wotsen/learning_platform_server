@@ -8,9 +8,7 @@
  * @copyright Copyright (c) 2020
  * 
  */
-#define LOG_TAG "SDK_ROUTER_DISTRIBUTION"
-
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include <iostream>
 #include <regex>
 #include "sdk_router.h"

@@ -9,9 +9,7 @@
  * 
  */
 
-#ifdef DEBUG
-#include <iostream>
-#endif
+#include <loguru.hpp>
 #include <cstring>
 #include <tfile/tfile.h>
 #include "os_param.h"
@@ -36,9 +34,7 @@ IConfig::IConfig(const std::string &file_name) : file_name_(file_name)
 	try
 	{
 		conf_ = nlohmann::json::parse(data);
-#ifdef DEBUG
-		std::cout << conf_.dump(4) << std::endl;
-#endif
+		LOG_F(INFO, "%s", conf_.dump(4).c_str());
 	}
 	catch(const nlohmann::detail::parse_error& e)
 	{

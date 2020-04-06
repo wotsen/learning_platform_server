@@ -8,9 +8,7 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#define LOG_TAG "UPGRADE"
-
-#include <easylogger/inc/elog.h>
+#include <loguru.hpp>
 #include "util_time/util_time.h"
 #include "task_manage/task_manage.h"
 #include "upgrade.h"
@@ -41,7 +39,7 @@ static void *system_upgrade(void *name)
     pthread_t tid = pthread_self();
     _module_state = true;
 
-    log_i("升级任务初始化完成...\n");
+    LOG_F(INFO, "升级任务初始化完成...\n");
 
     for (; _module_state; )
     {

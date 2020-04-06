@@ -8,14 +8,12 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#define LOG_TAG "SDK_PROTOCOL_DO"
-
 #include <cstdio>
 #include <cstring>
 #include <time.h>
 #include <string>
 #include <inttypes.h>
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "tools/calculate_crc16.h"
 #include "sdk_router_distribution.h"
 #include "sdk_protocol_do.h"
@@ -65,11 +63,11 @@ static bool sdk_body_do(SdkRequest &sdk_request)
 
 	if (op_type > OperationType::DELETE)
 	{
-		log_e("sdk method not match\n");
+		LOG_F(ERROR, "sdk method not match\n");
 		return false;
 	}
 
-	log_i("requset url : %s\n", body.url().c_str());
+	LOG_F(WARNING, "requset url : %s\n", body.url().c_str());
 
 	// 根据处理结果组包数据
 	return sdk_router_distribution(sdk_request);
@@ -81,7 +79,7 @@ static bool sdk_header_check_magic(const Header &header)
 	// 魔术数字检查
 	if (SdkMagic::SDK_MAGIC != header.msg_magic())
 	{
-		log_e("msg magic is %x\n", header.msg_magic());
+		LOG_F(ERROR, "msg magic is %x\n", header.msg_magic());
 		return false;
 	}
 
@@ -94,7 +92,7 @@ static bool sdk_header_check_version(const Header &header)
 	// 版本检查，不同版本不兼容，后续可去除
 	if (SdkVersion::SDK_CUR_VERSION != header.version())
 	{
-		log_e("msg version is %x\n", header.version());
+		LOG_F(ERROR, "msg version is %x\n", header.version());
 		return false;
 	}
 
@@ -109,7 +107,7 @@ static bool sdk_header_check_net(const Header &header, const struct SdkNetInterf
 	if (sdk_interface.trans_protocol != header.trans_proto() ||
 		sdk_interface.ip_version != header.host().ip_version())
 	{
-		log_e("trans proto not match\n");
+		LOG_F(ERROR, "trans proto not match\n");
 		return false;
 	}
 
@@ -117,7 +115,7 @@ static bool sdk_header_check_net(const Header &header, const struct SdkNetInterf
 	if (sdk_interface.src_ip != header.host().ip()
 		|| (int)sdk_interface.src_port != header.host().port())
 	{
-		log_i("client ip = %s, port = %d, sdk ip = %s, sdk port = %d\n",
+		LOG_F(ERROR, "client ip = %s, port = %d, sdk ip = %s, sdk port = %d\n",
 				sdk_interface.src_ip.c_str(), sdk_interface.src_port,
 				header.host().ip().c_str(), header.host().port());
 		return false;
@@ -127,7 +125,7 @@ static bool sdk_header_check_net(const Header &header, const struct SdkNetInterf
 	if (sdk_interface.des_ip != header.dest().ip()
 		|| (int)sdk_interface.des_port != header.dest().port())
 	{
-		log_i("server ip = %s, port = %d, sdk ip = %s, sdk port = %d\n",
+		LOG_F(ERROR, "server ip = %s, port = %d, sdk ip = %s, sdk port = %d\n",
 				sdk_interface.des_ip.c_str(), sdk_interface.des_port,
 				header.dest().ip().c_str(), header.dest().port());
 		return false;
@@ -142,7 +140,7 @@ static bool sdk_header_check_time(const Header &header)
 	// 时间错误，两边的时间不同步
 	if (time(NULL) < header.time().in_time())
 	{
-		log_e("time error\n");
+		LOG_F(ERROR, "time error\n");
 		return false;
 	}
 	return true;
@@ -154,7 +152,7 @@ static bool sdk_header_check_data_dir(const Header &header)
 	// 数据方向
 	if (DataFlow::DATA_IN != header.data_dir())
 	{
-		log_e("data dir error\n");
+		LOG_F(ERROR, "data dir error\n");
 		return false;
 	}
 	return true;

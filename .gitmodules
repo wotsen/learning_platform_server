@@ -31,3 +31,6 @@
 [submodule "third_party/tfile"]
 	path = third_party/tfile
 	url = https://github.com/rec/tfile
+[submodule "third_party/loguru"]
+	path = third_party/loguru
+	url = https://github.com/emilk/loguru

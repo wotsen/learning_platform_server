@@ -8,10 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#define LOG_TAG "USER_MANAGE"
-
 #include <memory>
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "task_manage/task_manage.h"
 #include "sys_capability.h"
 #include "user_manage_private.h"
@@ -94,7 +92,7 @@ void UserManager::update_session(void)
 	// 移除过期用户
 	sessions_.erase(std::remove_if(sessions_.begin(), sessions_.end(), [](auto &_session) -> bool {
 							if (0 == _session->now_) {
-								log_d("user %s token over time\n", _session->name_.c_str());
+								LOG_F(INFO, "user %s token over time\n", _session->name_.c_str());
 								return true;
 							}
 
@@ -164,7 +162,7 @@ bool UserManager::add_session(const UserSessionMsg &user_info, const std::string
 	// 用户管理满
 	if (sessions_.size() >= max_session_)
 	{
-		log_d("user session overs max\n");
+		LOG_F(WARNING, "user session overs max\n");
 		pthread_mutex_unlock(&mutex_);
 		return false;
 	}
@@ -174,7 +172,7 @@ bool UserManager::add_session(const UserSessionMsg &user_info, const std::string
 	new_session->alive_time_ = user_info.alive_time();
 	new_session->token_ = token;
 
-	log_d("user %s token %s\n", new_session->name_.c_str(), token.c_str());
+	LOG_F(INFO, "user %s token %s\n", new_session->name_.c_str(), token.c_str());
 
 	sessions_.push_back(new_session);
 	pthread_mutex_unlock(&mutex_);
@@ -204,8 +202,8 @@ bool UserManager::create_user_session(const UserSessionMsg &user_info, std::stri
 
 		token = _session->token_;
 
-		log_d("user %s login ready\n", user_info.user().user_name().c_str());
-		log_d("user %s token %s\n", _session->name_.c_str(), token.c_str());
+		LOG_F(INFO, "user %s login ready\n", user_info.user().user_name().c_str());
+		LOG_F(INFO, "user %s token %s\n", _session->name_.c_str(), token.c_str());
 
 		return true;
 	}
@@ -224,7 +222,7 @@ void UserManager::delete_session(const std::string &token)
 {
 	pthread_mutex_lock(&mutex_);
 	sessions_.erase(std::remove_if(sessions_.begin(), sessions_.end(), [&token](auto &_session) -> bool {
-							log_d("delete user %s\n", _session->name_.c_str());
+							LOG_F(INFO, "delete user %s\n", _session->name_.c_str());
 							return _session->token_ == token;
 					}),
 					sessions_.end());
@@ -242,19 +240,19 @@ enum ContentResultE UserManager::login(const UserSessionMsg &user_info, std::str
 {
 	if (max_alive_time < user_info.alive_time())
 	{
-		log_d("not support %zu alive time\n", user_info.alive_time());
+		LOG_F(WARNING, "not support %zu alive time\n", user_info.alive_time());
 		return ContentResultE::R_CODE_USER_ALIVE_TIME_TOOLONG;
 	}
 
 	if (!user_exist(user_info))
 	{
-		log_i("user : %s not exsit\n", user_info.user().user_name().c_str());
+		LOG_F(WARNING, "user : %s not exsit\n", user_info.user().user_name().c_str());
 		return ContentResultE::R_CODE_USER_NOT_EXIST;
 	}
 
 	if (!user_verify(user_info))
 	{
-		log_i("user : %s password error\n", user_info.user().user_name().c_str());
+		LOG_F(WARNING, "user : %s password error\n", user_info.user().user_name().c_str());
 		return ContentResultE::R_CODE_USER_PASS_ERROR;
 	}
 
@@ -308,19 +306,19 @@ enum ContentResultE UserManager::user_register(const UserSessionMsg &user_info, 
 {
 	if (max_alive_time < user_info.alive_time())
 	{
-		log_d("not support %zu alive time\n", user_info.alive_time());
+		LOG_F(WARNING, "not support %zu alive time\n", user_info.alive_time());
 		return ContentResultE::R_CODE_USER_ALIVE_TIME_TOOLONG;
 	}
 
 	if (user_exist(user_info))
 	{
-		log_i("user : %s exsit\n", user_info.user().user_name().c_str());
+		LOG_F(WARNING, "user : %s exsit\n", user_info.user().user_name().c_str());
 		return ContentResultE::R_CODE_USER_EXIST;
 	}
 
 	if (!add_user(user_info))
 	{
-		log_i("add user : %s failed\n", user_info.user().user_name().c_str());
+		LOG_F(WARNING, "add user : %s failed\n", user_info.user().user_name().c_str());
 		return ContentResultE::R_CODE_ERROR;
 	}
 
@@ -354,7 +352,7 @@ static void *user_manage_task(void *name)
 ///< 反初始化用户管理
 void user_manager_finit(void)
 {
-    log_i("module can not support finit\n");
+    LOG_F(WARNING, "module can not support finit\n");
     // _module_clean();
 }
 

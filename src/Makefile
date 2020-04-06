@@ -3,7 +3,7 @@ TARGET := AIService
 MAIN_SRC := main.cpp
 
 # compile marcros
-DIRS := core apps tools version config modules macro
+DIRS := core apps tools version config modules macro loguru
 OBJS := app.o appmodule_table.o sdk_midwares_table.o
 
 # intermedia compile marcros

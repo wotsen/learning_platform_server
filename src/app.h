@@ -29,12 +29,11 @@ public:
 	static std::shared_ptr<PlatSrvApp> &plat_srv_app(void);
 
 public:
-	void run(void);
+	void run(int argc, char **argv);
 	void stop(void);
 
 private:
-	void init(void);
-	void alone_run(void);
+	void init(int argc, char **argv);
 	void exception_setup(void);
 };
 

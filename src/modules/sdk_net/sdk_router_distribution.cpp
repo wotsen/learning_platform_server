@@ -8,9 +8,7 @@
  * @copyright Copyright (c) 2020
  * 
  */
-#define LOG_TAG "SDK_ROUTER_DISTRIBUTION"
-
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "sdk_router_distribution.h"
 
 namespace wotsen
@@ -22,7 +20,7 @@ bool sdk_router_distribution(SdkRequest &sdk_request)
 
     if (!is_support_sdk_method(body.method()))
     {
-        log_i("not support method : %d\n", body.method());
+        LOG_F(ERROR, "not support method : %d\n", body.method());
         sdk_set_result(ResponseResult::ERROR, "not support method", sdk_request.response);
 
         return false;
@@ -33,7 +31,7 @@ bool sdk_router_distribution(SdkRequest &sdk_request)
     // 校验url合法性
     if (!is_sdk_url_valid(url))
     {
-        log_i("url not valid : %s\n", url.c_str());
+        LOG_F(ERROR, "url not valid : %s\n", url.c_str());
         sdk_set_result(ResponseResult::ERROR, "invalid url", sdk_request.response);
 
         return false;
@@ -44,7 +42,7 @@ bool sdk_router_distribution(SdkRequest &sdk_request)
 
     if (!fn)
     {
-        log_i("url not find : %s\n", url.c_str());
+        LOG_F(ERROR, "url not find : %s\n", url.c_str());
         sdk_set_result(ResponseResult::ERROR, "url not find or not support", sdk_request.response);
 
         return false;

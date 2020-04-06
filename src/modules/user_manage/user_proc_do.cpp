@@ -9,11 +9,9 @@
  * 
  */
 
-#define LOG_TAG "USER_PROC_DO"
-
 #include <vector>
 #include <fmt/format.h>
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "user_manage_private.h"
 #include "user_manage.h"
 
@@ -151,7 +149,7 @@ static bool fill_proc_result_code(const enum ContentResultE &user_ret, Sdk &sdk_
 			return false;
 
 		default:
-			log_d("unknown error\n");
+			LOG_F(ERROR, "unknown error\n");
 			sdk_content_set_result(ContentResultE::R_CODE_ERROR, "unknown error", sdk_res);
 			return false;
 	}
@@ -164,7 +162,7 @@ static bool _user_manange_midware_do(const Sdk &sdk_req, Sdk &sdk_res)
 {
 	const UserSessionMsg &user_info = sdk_req.body().user_session();
 
-	log_d("%s %s\n", user_info.user().user_name().c_str(), user_info.user().user_pass().c_str());
+	LOG_F(INFO, "%s %s\n", user_info.user().user_name().c_str(), user_info.user().user_pass().c_str());
 
 	// 查找处理方法
 	UserRequestProc *item = find_user_proc(user_info.user_type());

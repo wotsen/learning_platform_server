@@ -1,57 +1,62 @@
 #include <iostream>
 #include <exception>
 #include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <cstring>
+#include <cerrno>
+#include <fcntl.h>
+#include "os_param.h"
 #include "app.h"
 
-// 信号屏蔽集
-static sigset_t signal_mask;
-
-// 屏蔽所有信号
-static void mask_all_signal(void)
+// 移到main函数第一行
+void alone_run(void)
 {
-    sigemptyset(&signal_mask);
-    // 加入所有信号
-    sigfillset(&signal_mask);
+	// 保证只有一个程序运行
+    int fd = open(PID_FILE, O_RDWR | O_CREAT, 0666);
+    char buf[16] = {'\0'};
 
-    // 所有线程都屏蔽该信号集
-    if (pthread_sigmask(SIG_BLOCK, &signal_mask, nullptr) != 0)
+    if (fd < 0)
     {
-        std::cout << "error." << std::endl;
+        std::cout << strerror(errno) << std::endl;
         exit(-1);
     }
-}
 
-// 由主线程统一处理所有信号
-static void wait_signal(void)
-{
-    while (1)
+	auto lock_file = [&](void) -> int
+	{
+		struct flock fl;
+
+		fl.l_type = F_WRLCK; // 锁定文件，锁定失败则是已经运行了一个
+		fl.l_start = 0;
+		fl.l_whence = SEEK_SET;
+		fl.l_len = 0;
+
+		return fcntl(fd, F_SETLK, &fl);
+	};
+
+    if (lock_file() < 0)
     {
-        int sig = 0;
-
-        if (sigwait(&signal_mask, &sig))
+        if (errno == EACCES || errno == EAGAIN)
         {
-            continue;
+            close(fd);
+            std::cout << "proccessing is running!" << std::endl;
+            exit(-1);
         }
-
-        // 特殊处理
-        if (SIGINT == sig || SIGTERM == sig || SIGKILL == sig)
-        {
-            wotsen::PlatSrvApp::plat_srv_app()->stop();
-            std::cout << "exit." << std::endl;
-            exit(0);
-        }
+		std::cout << "can't lock " << PID_FILE << ", reason :" << strerror(errno) << std::endl;
     }
+
+    ftruncate(fd, 0);
+    sprintf(buf, "%ld", (long)getpid());
+    write(fd, buf, strlen(buf) + 1);
 }
 
 int main(int argc, char **argv)
 {
-    // mask_all_signal();
+    alone_run();
 
-    std::cout << "start app.................." << std::endl;
+    wotsen::PlatSrvApp::plat_srv_app()->run(argc, argv);
 
-    wotsen::PlatSrvApp::plat_srv_app()->run();
-
-    // wait_signal();
     while (1);
 
     return 0;

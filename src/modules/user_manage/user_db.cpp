@@ -9,9 +9,7 @@
  * 
  */
 
-#define LOG_TAG "USER_DB"
-
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include <SQLiteCpp/Backup.h>
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Statement.h>
@@ -87,7 +85,7 @@ bool user_db_init(void)
 		    user_db = new Database(OS_SYS_USER_DB_PATH, OPEN_READWRITE|OPEN_CREATE);
         }
 	} catch (std::exception& e) {
-		log_e("%s\n", e.what());
+		LOG_F(ERROR, "%s\n", e.what());
 
 		return false;
 	}

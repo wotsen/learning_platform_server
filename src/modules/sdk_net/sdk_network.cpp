@@ -8,10 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#define LOG_TAG "NETWORK"
-
 #include <iostream>
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "util_time/util_time.h"
 #include "os_param.h"
 #include "sys_config.h"
@@ -41,7 +39,7 @@ static bool sdk_msg_decode(Buffer &input, Sdk &req)
 	bool ret = true;
 	if (!req.ParseFromString(std::string(input.data())))
 	{
-		log_e("parser sdk msg failed ：%ld\n", input.size());
+		LOG_F(ERROR, "parser sdk msg failed ：%ld\n", input.size());
 		ret = false;
 	}
 
@@ -56,7 +54,7 @@ static bool sdk_msg_encode(const Sdk &res, Buffer &output)
 
 	if (!res.SerializeToString(&out) || out.empty())
 	{
-		log_e("serial sdk msg error\n");
+		LOG_F(ERROR, "serial sdk msg error\n");
 		return false;
 	}
 
@@ -130,14 +128,14 @@ bool SdkServer::tcp_connection_made(void)
         TcpConnPtr con(new TcpConn);
         con->onState([&](const TcpConnPtr &con) {
             if (con->getState() == TcpConn::Connected) {
-				log_d("[%s] connetd\n", con->peer_.toString().c_str());
+				LOG_F(WARNING, "[%s] connetd\n", con->peer_.toString().c_str());
 				if (!tcp_links_inc()) {
-					log_i("tcp_links_inc faild\n");
+					LOG_F(WARNING, "tcp_links_inc faild\n");
 					con->close();
 				}
             } else if (con->getState() == TcpConn::Closed) {
                 tcp_links_dec(); // FIXME:手动close是否会执行此处
-				log_d("close links\n");
+				LOG_F(WARNING, "close links\n");
             } else {
 				/* code */
 			}
@@ -232,7 +230,7 @@ bool SdkServer::create_tcp_srv(void)
 	// 校验配置与能力
 	if (get_ip_version_capability() != get_ip_version_config())
 	{
-		log_e("not support ip version : %s\n", get_ip_version_config().c_str());
+		LOG_F(ERROR, "not support ip version : %s\n", get_ip_version_config().c_str());
 		return false;
 	}
 
@@ -250,7 +248,7 @@ bool SdkServer::create_udp_srv(void)
 	// 校验配置与能力
 	if (get_ip_version_capability() != get_ip_version_config())
 	{
-		log_e("not support ip version : %s\n", get_ip_version_config().c_str());
+		LOG_F(ERROR, "not support ip version : %s\n", get_ip_version_config().c_str());
 		return false;
 	}
 

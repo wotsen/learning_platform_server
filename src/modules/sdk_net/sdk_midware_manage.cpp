@@ -8,9 +8,7 @@
  * @copyright Copyright (c) 2020
  * 
  */
-#define LOG_TAG "SDK_MIDWARE_MANAGE"
-
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "sdk_midware.h"
 #include "sdk_midware_manage.h"
 
@@ -57,7 +55,7 @@ bool sdk_midware_function(SdkRequest &sdk_request)
 		if (!item->is_enable()) { continue; }
 
 		if (!(*item)(sdk_request)) {
-			log_d("proc midware %s failed\n", item->name().c_str());
+			LOG_F(ERROR, "proc midware %s failed\n", item->name().c_str());
 
 			sdk_set_result(ResponseResult::ERROR, "error module : " + item->name(), sdk_request.response);
 
@@ -65,7 +63,7 @@ bool sdk_midware_function(SdkRequest &sdk_request)
 			return false;
 		}
 
-		log_d("proc midware %s success\n", item->name().c_str());
+		LOG_F(INFO, "proc midware %s success\n", item->name().c_str());
 	}
 
 	return true;

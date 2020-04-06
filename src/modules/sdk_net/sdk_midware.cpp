@@ -8,10 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
-#define LOG_TAG "SDK_MIDWARE"
-
 #include <vector>
-#include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "sdk_midware.h"
 
 namespace wotsen

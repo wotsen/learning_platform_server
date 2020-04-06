@@ -9,16 +9,11 @@
  * 
  */
 
-#define LOG_TAG "APP"
+// #define LOG_TAG "APP"
 
 #include <iostream>
-#include <easylogger/easylogger_setup.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <cstring>
-#include <cerrno>
+// #include <easylogger/easylogger_setup.h>
+#include <loguru.hpp>
 #include "tools/coredump.h"
 #include "config/os_param.h"
 #include "version.h"
@@ -38,53 +33,12 @@ namespace wotsen
 
 PlatSrvApp::PlatSrvApp()
 {
-	alone_run();
 	exception_setup();
 }
 
 PlatSrvApp::~PlatSrvApp()
 {
 
-}
-
-void PlatSrvApp::alone_run(void)
-{
-	// 保证只有一个程序运行
-    int fd = open(PID_FILE, O_RDWR | O_CREAT, 0666);
-    char buf[16] = {'\0'};
-
-    if (fd < 0)
-    {
-        std::cout << strerror(errno) << std::endl;
-        exit(-1);
-    }
-
-	auto lock_file = [&](void) -> int
-	{
-		struct flock fl;
-
-		fl.l_type = F_WRLCK; // 锁定文件，锁定失败则是已经运行了一个
-		fl.l_start = 0;
-		fl.l_whence = SEEK_SET;
-		fl.l_len = 0;
-
-		return fcntl(fd, F_SETLK, &fl);
-	};
-
-    if (lock_file() < 0)
-    {
-        if (errno == EACCES || errno == EAGAIN)
-        {
-            close(fd);
-            std::cout << "proccessing is running!" << std::endl;
-            exit(-1);
-        }
-		std::cout << "can't lock " << PID_FILE << ", reason :" << strerror(errno) << std::endl;
-    }
-
-    ftruncate(fd, 0);
-    sprintf(buf, "%ld", (long)getpid());
-    write(fd, buf, strlen(buf) + 1);
 }
 
 void PlatSrvApp::exception_setup(void)
@@ -102,46 +56,65 @@ std::shared_ptr<PlatSrvApp> &PlatSrvApp::plat_srv_app(void)
 	return app;
 }
 
-void PlatSrvApp::run(void)
+void PlatSrvApp::run(int argc, char **argv)
 {
-	init();
+	init(argc, argv);
 
 	std::cout << "start app..................version: " << get_service_version() << std::endl;
 }
 
 void PlatSrvApp::stop(void)
 {
-
+	std::cout << "stop app..................version: " << get_service_version() << std::endl;
 }
 
-static void log_init(void)
+static void log_init(int argc, char **argv)
 {
     // 日志采用elog
-    struct elog_custom_config elog_config = {
-        .log_path = (char *)SYS_ELOG_PATH,
-#ifdef NDEBUG
-        .log_lv = ELOG_LVL_INFO
-#else
-        // debug版本打印所有日志
-        .log_lv = ELOG_LVL_VERBOSE
-#endif
-    };
+//     struct elog_custom_config elog_config = {
+//         .log_path = (char *)SYS_ELOG_PATH,
+// #ifdef NDEBUG
+//         .log_lv = ELOG_LVL_INFO
+// #else
+//         // debug版本打印所有日志
+//         .log_lv = ELOG_LVL_VERBOSE
+// #endif
+//     };
 
-    if (easylogger_setup(&elog_config))
-    {
-        log_i("日志模块初始化完成...\n");
-    }
-    else
-    {
-        std::cout << "日志模块初始化失败!\n";
-        exit(0);
-    }
+//     if (easylogger_setup(&elog_config))
+//     {
+//         log_i("日志模块初始化完成...\n");
+//     }
+//     else
+//     {
+//         std::cout << "日志模块初始化失败!\n";
+//         exit(0);
+//     }
+
+    loguru::init(argc, argv);
+    loguru::g_stderr_verbosity = loguru::Verbosity_INFO;
+    loguru::add_file("../log/everything.log", loguru::Append, loguru::Verbosity_MAX);
+
+    loguru::set_fatal_handler([](const loguru::Message& message){
+        std::string signal_name(message.message);
+
+        if (signal_name == "SIGINT"
+            || signal_name == "SIGSEGV"
+            || signal_name == "SIGTERM"
+            || signal_name == "SIGABRT"
+            || signal_name == "SIGBUS"
+            || signal_name == "SIGILL")
+        {
+            wotsen::PlatSrvApp::plat_srv_app()->stop();
+            exit(-1);
+        }
+	});
 }
 
-void PlatSrvApp::init(void)
+void PlatSrvApp::init(int argc, char **argv)
 {
 	// 日志初始化
-    log_init();
+    log_init(argc, argv);
 
     // 加载配置
 	Configures::configures();

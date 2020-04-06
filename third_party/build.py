@@ -155,6 +155,7 @@ def handy_build(source_dir, debug, install_path):
 
     os.chdir(cur_dir)
 
+
 def tfile_build(source_dir, debug, install_path):
     cur_dir = os.getcwd()
 
@@ -164,10 +165,20 @@ def tfile_build(source_dir, debug, install_path):
     os.chdir(cur_dir)
 
 
+def loguru_build(source_dir, debug, install_path):
+    cur_dir = os.getcwd()
+
+    os.chdir(source_dir)
+    os.system("cp loguru.cpp %s/src/loguru/ -f" % install_path)
+    os.system("cp loguru.hpp %s/src/loguru/ -f" % install_path)
+
+    os.chdir(cur_dir)
+
+
 # 模块信息
 third_party_modules = [
     ThirdPartyModule(SQLiteCpp_build, "SQLiteCpp", "c++封装的sqlite3"),
-    ThirdPartyModule(c_log_build, "c-log", "c语言实现的日志,easyLogger"),
+    # ThirdPartyModule(c_log_build, "c-log", "c语言实现的日志,easyLogger"),
     ThirdPartyModule(c_time_build, "c-time", "c语言封装的时间函数接口"),
     ThirdPartyModule(json_build, "json", "c++很直观的json库"),
     # ThirdPartyModule(libuv_build, "libuv", "libuv库"),
@@ -178,6 +189,7 @@ third_party_modules = [
     ThirdPartyModule(fmt_build, "fmt", "c++更好的格式话输出，类似python format"),
     ThirdPartyModule(handy_build, "handy", "c++异步网络库"),
     ThirdPartyModule(tfile_build, "tfile", "c++文件操作库"),
+    ThirdPartyModule(loguru_build, "loguru", "c++比较好用的日志"),
 ]
 
 # 模块索引列表

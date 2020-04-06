@@ -21,11 +21,11 @@ INC := -I$(ROOT_DIR)/../include \
 		-I$(ROOT_DIR)/macro \
 		-I$(ROOT_DIR)/version \
 		-I$(ROOT_DIR)/modules \
-		-I$(ROOT_DIR)/tools
+		-I$(ROOT_DIR)/tools \
+		-I$(ROOT_DIR)/loguru
 
 # github三方库使用静态链接
 LIBS := -L$(ROOT_DIR)/../lib \
-		-leasylogger \
 		-lutil_time \
 		-lprotobuf \
 		-lutil_pthread \
@@ -35,7 +35,7 @@ LIBS := -L$(ROOT_DIR)/../lib \
 		-lhandy
 LIBS += $(LIBS) -lrt -lpthread -ldl
 
-DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\"
+DMARCROS := -DLANGUAGE_ZH -DSOFT_VERSION=\"$(RELEASE_VERSION)\" -DLOGURU_WITH_STREAMS=1
 
 # 调试模式
 ifeq ($(ndebug), true)
