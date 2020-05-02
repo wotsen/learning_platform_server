@@ -68,7 +68,12 @@ void IAppModules::init_single_appmodule(const uint32_t identifier, const std::st
 
 	for (auto &item : appmodule_list_)
 	{
-		if (name == item->base_info.name() && identifier == item->base_info.identifier() && item->base_info.enable() && E_APP_MODULE_IDLE == item->base_info.state() && item->init && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
+		if (name == item->base_info.name()
+			&& identifier == item->base_info.identifier()
+			&& item->base_info.enable()
+			&& E_APP_MODULE_IDLE == item->base_info.state()
+			&& item->init
+			&& E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
 		{
 			LOG_F(WARNING, "init app modules : %s\n", item->base_info.name().c_str());
 			item->init();
@@ -84,7 +89,12 @@ void IAppModules::finit_single_appmodule(const uint32_t identifier, const std::s
 
 	for (auto &item : appmodule_list_)
 	{
-		if (name == item->base_info.name() && identifier == item->base_info.identifier() && item->base_info.enable() && E_APP_MODULE_INSTALLED == item->base_info.state() && item->exit && E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
+		if (name == item->base_info.name()
+			&& identifier == item->base_info.identifier()
+			&& item->base_info.enable()
+			&& E_APP_MODULE_INSTALLED == item->base_info.state()
+			&& item->exit
+			&& E_APP_MODULE_CFG_PERMISSION_ENABLE == item->base_info.permission())
 		{
 			LOG_F(WARNING, "exit app modules : %s\n", item->base_info.name().c_str());
 			item->exit();

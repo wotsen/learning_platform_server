@@ -11,7 +11,7 @@
 #include "version.h"
 
 #ifndef SOFT_VERSION
-    #define SOFT_VERSION "unknown version"
+    #define SOFT_VERSION "0.0.0"
 #endif
 
 namespace wotsen

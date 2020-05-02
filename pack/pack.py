@@ -177,9 +177,22 @@ def check_build_version(old_version, new_version):
         print("%s 版本号格式错误，以0开头的版本号只能有一个数字." % new_version)
         exit(-1)
 
-    if old_version > new_version:
-        print("新版本号错误，不能比历史最近版本号还小，old:%s, new:%s" % (old_version, new_version))
-        exit(-1)
+    old_ver = old_version.split(".")
+    old_ver = [int(item) for item in old_ver]
+    new_ver = new_version.split(".")
+    new_ver = [int(item) for item in new_ver]
+
+    if old_ver[0] <= new_ver[0]:
+        if old_ver[0] < new_ver[0]:
+            return
+        if old_ver[1] <= new_ver[1]:
+            if old_ver[1] < new_ver[1]:
+                return
+            if old_ver[2] <= new_ver[2]:
+                return
+
+    print("新版本号错误，不能比历史最近版本号还小，old:%s, new:%s" % (old_version, new_version))
+    exit(-1)
 
 
 _SRV_DEBUG = "ndebug=true"
@@ -447,12 +460,16 @@ def pack_learn_platform_server(pack_type, pack_name, version, debug):
     print("配置文件拷贝")
 
     # 配置文件拷贝
-    os.system("cp learning_platform/learning_platform_runtime/etc/*.json zip_dir/learning_platform/learning_platform_runtime/etc/")
+    os.system(
+        "cp learning_platform/learning_platform_runtime/etc/*.json "
+        "zip_dir/learning_platform/learning_platform_runtime/etc/")
 
     print("默认参数拷贝")
 
     # 默认参数拷贝
-    os.system("cp learning_platform/learning_platform_runtime/data/sys_default_param.json zip_dir/learning_platform/learning_platform_runtime/data/")
+    os.system(
+        "cp learning_platform/learning_platform_runtime/data/sys_default_param.json "
+        "zip_dir/learning_platform/learning_platform_runtime/data/")
 
     print("安装脚本拷贝")
 
@@ -462,7 +479,9 @@ def pack_learn_platform_server(pack_type, pack_name, version, debug):
     print("启动脚本拷贝")
 
     # 启动脚本拷贝
-    os.system("cp learning_platform/learning_platform_runtime/srv_run.sh zip_dir/learning_platform/learning_platform_runtime/srv_run.sh")
+    os.system(
+        "cp learning_platform/learning_platform_runtime/srv_run.sh "
+        "zip_dir/learning_platform/learning_platform_runtime/srv_run.sh")
 
     # 时间戳
     zip_name = get_zip_name(pack_type, pack_name, version, debug)
