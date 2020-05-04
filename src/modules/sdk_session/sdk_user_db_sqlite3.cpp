@@ -12,7 +12,6 @@
 #include <cstring>
 #include <exception>
 #include <loguru.hpp>
-// #include "os_param.h"
 #include "sdk_user_db_sqlite3.h"
 
 namespace wotsen
@@ -30,7 +29,7 @@ using namespace SQLite;
 	"headpic BLOB, " \
 	"phone CHAR(24), " \
 	"email CHAR(128) NOT NULL, " \
-	"permission INT NOT NULL, " \
+	"permission INT NOT NULL default 0, " \
 	"valid BOOLEAN default 1, " \
 	"black BOOLEAN default 0, " \
 	"create_time DATETIME NOT NULL, " \
@@ -74,7 +73,7 @@ SdkUserDBErr SdkUserDbSqlite3::init()
 		admin += table_name_;
 		admin += " (name, nik, sex, password, phone, email, permission, create_time)"
 					" VALUES (\"admin\", \"wotsen\", 3, \"admin\", \"15558198512\", "
-					"\"astralrovers@outlook.com\", 3, datetime('now'))";
+					"\"astralrovers@outlook.com\", 1, datetime('now'))";
 		
 		LOG_F(INFO, "sql : %s\n", admin.c_str());
 		
@@ -150,11 +149,13 @@ SdkUserDBErr SdkUserDbSqlite3::query_by_name(const std::string &name, const std:
 
 SdkUserDBErr SdkUserDbSqlite3::query(const std::string &name, SdkDbUser *user)
 {
+	std::unique_lock<std::mutex> lock(mtx_);
 	return query_by_name(name, "name", user);
 }
 
 SdkUserDBErr SdkUserDbSqlite3::query_by_nikname(const std::string &name, SdkDbUser *user)
 {
+	std::unique_lock<std::mutex> lock(mtx_);
 	return query_by_name(name, "nik", user);
 }
 
@@ -184,6 +185,7 @@ bool SdkUserDbSqlite3::user_exist(const SdkDbUser *user)
 
 SdkUserDBErr SdkUserDbSqlite3::add_user(const SdkDbUser *user)
 {
+	std::unique_lock<std::mutex> lock(mtx_);
 	// 先检查是否存在
 	if (user_exist(user))
 	{
@@ -241,6 +243,7 @@ SdkUserDBErr SdkUserDbSqlite3::add_user(const SdkDbUser *user)
 
 SdkUserDBErr SdkUserDbSqlite3::del_user(const SdkDbUser *user)
 {
+	std::unique_lock<std::mutex> lock(mtx_);
 	// 先检查是否存在
 	if (!user_exist(user))
 	{
@@ -273,6 +276,7 @@ void SdkUserDbSqlite3::free_export_user(SdkDbUser **user)
 
 SdkUserDBErr SdkUserDbSqlite3::export_user(SdkDbUser **user, uint32_t &num)
 {
+	std::unique_lock<std::mutex> lock(mtx_);
 	std::string sql("select count(id) from ");
 
 	sql += table_name_;

@@ -19,7 +19,7 @@
 #include "handy_loop/handy_loop.h"
 #include "sdk_net/sdk_network.h"
 #include "upgrade/upgrade.h"
-#include "user_manage/user_manage.h"
+// #include "user_manage/user_manage.h"
 
 /**************************************************************************************
  * !扩展模块导入
@@ -108,8 +108,8 @@ static std::vector<appmodule_t> _sys_modules = {
     create_appmoudle("system upgrade", 3, true, E_APP_MODULE_IDLE, E_APP_MODULE_CFG_PERMISSION_DISENABLE,
         system_upgrade_task_init, nullptr, system_upgrade_task_state),
 
-    create_appmoudle("user manage", 4, true, E_APP_MODULE_IDLE, E_APP_MODULE_CFG_PERMISSION_DISENABLE,
-        user_manager_init, nullptr, user_manager_state),
+    // create_appmoudle("user manage", 4, true, E_APP_MODULE_IDLE, E_APP_MODULE_CFG_PERMISSION_DISENABLE,
+    //     user_manager_init, nullptr, user_manager_state),
 };
 
 /****************************************************************************************************************

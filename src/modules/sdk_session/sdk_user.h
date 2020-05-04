@@ -13,42 +13,47 @@
 
 #include <vector>
 #include <memory>
-#include "sdk_protocol/in_sdk_body_user.pb.h"
-#include "sdk_protocol/in_sdk_footer.pb.h"
+#include "base/sdk_protocol/in_sdk_body_user.pb.h"
+#include "base/sdk_protocol/in_sdk_footer.pb.h"
 
 namespace wotsen
 {
 
-using SdkUser = insider::sdk::UserSessionMsg;
+using SdkUserInfo = insider::sdk::UserAllInfo;
 using SdkUserErr = insider::sdk::ContentResultE;
+using SdkUserPermission = insider::sdk::UserPermissson;
 
 class ISdkUserDb;
 
 class SdkUser
 {
 public:
-	SdkUser();
+	SdkUser(ISdkUserDb *db);
 	~SdkUser();
 
 public:
-	static std::shared_ptr<SdkUser> &sdk_user();
+	static std::shared_ptr<SdkUser> &sdk_user(ISdkUserDb *db);
 
 public:
 /******************************************************************************************************************
  * !单个用户操作
  ******************************************************************************************************************/
 	SdkUserErr sdk_user_verify(const std::string &username, const std::string &password);
+	bool sdk_user_exist(const std::string &username);
 	SdkUserErr sdk_user_change_password(const std::string &username, const std::string &password);
-	SdkUserErr sdk_user_add(const SdkUser &user);
-	SdkUserErr sdk_user_del(const SdkUser &user);
+	SdkUserErr sdk_user_add(const SdkUserInfo &user);
+	SdkUserErr sdk_user_del(const SdkUserInfo &user);
+	SdkUserPermission sdk_user_permission(const std::string &username);
+
+	bool sdk_user_info(const std::string &username, SdkUserInfo &user);
 
 /******************************************************************************************************************
  * !批量用户操作
  ******************************************************************************************************************/
-	SdkUserErr sdk_user_list(std::vector<SdkUser> &list);
+	SdkUserErr sdk_user_list(std::vector<std::shared_ptr<SdkUserInfo>> &list);
 
 private:
-	std::shared_ptr<ISdkUserDb> user_db_;
+	ISdkUserDb *user_db_;
 };
 
 } // namespace wotsen

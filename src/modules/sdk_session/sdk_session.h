@@ -37,12 +37,12 @@ struct SdkUserSessionInfo : public SdkSessionInfo
 class SdkSession
 {
 public:
-	SdkSession(const uint32_t max_session=128);
+	SdkSession(const uint32_t &max_session=128);
 	~SdkSession();
 
 public:
 	bool verify(const std::string &token);
-	bool add_session(const SdkUserSessionInfo &session);
+	bool add_session(SdkUserSessionInfo &session);
 	bool del_session(const std::string &token);
 	void update(void);
 

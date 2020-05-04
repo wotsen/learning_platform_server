@@ -19,7 +19,8 @@ using namespace wotsen;
 
 void register_sdk_midwares(void)
 {
-	SDK_IMPORT_MIDWARE(user_manange_midware_do, "user_manange_midware", true);
+	// SDK_IMPORT_MIDWARE(user_manange_midware_do, "user_manange_midware", true);
+	SDK_IMPORT_MIDWARE(sdk_user_midware, "sdk user midware", true);
 	// TODO:记录访问者，ip，端口，时间(),json格式
 }
 
