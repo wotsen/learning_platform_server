@@ -26,6 +26,7 @@
 #include "sdk_midwares_table.h"
 #if defined(DEBUG)
 #include "sdk_session/sdk_user_manage.h"
+#include "tools/string_match.h"
 #endif
 #include "app.h"
 
@@ -131,7 +132,13 @@ void PlatSrvApp::init(int argc, char **argv)
     show_sdk_router_map();
     _print_app_module_state();
 
-    sdk_user_manage_test();
+    LOG_F(INFO, "%s\n", email_match("wotsen@outlook.com") ? "true" : "false");
+    LOG_F(INFO, "%s\n", zh_cellphone_number_match("15558198512") ? "true" : "false");
+    LOG_F(INFO, "%s\n", id_card_match("511623199505121211") ? "true" : "false");
+    LOG_F(INFO, "%s\n", ipv4_match("127.0.0.1") ? "true" : "false");
+    LOG_F(INFO, "%s\n", ipv6_match("wotsen@outlook.com") ? "true" : "false");
+
+    // sdk_user_manage_test();
 #endif
 }
 
